@@ -1,10 +1,10 @@
 {
   "settings": {
     "site_name": "Red Sea & Egypt Excursions",
-    "whatsapp_number": "201012345678",
+    "whatsapp_number": "201140423458",
     "contact_email": "info@redseaexcursions.com",
-    "phone": "+20 101 234 5678",
-    "currency": "€",
+    "phone": "+201140423458",
+    "currency": "$",
     "currency_code": "EUR",
     "admin_pin": "admin123",
     "social_facebook": "https://facebook.com",
@@ -148,10 +148,34 @@
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel pickup & drop-off", "Snorkeling equipment & life jackets", "Orange Bay entrance fees", "Open buffet lunch & soft drinks", "Banana & sofa boat ride"],
-        "ru": ["Трансфер из/в отель", "Снаряжение для снорклинга и жилеты", "Входной билет на остров Оранж", "Обед (шведский стол) и напитки", "Катание на банане и таблетке"],
-        "fr": ["Transfert aller-retour depuis l'hôtel", "Équipement de snorkeling et gilets", "Frais d'entrée à Orange Bay", "Déjeuner buffet et boissons fraîches", "Bouée tractée et banane"],
-        "pl": ["Transfer z/do hotelu", "Sprzęt do snorkelingu i kamizelki", "Bilety wstępu na wyspę Orange Bay", "Lunch w formie bufetu i napoje", "Pływanie na bananie i sofie wodnej"]
+        "en": [
+          "Hotel pickup & drop-off",
+          "Snorkeling equipment & life jackets",
+          "Orange Bay entrance fees",
+          "Open buffet lunch & soft drinks",
+          "Banana & sofa boat ride"
+        ],
+        "ru": [
+          "Трансфер из/в отель",
+          "Снаряжение для снорклинга и жилеты",
+          "Входной билет на остров Оранж",
+          "Обед (шведский стол) и напитки",
+          "Катание на банане и таблетке"
+        ],
+        "fr": [
+          "Transfert aller-retour depuis l'hôtel",
+          "Équipement de snorkeling et gilets",
+          "Frais d'entrée à Orange Bay",
+          "Déjeuner buffet et boissons fraîches",
+          "Bouée tractée et banane"
+        ],
+        "pl": [
+          "Transfer z/do hotelu",
+          "Sprzęt do snorkelingu i kamizelki",
+          "Bilety wstępu na wyspę Orange Bay",
+          "Lunch w formie bufetu i napoje",
+          "Pływanie na bananie i sofie wodnej"
+        ]
       },
       "featured": true,
       "active": true
@@ -189,10 +213,34 @@
         "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel pickup & drop-off", "Quad bike & Spider car ride", "Camel ride & Bedouin tea", "BBQ Dinner & soft drinks", "Oriental folkloric and fire show"],
-        "ru": ["Трансфер из/в отель", "Катание на квадроцикле и багги", "Катание на верблюде и чай", "Ужин барбекю и напитки", "Восточное шоу и танец с огнем"],
-        "fr": ["Transfert aller-retour", "Conduite de quad et buggy", "Balade à dos de chameau et thé", "Dîner barbecue et boissons", "Spectacle oriental et cracheur de feu"],
-        "pl": ["Transfer z/do hotelu", "Jazda na quadzie i buggy", "Przejażdżka na wielbłądzie i herbata", "Kolacja grillowa z napojami", "Pokaz orientalny i fireshow"]
+        "en": [
+          "Hotel pickup & drop-off",
+          "Quad bike & Spider car ride",
+          "Camel ride & Bedouin tea",
+          "BBQ Dinner & soft drinks",
+          "Oriental folkloric and fire show"
+        ],
+        "ru": [
+          "Трансфер из/в отель",
+          "Катание на квадроцикле и багги",
+          "Катание на верблюде и чай",
+          "Ужин барбекю и напитки",
+          "Восточное шоу и танец с огнем"
+        ],
+        "fr": [
+          "Transfert aller-retour",
+          "Conduite de quad et buggy",
+          "Balade à dos de chameau et thé",
+          "Dîner barbecue et boissons",
+          "Spectacle oriental et cracheur de feu"
+        ],
+        "pl": [
+          "Transfer z/do hotelu",
+          "Jazda na quadzie i buggy",
+          "Przejażdżka na wielbłądzie i herbata",
+          "Kolacja grillowa z napojami",
+          "Pokaz orientalny i fireshow"
+        ]
       },
       "featured": true,
       "active": true
@@ -222,17 +270,41 @@
       "price": 35,
       "price_child": 20,
       "duration": "7 Hours (08:30 - 15:30)",
-      "rating": 5.0,
+      "rating": 5,
       "reviews_count": 198,
       "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
       "gallery": [
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip transfer", "2 introductory dives with instructor", "Full modern scuba equipment", "Freshly cooked lunch & drinks", "Snorkeling equipment"],
-        "ru": ["Трансфер туда и обратно", "2 погружения с инструктором", "Полное снаряжение для дайвинга", "Вкусный обед и напитки", "Маски и ласты для снорклинга"],
-        "fr": ["Transfert aller-retour", "2 plongées avec moniteur", "Équipement complet de plongée", "Déjeuner chaud et boissons", "Matériel de snorkeling"],
-        "pl": ["Transfer w obie strony", "2 nurkowania z instruktorem", "Kompletny sprzęt nurkowy", "Ciepły obiad i napoje", "Sprzęt do snorkelingu"]
+        "en": [
+          "Hotel round-trip transfer",
+          "2 introductory dives with instructor",
+          "Full modern scuba equipment",
+          "Freshly cooked lunch & drinks",
+          "Snorkeling equipment"
+        ],
+        "ru": [
+          "Трансфер туда и обратно",
+          "2 погружения с инструктором",
+          "Полное снаряжение для дайвинга",
+          "Вкусный обед и напитки",
+          "Маски и ласты для снорклинга"
+        ],
+        "fr": [
+          "Transfert aller-retour",
+          "2 plongées avec moniteur",
+          "Équipement complet de plongée",
+          "Déjeuner chaud et boissons",
+          "Matériel de snorkeling"
+        ],
+        "pl": [
+          "Transfer w obie strony",
+          "2 nurkowania z instruktorem",
+          "Kompletny sprzęt nurkowy",
+          "Ciepły obiad i napoje",
+          "Sprzęt do snorkelingu"
+        ]
       },
       "featured": false,
       "active": true
@@ -269,10 +341,34 @@
         "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip transfer", "Ras Mohammed Marine Reserve entry", "White Island stopover", "Delicious buffet lunch & drinks", "Snorkeling guide"],
-        "ru": ["Трансфер из/в отель", "Билеты в морской заповедник", "Высадка на Белый Остров", "Обед (шведский стол) и напитки", "Инструктор по снорклингу"],
-        "fr": ["Transfert de l'hôtel", "Entrée de la réserve marine", "Arrêt sur l'Île Blanche", "Déjeuner buffet et boissons", "Guide de snorkeling"],
-        "pl": ["Transfer hotelowy", "Opłaty wstępu do rezerwatu", "Pobyt na Białej Wyspie", "Lunch w formie bufetu i napoje", "Przewodnik snorkelingu"]
+        "en": [
+          "Hotel round-trip transfer",
+          "Ras Mohammed Marine Reserve entry",
+          "White Island stopover",
+          "Delicious buffet lunch & drinks",
+          "Snorkeling guide"
+        ],
+        "ru": [
+          "Трансфер из/в отель",
+          "Билеты в морской заповедник",
+          "Высадка на Белый Остров",
+          "Обед (шведский стол) и напитки",
+          "Инструктор по снорклингу"
+        ],
+        "fr": [
+          "Transfert de l'hôtel",
+          "Entrée de la réserve marine",
+          "Arrêt sur l'Île Blanche",
+          "Déjeuner buffet et boissons",
+          "Guide de snorkeling"
+        ],
+        "pl": [
+          "Transfer hotelowy",
+          "Opłaty wstępu do rezerwatu",
+          "Pobyt na Białej Wyspie",
+          "Lunch w formie bufetu i napoje",
+          "Przewodnik snorkelingu"
+        ]
       },
       "featured": true,
       "active": true
@@ -309,10 +405,34 @@
         "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["4x4 Jeep transport from Sharm", "Canyon hike with local Bedouin guide", "Blue Hole entrance & snorkeling", "Bedouin camel ride along the coast", "Lunch at coastal restaurant in Dahab"],
-        "ru": ["Трансфер на джипах 4х4", "Пешая прогулка по каньону с гидом", "Вход в Голубую Дыру и снорклинг", "Катание на верблюдах у моря", "Обед в ресторане на берегу"],
-        "fr": ["Transport en Jeep 4x4", "Randonnée dans le canyon avec guide", "Baignade au Blue Hole", "Balade à dos de chameau", "Déjeuner en bord de mer à Dahab"],
-        "pl": ["Transport jeepem 4x4 z hotelu", "Wędrówka kanionem z przewodnikiem", "Wstęp do Blue Hole i snorkeling", "Jazda na wielbłądzie przy plaży", "Obiad w restauracji nad brzegiem morza"]
+        "en": [
+          "4x4 Jeep transport from Sharm",
+          "Canyon hike with local Bedouin guide",
+          "Blue Hole entrance & snorkeling",
+          "Bedouin camel ride along the coast",
+          "Lunch at coastal restaurant in Dahab"
+        ],
+        "ru": [
+          "Трансфер на джипах 4х4",
+          "Пешая прогулка по каньону с гидом",
+          "Вход в Голубую Дыру и снорклинг",
+          "Катание на верблюдах у моря",
+          "Обед в ресторане на берегу"
+        ],
+        "fr": [
+          "Transport en Jeep 4x4",
+          "Randonnée dans le canyon avec guide",
+          "Baignade au Blue Hole",
+          "Balade à dos de chameau",
+          "Déjeuner en bord de mer à Dahab"
+        ],
+        "pl": [
+          "Transport jeepem 4x4 z hotelu",
+          "Wędrówka kanionem z przewodnikiem",
+          "Wstęp do Blue Hole i snorkeling",
+          "Jazda na wielbłądzie przy plaży",
+          "Obiad w restauracji nad brzegiem morza"
+        ]
       },
       "featured": true,
       "active": true
@@ -349,10 +469,34 @@
         "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel pickup and drop-off", "Professional Bedouin mountain guide", "St. Catherine Monastery entrance", "Torch/flashlight for the night trek", "Breakfast box"],
-        "ru": ["Трансфер из отеля и обратно", "Бедуинский горный проводник", "Посещение монастыря Св. Екатерины", "Фонарики для ночного подъема", "Завтрак"],
-        "fr": ["Prise en charge à l'hôtel", "Guide bédouin de montagne", "Entrée au monastère Sainte-Catherine", "Lampe de poche pour la randonnée", "Petit-déjeuner"],
-        "pl": ["Transfer z i do hotelu", "Lokalny przewodnik górski", "Zwiedzanie klasztoru św. Katarzyny", "Latarki na nocne wejście", "Pudełko śniadaniowe"]
+        "en": [
+          "Hotel pickup and drop-off",
+          "Professional Bedouin mountain guide",
+          "St. Catherine Monastery entrance",
+          "Torch/flashlight for the night trek",
+          "Breakfast box"
+        ],
+        "ru": [
+          "Трансфер из отеля и обратно",
+          "Бедуинский горный проводник",
+          "Посещение монастыря Св. Екатерины",
+          "Фонарики для ночного подъема",
+          "Завтрак"
+        ],
+        "fr": [
+          "Prise en charge à l'hôtel",
+          "Guide bédouin de montagne",
+          "Entrée au monastère Sainte-Catherine",
+          "Lampe de poche pour la randonnée",
+          "Petit-déjeuner"
+        ],
+        "pl": [
+          "Transfer z i do hotelu",
+          "Lokalny przewodnik górski",
+          "Zwiedzanie klasztoru św. Katarzyny",
+          "Latarki na nocne wejście",
+          "Pudełko śniadaniowe"
+        ]
       },
       "featured": false,
       "active": true
@@ -382,17 +526,41 @@
       "price": 45,
       "price_child": 25,
       "duration": "9 Hours (06:30 - 16:00)",
-      "rating": 5.0,
+      "rating": 5,
       "reviews_count": 310,
       "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
       "gallery": [
         "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip transport", "Yacht cruise to Sataya Lagoon", "2 Guided dolphin swimming sessions", "Full snorkeling gear & life vests", "Chef-prepared lunch buffet & drinks"],
-        "ru": ["Трансфер туда и обратно", "Круиз на яхте к лагуне Сатая", "2 сессии плавания с дельфинами с гидом", "Маски, трубки, ласты и жилеты", "Обед от шеф-повара и напитки"],
-        "fr": ["Transfert de votre hôtel", "Croisière en yacht vers Sataya", "2 sessions guidées de nage avec dauphins", "Équipement de snorkeling et gilets", "Déjeuner buffet frais et boissons"],
-        "pl": ["Transfer z/do hotelu", "Rejs jachtem do laguny Sataya", "2 sesje pływania z delfinami z przewodnikiem", "Kompletny sprzęt do snorkelingu", "Lunch w formie bufetu i napoje"]
+        "en": [
+          "Hotel round-trip transport",
+          "Yacht cruise to Sataya Lagoon",
+          "2 Guided dolphin swimming sessions",
+          "Full snorkeling gear & life vests",
+          "Chef-prepared lunch buffet & drinks"
+        ],
+        "ru": [
+          "Трансфер туда и обратно",
+          "Круиз на яхте к лагуне Сатая",
+          "2 сессии плавания с дельфинами с гидом",
+          "Маски, трубки, ласты и жилеты",
+          "Обед от шеф-повара и напитки"
+        ],
+        "fr": [
+          "Transfert de votre hôtel",
+          "Croisière en yacht vers Sataya",
+          "2 sessions guidées de nage avec dauphins",
+          "Équipement de snorkeling et gilets",
+          "Déjeuner buffet frais et boissons"
+        ],
+        "pl": [
+          "Transfer z/do hotelu",
+          "Rejs jachtem do laguny Sataya",
+          "2 sesje pływania z delfinami z przewodnikiem",
+          "Kompletny sprzęt do snorkelingu",
+          "Lunch w formie bufetu i napoje"
+        ]
       },
       "featured": true,
       "active": true
@@ -429,10 +597,34 @@
         "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip air-conditioned transfer", "Abu Dabbab protected beach entry ticket", "Beach umbrella, sunbed & shower facilities", "Snorkeling guide in water", "Snorkeling equipment"],
-        "ru": ["Трансфер на комфортабельном автобусе", "Входной билет на пляж заповедника", "Шезлонги, зонтики и душ на пляже", "Инструктор по снорклингу в воде", "Маски и ласты"],
-        "fr": ["Transport climatisé aller-retour", "Billet d'entrée à la plage protégée", "Transat, parasol et douches", "Guide de snorkeling dans l'eau", "Matériel de snorkeling"],
-        "pl": ["Klimatyzowany transfer w obie strony", "Bilet wstępu na chronioną plażę", "Leżak, parasol i prysznice", "Przewodnik snorkelingu w wodzie", "Sprzęt do snorkelingu"]
+        "en": [
+          "Hotel round-trip air-conditioned transfer",
+          "Abu Dabbab protected beach entry ticket",
+          "Beach umbrella, sunbed & shower facilities",
+          "Snorkeling guide in water",
+          "Snorkeling equipment"
+        ],
+        "ru": [
+          "Трансфер на комфортабельном автобусе",
+          "Входной билет на пляж заповедника",
+          "Шезлонги, зонтики и душ на пляже",
+          "Инструктор по снорклингу в воде",
+          "Маски и ласты"
+        ],
+        "fr": [
+          "Transport climatisé aller-retour",
+          "Billet d'entrée à la plage protégée",
+          "Transat, parasol et douches",
+          "Guide de snorkeling dans l'eau",
+          "Matériel de snorkeling"
+        ],
+        "pl": [
+          "Klimatyzowany transfer w obie strony",
+          "Bilet wstępu na chronioną plażę",
+          "Leżak, parasol i prysznice",
+          "Przewodnik snorkelingu w wodzie",
+          "Sprzęt do snorkelingu"
+        ]
       },
       "featured": false,
       "active": true
@@ -462,17 +654,41 @@
       "price": 40,
       "price_child": 22,
       "duration": "9 Hours (06:30 - 16:30)",
-      "rating": 5.0,
+      "rating": 5,
       "reviews_count": 140,
       "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
       "gallery": [
         "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip transport", "Luxury boat cruise through the archipelago", "Island walking stopover & photography", "2 Snorkeling stops with guide", "Lunch buffet and soft drinks"],
-        "ru": ["Трансфер из отеля и обратно", "Круиз на комфортабельной яхте", "Высадка на песчаный остров и фотосессия", "2 остановки для снорклинга с гидом", "Обед и прохладительные напитки"],
-        "fr": ["Transfert aller-retour", "Croisière en bateau tout confort", "Arrêt débarquement sur l'île", "2 arrêts snorkeling avec guide", "Déjeuner buffet et boissons fraîches"],
-        "pl": ["Transfer w obie strony z hotelu", "Rejs komfortowym statkiem", "Zejście na bezludną wyspę i czas na zdjęcia", "2 przystanki na snorkeling z przewodnikiem", "Lunch w formie bufetu i napoje"]
+        "en": [
+          "Hotel round-trip transport",
+          "Luxury boat cruise through the archipelago",
+          "Island walking stopover & photography",
+          "2 Snorkeling stops with guide",
+          "Lunch buffet and soft drinks"
+        ],
+        "ru": [
+          "Трансфер из отеля и обратно",
+          "Круиз на комфортабельной яхте",
+          "Высадка на песчаный остров и фотосессия",
+          "2 остановки для снорклинга с гидом",
+          "Обед и прохладительные напитки"
+        ],
+        "fr": [
+          "Transfert aller-retour",
+          "Croisière en bateau tout confort",
+          "Arrêt débarquement sur l'île",
+          "2 arrêts snorkeling avec guide",
+          "Déjeuner buffet et boissons fraîches"
+        ],
+        "pl": [
+          "Transfer w obie strony z hotelu",
+          "Rejs komfortowym statkiem",
+          "Zejście na bezludną wyspę i czas na zdjęcia",
+          "2 przystanki na snorkeling z przewodnikiem",
+          "Lunch w formie bufetu i napoje"
+        ]
       },
       "featured": true,
       "active": true
@@ -509,10 +725,34 @@
         "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel / resort pickup in Alamein & North Coast", "Luxury yacht cruise with captain & crew", "Fresh seafood & grilled lunch", "Non-alcoholic beverages & seasonal fruits", "Stand-up paddle boards & swimming gear"],
-        "ru": ["Трансфер из отелей Эль-Аламейна и побережья", "Круиз на современной яхте с экипажем", "Обед с морепродуктами и грилем", "Напитки, свежие фрукты и кофе", "Сапборды и снаряжение для плавания"],
-        "fr": ["Transfert depuis votre hôtel ou résidence", "Croisière en yacht avec capitaine et équipage", "Déjeuner gastronomique poissons et grillades", "Boissons fraîches et fruits de saison", "Paddles et matériel de baignade"],
-        "pl": ["Transfer z hoteli w Alamein i na wybrzeżu", "Rejs luksusowym jachtem z załogą", "Wykwintny obiad z rybami i owocami morza", "Napoje, owoce i kawa", "Deski SUP i sprzęt do pływania"]
+        "en": [
+          "Hotel / resort pickup in Alamein & North Coast",
+          "Luxury yacht cruise with captain & crew",
+          "Fresh seafood & grilled lunch",
+          "Non-alcoholic beverages & seasonal fruits",
+          "Stand-up paddle boards & swimming gear"
+        ],
+        "ru": [
+          "Трансфер из отелей Эль-Аламейна и побережья",
+          "Круиз на современной яхте с экипажем",
+          "Обед с морепродуктами и грилем",
+          "Напитки, свежие фрукты и кофе",
+          "Сапборды и снаряжение для плавания"
+        ],
+        "fr": [
+          "Transfert depuis votre hôtel ou résidence",
+          "Croisière en yacht avec capitaine et équipage",
+          "Déjeuner gastronomique poissons et grillades",
+          "Boissons fraîches et fruits de saison",
+          "Paddles et matériel de baignade"
+        ],
+        "pl": [
+          "Transfer z hoteli w Alamein i na wybrzeżu",
+          "Rejs luksusowym jachtem z załogą",
+          "Wykwintny obiad z rybami i owocami morza",
+          "Napoje, owoce i kawa",
+          "Deski SUP i sprzęt do pływania"
+        ]
       },
       "featured": true,
       "active": true
@@ -549,10 +789,34 @@
         "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel pickup and drop-off", "Expert multilingual historian guide", "Entry tickets to Military Museum", "Visits to German, Italian & Commonwealth memorials", "Bottled water and soft drinks"],
-        "ru": ["Трансфер из отеля и обратно", "Профессиональный гид-историк", "Входные билеты в военный музей", "Посещение мемориалов трех сторон", "Минеральная вода и напитки"],
-        "fr": ["Transport privé aller-retour", "Guide conférencier historien", "Billets d'entrée au musée militaire", "Visite des différents mémoriaux", "Bouteilles d'eau et rafraîchissements"],
-        "pl": ["Transfer w obie strony", "Przewodnik historyk", "Bilety wstępu do Muzeum Wojskowego", "Wizyty na cmentarzach wojennych", "Woda mineralna i napoje"]
+        "en": [
+          "Hotel pickup and drop-off",
+          "Expert multilingual historian guide",
+          "Entry tickets to Military Museum",
+          "Visits to German, Italian & Commonwealth memorials",
+          "Bottled water and soft drinks"
+        ],
+        "ru": [
+          "Трансфер из отеля и обратно",
+          "Профессиональный гид-историк",
+          "Входные билеты в военный музей",
+          "Посещение мемориалов трех сторон",
+          "Минеральная вода и напитки"
+        ],
+        "fr": [
+          "Transport privé aller-retour",
+          "Guide conférencier historien",
+          "Billets d'entrée au musée militaire",
+          "Visite des différents mémoriaux",
+          "Bouteilles d'eau et rafraîchissements"
+        ],
+        "pl": [
+          "Transfer w obie strony",
+          "Przewodnik historyk",
+          "Bilety wstępu do Muzeum Wojskowego",
+          "Wizyty na cmentarzach wojennych",
+          "Woda mineralna i napoje"
+        ]
       },
       "featured": false,
       "active": true
@@ -589,10 +853,34 @@
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
       ],
       "included": {
-        "en": ["Hotel round-trip transport", "2-Hour semi-submarine cruise", "Underwater viewing cabin seat", "Fish feeding show by professional diver", "Soft drinks and water onboard"],
-        "ru": ["Трансфер из/в отель", "Морская прогулка на батискафе", "Место в панорамной подводной каюте", "Шоу кормления рыб аквалангистом", "Безалкогольные напитки и вода"],
-        "fr": ["Transfert aller-retour", "Croisière en semi-sous-marin", "Siège dans la cabine sous-marine vitrée", "Spectacle de nourrissage des poissons", "Boissons fraîches incluses"],
-        "pl": ["Transfer hotelowy", "Rejs pół-łodzią podwodną", "Miejsce w panoramicznej kabinie podwodnej", "Pokaz karmienia ryb przez nurka", "Napoje bezalkoholowe"]
+        "en": [
+          "Hotel round-trip transport",
+          "2-Hour semi-submarine cruise",
+          "Underwater viewing cabin seat",
+          "Fish feeding show by professional diver",
+          "Soft drinks and water onboard"
+        ],
+        "ru": [
+          "Трансфер из/в отель",
+          "Морская прогулка на батискафе",
+          "Место в панорамной подводной каюте",
+          "Шоу кормления рыб аквалангистом",
+          "Безалкогольные напитки и вода"
+        ],
+        "fr": [
+          "Transfert aller-retour",
+          "Croisière en semi-sous-marin",
+          "Siège dans la cabine sous-marine vitrée",
+          "Spectacle de nourrissage des poissons",
+          "Boissons fraîches incluses"
+        ],
+        "pl": [
+          "Transfer hotelowy",
+          "Rejs pół-łodzią podwodną",
+          "Miejsce w panoramicznej kabinie podwodnej",
+          "Pokaz karmienia ryb przez nurka",
+          "Napoje bezalkoholowe"
+        ]
       },
       "featured": false,
       "active": true

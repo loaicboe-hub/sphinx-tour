@@ -70,21 +70,90 @@
     </div>
   </header>
 
-  <!-- ==================== HERO SECTION ==================== -->
-  <section class="hero">
-    <div class="hero-bg-overlay"></div>
-    <div class="container hero-content">
-      <div class="badge-glow" data-i18n="hero_badge">
-        ✨ Official Egypt Excursions & Boat Trips
+  <!-- ==================== HERO & ROTATING BANNER SECTION ==================== -->
+  <section class="hero-section">
+    <div class="container">
+      
+      <!-- Top Title & Subtitle Intro -->
+      <div class="hero-header-box">
+        <div class="badge-glow" data-i18n="hero_badge">
+          ✨ Official Egypt Excursions & Boat Trips
+        </div>
+        <h1 class="hero-title" data-i18n="hero_title" style="color: var(--text-heading); text-shadow: none; margin-bottom: 12px;">
+          Unforgettable Excursions in Egypt
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero_subtitle" style="color: var(--text-muted); text-shadow: none; margin-bottom: 24px;">
+          Book premium sea cruises, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein with instant WhatsApp confirmation.
+        </p>
       </div>
-      <h1 class="hero-title" data-i18n="hero_title">
-        Unforgettable Excursions in Egypt
-      </h1>
-      <p class="hero-subtitle" data-i18n="hero_subtitle">
-        Book premium sea cruises, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein with instant WhatsApp confirmation.
-      </p>
 
-      <div class="hero-actions">
+      <!-- ROTATING BANNER (Matching User's Reference Image) -->
+      <div class="rotating-banner-wrapper" id="rotatingBannerWrapper">
+        <div class="banner-slider" id="bannerSlider">
+          
+          <!-- Slide 1: Real Red Sea Luxury Cruise Yacht (Golden Sunset) -->
+          <div class="banner-slide active" data-slide="0">
+            <img src="/uploads/banner_1.jpg" alt="Red Sea Luxury Yacht Cruise" class="banner-slide-img" />
+            <div class="banner-overlay"></div>
+            <div class="banner-pill-tag">
+              <span class="banner-pill-text" data-i18n="banner_slide_1">5★ VIP LUXURY YACHT • RED SEA RIVIERA</span>
+            </div>
+          </div>
+
+          <!-- Slide 2: Real Orange Bay Island Shallow Turquoise Lagoon -->
+          <div class="banner-slide" data-slide="1">
+            <img src="/uploads/banner_2.jpg" alt="Orange Bay Island Hurghada" class="banner-slide-img" />
+            <div class="banner-overlay"></div>
+            <div class="banner-pill-tag">
+              <span class="banner-pill-text" data-i18n="banner_slide_2">★ ORANGE BAY ISLAND • CARIBBEAN OF EGYPT</span>
+            </div>
+          </div>
+
+          <!-- Slide 3: Real Red Sea Quad Safari Dunes at Sunset -->
+          <div class="banner-slide" data-slide="2">
+            <img src="/uploads/banner_3.jpg" alt="Desert Safari Hurghada & Sinai" class="banner-slide-img" />
+            <div class="banner-overlay"></div>
+            <div class="banner-pill-tag">
+              <span class="banner-pill-text" data-i18n="banner_slide_3">★ MEGA DESERT SAFARI • HURGHADA & SINAI</span>
+            </div>
+          </div>
+
+          <!-- Slide 4: Real Sataya Dolphin Reef Underwater Lagoon -->
+          <div class="banner-slide" data-slide="3">
+            <img src="/uploads/banner_4.jpg" alt="Sataya Dolphin Reef Marsa Alam" class="banner-slide-img" />
+            <div class="banner-overlay"></div>
+            <div class="banner-pill-tag">
+              <span class="banner-pill-text" data-i18n="banner_slide_4">★ SATAYA DOLPHIN REEF • MARSA ALAM</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Left / Right Navigation Buttons (Circular Dark Glass) -->
+        <button class="banner-nav-btn prev" id="bannerPrevBtn" aria-label="Previous Slide">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="banner-nav-btn next" id="bannerNextBtn" aria-label="Next Slide">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <!-- Bottom Center Navigation Capsule (Dots + Gold Pill + Pause/Play) -->
+        <div class="banner-controls-capsule">
+          <div class="banner-dots" id="bannerDotsContainer">
+            <button class="banner-dot active" data-index="0" aria-label="Slide 1"></button>
+            <button class="banner-dot" data-index="1" aria-label="Slide 2"></button>
+            <button class="banner-dot" data-index="2" aria-label="Slide 3"></button>
+            <button class="banner-dot" data-index="3" aria-label="Slide 4"></button>
+          </div>
+          <button class="banner-play-toggle" id="bannerPlayToggle" aria-label="Pause Auto-rotate">
+            <span id="playToggleIcon">⏸</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Buttons Below Banner -->
+      <div class="hero-actions" style="margin-top: 32px; margin-bottom: 24px;">
         <a href="#toursSection" class="btn-primary" data-i18n="hero_cta_explore">
           <span>🔍</span> Explore Tours
         </a>
@@ -124,6 +193,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </section>
 

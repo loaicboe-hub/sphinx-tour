@@ -18,10 +18,138 @@ let bookingChildren = 0;
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   initLanguage();
+  initRotatingBanner();
   fetchData();
   setupEventListeners();
   setDefaultBookingDate();
 });
+
+/* ==================== ROTATING BANNER CONTROLLER ==================== */
+let bannerCurrentIndex = 0;
+let bannerInterval = null;
+let bannerIsPlaying = true;
+const BANNER_AUTOPLAY_DELAY = 5000;
+
+function initRotatingBanner() {
+  const wrapper = document.getElementById('rotatingBannerWrapper');
+  const slides = document.querySelectorAll('.banner-slide');
+  const dots = document.querySelectorAll('.banner-dot');
+  const prevBtn = document.getElementById('bannerPrevBtn');
+  const nextBtn = document.getElementById('bannerNextBtn');
+  const playToggle = document.getElementById('bannerPlayToggle');
+  const playIcon = document.getElementById('playToggleIcon');
+
+  if (!wrapper || slides.length === 0) return;
+
+  function goToSlide(idx) {
+    if (idx < 0) idx = slides.length - 1;
+    if (idx >= slides.length) idx = 0;
+
+    bannerCurrentIndex = idx;
+
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === idx);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === idx);
+    });
+  }
+
+  function nextSlide() {
+    goToSlide(bannerCurrentIndex + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(bannerCurrentIndex - 1);
+  }
+
+  function startBannerTimer() {
+    stopBannerTimer();
+    bannerInterval = setInterval(nextSlide, BANNER_AUTOPLAY_DELAY);
+    bannerIsPlaying = true;
+    if (playIcon) playIcon.textContent = '⏸';
+  }
+
+  function stopBannerTimer() {
+    if (bannerInterval) {
+      clearInterval(bannerInterval);
+      bannerInterval = null;
+    }
+  }
+
+  function togglePlay() {
+    if (bannerIsPlaying) {
+      stopBannerTimer();
+      bannerIsPlaying = false;
+      if (playIcon) playIcon.textContent = '▶';
+    } else {
+      startBannerTimer();
+      bannerIsPlaying = true;
+      if (playIcon) playIcon.textContent = '⏸';
+    }
+  }
+
+  // Event handlers
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      if (bannerIsPlaying) startBannerTimer();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      if (bannerIsPlaying) startBannerTimer();
+    });
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-index'), 10);
+      goToSlide(idx);
+      if (bannerIsPlaying) startBannerTimer();
+    });
+  });
+
+  if (playToggle) {
+    playToggle.addEventListener('click', togglePlay);
+  }
+
+  // Hover to pause, leave to resume
+  wrapper.addEventListener('mouseenter', () => {
+    if (bannerIsPlaying) stopBannerTimer();
+  });
+
+  wrapper.addEventListener('mouseleave', () => {
+    if (bannerIsPlaying) startBannerTimer();
+  });
+
+  // Mobile touch swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  wrapper.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  wrapper.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      if (bannerIsPlaying) startBannerTimer();
+    }
+  }, { passive: true });
+
+  // Start auto-rotation
+  startBannerTimer();
+}
 
 // Fetch all public data from server
 async function fetchData() {

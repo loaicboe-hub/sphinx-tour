@@ -73,7 +73,11 @@ const TRANSLATIONS = {
     whatsapp_msg_children: "Children",
     whatsapp_msg_hotel: "Hotel:",
     whatsapp_msg_total: "Total Estimate:",
-    whatsapp_msg_link: "Website Link:"
+    whatsapp_msg_link: "Website Link:",
+    banner_slide_1: "5★ VIP LUXURY YACHT • RED SEA RIVIERA",
+    banner_slide_2: "★ ORANGE BAY ISLAND • CARIBBEAN OF EGYPT",
+    banner_slide_3: "★ MEGA DESERT SAFARI • HURGHADA & SINAI",
+    banner_slide_4: "★ SATAYA DOLPHIN REEF • MARSA ALAM"
   },
   ru: {
     site_title: "Egypt Voyage | Экскурсии в Хургаде, Шарме и Марса Аламе",
@@ -149,7 +153,11 @@ const TRANSLATIONS = {
     whatsapp_msg_children: "Детей",
     whatsapp_msg_hotel: "Отель:",
     whatsapp_msg_total: "Примерная сумма:",
-    whatsapp_msg_link: "Ссылка на сайте:"
+    whatsapp_msg_link: "Ссылка на сайте:",
+    banner_slide_1: "5★ VIP ЯХТЫ И КРУИЗЫ • КРАСНОЕ МОРЕ",
+    banner_slide_2: "★ ОСТРОВ ОРАНЖ БЕЙ • ЕГИПЕТСКИЕ КАРИБЫ",
+    banner_slide_3: "★ МЕГА САФАРИ • КВАДРОЦИКЛЫ И ПУСТЫНЯ",
+    banner_slide_4: "★ РИФ САТАЯ • ПЛАВАНИЕ С ДЕЛЬФИНАМИ"
   },
   fr: {
     site_title: "Egypt Voyage | Excursions en Mer Rouge & Sinaï",
@@ -225,7 +233,11 @@ const TRANSLATIONS = {
     whatsapp_msg_children: "Enfants",
     whatsapp_msg_hotel: "Hôtel :",
     whatsapp_msg_total: "Total estimé :",
-    whatsapp_msg_link: "Lien de l'excursion :"
+    whatsapp_msg_link: "Lien de l'excursion :",
+    banner_slide_1: "5★ YACHT VIP & CROISIÈRES • MER ROUGE",
+    banner_slide_2: "★ ÎLE ORANGE BAY • CARAÏBES D'ÉGYPTE",
+    banner_slide_3: "★ MEGA SAFARI DÉSERT • DUNES & MONTAGNES",
+    banner_slide_4: "★ RÉCIF DES DAUPHINS • MARSA ALAM"
   },
   pl: {
     site_title: "Egypt Voyage | Wycieczki fakultatywne w Egipcie",
@@ -301,6 +313,10 @@ const TRANSLATIONS = {
     whatsapp_msg_children: "Dzieci",
     whatsapp_msg_hotel: "Hotel:",
     whatsapp_msg_total: "Szacowany koszt:",
-    whatsapp_msg_link: "Link do wycieczki:"
+    whatsapp_msg_link: "Link do wycieczki:",
+    banner_slide_1: "5★ LUKSUSOWY JACHT • MORZE CZERWONE",
+    banner_slide_2: "★ WYSPA ORANGE BAY • EGIPSKIE KARAIBY",
+    banner_slide_3: "★ MEGA SAFARI PUSTYNNE • ZŁOTE WYDMY",
+    banner_slide_4: "★ RAFA SATAYA • DZIKIE DELFINY"
   }
 };
