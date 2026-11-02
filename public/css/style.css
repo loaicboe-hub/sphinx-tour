@@ -6,8 +6,8 @@
 
 :root {
   /* Bright, Clean Light Theme Palette */
-  --bg-body: #F8FAFC;
-  --bg-secondary: #F1F5F9;
+  --bg-body: #FFFFFF;
+  --bg-secondary: #F8FAFC;
   --bg-white: #FFFFFF;
   --bg-card: #FFFFFF;
   --bg-card-hover: #FFFFFF;
@@ -608,6 +608,7 @@ button {
 .section {
   padding: 95px 0;
   position: relative;
+  background: #FFFFFF;
 }
 
 .section-header {
