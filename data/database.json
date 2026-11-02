@@ -1,0 +1,602 @@
+{
+  "settings": {
+    "site_name": "Red Sea & Egypt Excursions",
+    "whatsapp_number": "201012345678",
+    "contact_email": "info@redseaexcursions.com",
+    "phone": "+20 101 234 5678",
+    "currency": "€",
+    "currency_code": "EUR",
+    "admin_pin": "admin123",
+    "social_facebook": "https://facebook.com",
+    "social_instagram": "https://instagram.com",
+    "social_telegram": "https://t.me"
+  },
+  "cities": [
+    {
+      "id": "hurghada",
+      "slug": "hurghada",
+      "names": {
+        "en": "Hurghada",
+        "ru": "Хургада",
+        "fr": "Hourghada",
+        "pl": "Hurghada"
+      },
+      "taglines": {
+        "en": "Red Sea Riviera & Island Paradises",
+        "ru": "Ривьера Красного моря и райские острова",
+        "fr": "Riviera de la Mer Rouge et îles paradisiaques",
+        "pl": "Riwiera Morza Czerwonego i rajskie wyspy"
+      },
+      "descriptions": {
+        "en": "Famous for turquoise bays, vibrant coral reefs, world-class diving, and desert quad safaris along the golden coast.",
+        "ru": "Знаменита бирюзовыми лагунами, коралловыми рифами, дайвингом мирового класса и сафари по золотой пустыне.",
+        "fr": "Célèbre pour ses baies turquoises, récifs coralliens spectaculaires, plongée sous-marine et safaris en quad.",
+        "pl": "Słynie z turkusowych zatok, raf koralowych, nurkowania światowej klasy i safari na quadach po pustyni."
+      },
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=1200&q=80",
+      "order": 1,
+      "featured": true
+    },
+    {
+      "id": "sharm",
+      "slug": "sharm-el-sheikh",
+      "names": {
+        "en": "Sharm El Sheikh",
+        "ru": "Шарм-эль-Шейх",
+        "fr": "Charm el-Cheikh",
+        "pl": "Szarm el-Szejk"
+      },
+      "taglines": {
+        "en": "The Pearl of Sinai & Marine Sanctuaries",
+        "ru": "Жемчужина Синая и морские заповедники",
+        "fr": "La perle du Sinaï et sanctuaires marins",
+        "pl": "Perła Synaju i morskie rezerwaty"
+      },
+      "descriptions": {
+        "en": "Surrounded by Ras Mohammed National Park, crystal-clear straits of Tiran, Mount Sinai sunrises, and luxury nightlife.",
+        "ru": "Окружен заповедником Рас Мохаммед, проливом Тиран, рассветами на горе Синай и ночной жизнью.",
+        "fr": "Entouré par le parc national de Ras Mohammed, les détroits de Tiran et les levers de soleil sur le mont Sinaï.",
+        "pl": "Otoczony parkiem narodowym Ras Mohammed, cieśniną Tiran i wschodami słońca na górze Synaj."
+      },
+      "image": "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=1200&q=80",
+      "order": 2,
+      "featured": true
+    },
+    {
+      "id": "marsa-alam",
+      "slug": "marsa-alam",
+      "names": {
+        "en": "Marsa Alam",
+        "ru": "Марса Алам",
+        "fr": "Marsa Alam",
+        "pl": "Marsa Alam"
+      },
+      "taglines": {
+        "en": "Untouched Nature & Sea Turtles Haven",
+        "ru": "Нетронутая природа и рай морских черепах",
+        "fr": "Nature préservée et sanctuaire des tortues géantes",
+        "pl": "Dzika natura i przystań gigantycznych żółwi"
+      },
+      "descriptions": {
+        "en": "A tranquil southern jewel with pristine reefs, spinner dolphins at Sataya Reef, and sea cow (dugong) encounters.",
+        "ru": "Южный оазис первозданных рифов, дельфиньих бухт Сатая и редких морских коров в заливе Абу Даббаб.",
+        "fr": "Un joyau préservé du sud avec récifs intacts, dauphins de Sataya et dugongs de la baie d'Abu Dabbab.",
+        "pl": "Spokojna oaza z dziewiczymi rafami, delfinami w Sataya i diugoniami w zatoce Abu Dabbab."
+      },
+      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+      "order": 3,
+      "featured": true
+    },
+    {
+      "id": "alamein",
+      "slug": "alamein",
+      "names": {
+        "en": "Alamein & North Coast",
+        "ru": "Эль-Аламейн и Северное побережье",
+        "fr": "El Alamein & Côte Nord",
+        "pl": "El Alamein i Wybrzeże Północne"
+      },
+      "taglines": {
+        "en": "Mediterranean Luxury & Historic Heritage",
+        "ru": "Средиземноморская роскошь и историческое наследие",
+        "fr": "Luxe méditerranéen et patrimoine historique",
+        "pl": "Śródziemnomorski luksus i dziedzictwo historyczne"
+      },
+      "descriptions": {
+        "en": "The modern Egyptian Riviera with pure white sands, turquoise Mediterranean waters, WWII history, and VIP yachting.",
+        "ru": "Современная Ривьера с белоснежными песками, лазурным Средиземным морем, музеями ВОВ и яхтингом.",
+        "fr": "La nouvelle Riviera égyptienne avec sables blancs, eaux cristallines, histoire et yachting VIP.",
+        "pl": "Nowoczesna riwiera z białym piaskiem, turkusowym morzem, historią II Wojny Światowej i luksusowymi jachtami."
+      },
+      "image": "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=1200&q=80",
+      "order": 4,
+      "featured": true
+    }
+  ],
+  "tours": [
+    {
+      "id": 1,
+      "city_id": "hurghada",
+      "category": "island",
+      "names": {
+        "en": "Orange Bay Island VIP Yacht Cruise",
+        "ru": "VIP Морская прогулка на остров Оранж Бей",
+        "fr": "Croisière VIP en Yacht sur l'Île Orange Bay",
+        "pl": "Rejs luksusowym jachtem na wyspę Orange Bay"
+      },
+      "short_descriptions": {
+        "en": "The Egyptian Caribbean: 2 hours relaxation on Orange Island, 2 snorkeling stops, seafood lunch & water sports.",
+        "ru": "Египетские Карибы: 2 часа на острове Оранж, 2 снорклинга на коралловых рифах, обед из морепродуктов и банана-бот.",
+        "fr": "Les Caraïbes égyptiennes: 2h de détente sur l'île Orange, 2 arrêts snorkeling, déjeuner fruits de mer et bouée.",
+        "pl": "Egipskie Karaiby: 2 godziny na wyspie Orange Bay, 2 przystanki na snorkeling, lunch z owocami morza i sporty wodne."
+      },
+      "descriptions": {
+        "en": "Experience a luxury full-day cruise to Orange Bay Island on Giftun National Park. Relax on sandy beaches with wooden swings in crystal shallow waters. Enjoy two guided snorkeling stops with colorful marine life, an open buffet lunch with soft drinks, plus banana boat water sports.",
+        "ru": "Насладитесь роскошным круизом на остров Оранж Бей в национальном парке Гифтун. Отдохните на белоснежном пляже с фотогеничными деревянными качелями в воде. В программу входят 2 остановки для снорклинга на красочных рифах, сытный обед 'шведский стол' с безалкогольными напитками и катание на банане.",
+        "fr": "Profitez d'une journée de croisière de luxe vers l'île d'Orange Bay. Détendez-vous sur les plages de sable fin avec des balançoires dans l'eau turquoise. Comprend deux sessions de snorkeling, un buffet de fruits de mer et des activités nautiques amusantes.",
+        "pl": "Przeżyj luksusowy całodniowy rejs na wyspę Orange Bay w Parku Narodowym Giftun. Zrelaksuj się na piaszczystej plaży ze słynnymi huśtawkami w krystalicznie czystej wodzie. Pakiet obejmuje 2 przystanki na snorkeling, lunch w formie bufetu i sporty wodne."
+      },
+      "price": 28,
+      "price_child": 15,
+      "duration": "8 Hours (08:30 - 16:30)",
+      "rating": 4.9,
+      "reviews_count": 340,
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel pickup & drop-off", "Snorkeling equipment & life jackets", "Orange Bay entrance fees", "Open buffet lunch & soft drinks", "Banana & sofa boat ride"],
+        "ru": ["Трансфер из/в отель", "Снаряжение для снорклинга и жилеты", "Входной билет на остров Оранж", "Обед (шведский стол) и напитки", "Катание на банане и таблетке"],
+        "fr": ["Transfert aller-retour depuis l'hôtel", "Équipement de snorkeling et gilets", "Frais d'entrée à Orange Bay", "Déjeuner buffet et boissons fraîches", "Bouée tractée et banane"],
+        "pl": ["Transfer z/do hotelu", "Sprzęt do snorkelingu i kamizelki", "Bilety wstępu na wyspę Orange Bay", "Lunch w formie bufetu i napoje", "Pływanie na bananie i sofie wodnej"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 2,
+      "city_id": "hurghada",
+      "category": "safari",
+      "names": {
+        "en": "Mega Desert Safari: Quad, Spider Buggy & Bedouin Show",
+        "ru": "Мега Сафари: Квадроциклы, Багги и Бедуинский ужин",
+        "fr": "Mega Safari Désert: Quad, Buggy Spider & Soirée Bédouine",
+        "pl": "Mega Safari Pustynne: Quady, Buggy i Kolacja Beduńska"
+      },
+      "short_descriptions": {
+        "en": "Drive 45 min Quad bike & 20 min Spider car through the desert, visit a Bedouin village, camel ride, BBQ dinner & Oriental show.",
+        "ru": "45 минут на квадроциклах и 20 минут на багги, посещение бедуинской деревни, катание на верблюдах, ужин барбекю и восточное шоу.",
+        "fr": "45 min de quad et 20 min de buggy dans le désert, village bédouin, promenade à dos de chameau, dîner barbecue et spectacle oriental.",
+        "pl": "45 min na quadach i 20 min na buggy przez pustynię, wioska beduińska, przejażdżka na wielbłądzie, kolacja BBQ i pokaz orientalny."
+      },
+      "descriptions": {
+        "en": "An adrenaline-fueled expedition into the heart of the Hurghada desert. Drive your own quad bike and spider car across golden sand dunes. Learn about authentic Bedouin lifestyle, sip Bedouin tea, ride a camel, and enjoy an enchanting BBQ dinner under the stars with Tanoura dance and fire show.",
+        "ru": "Захватывающее приключение в сердце пустыни Хургады. Прокатитесь на мощном квадроцикле и скоростном багги по дюнам. Познакомьтесь с бытом бедуинов, выпейте ароматный травяной чай, прокатитесь на верблюде и насладитесь вкусным ужином барбекю с танцем Танура и огненным шоу.",
+        "fr": "Une aventure pleine d'adrénaline au cœur du désert. Pilotez votre propre quad et buggy à travers les dunes dorées. Découvrez la vie bédouine, dégustez un thé traditionnel, montez à dos de chameau et savourez un dîner barbecue avec spectacle de feu.",
+        "pl": "Ekscytująca wyprawa w serce pustyni. Prowadź quada i buggy przez złote wydmy. Poznaj życie Beduinów, napij się tradycyjnej herbaty, przejedź się na wielbłądzie i delektuj się kolacją z grilla pod gwiazdami z pokazem ognia."
+      },
+      "price": 22,
+      "price_child": 12,
+      "duration": "5 Hours (13:30 - 19:00)",
+      "rating": 4.8,
+      "reviews_count": 289,
+      "image": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=900&q=80",
+        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel pickup & drop-off", "Quad bike & Spider car ride", "Camel ride & Bedouin tea", "BBQ Dinner & soft drinks", "Oriental folkloric and fire show"],
+        "ru": ["Трансфер из/в отель", "Катание на квадроцикле и багги", "Катание на верблюде и чай", "Ужин барбекю и напитки", "Восточное шоу и танец с огнем"],
+        "fr": ["Transfert aller-retour", "Conduite de quad et buggy", "Balade à dos de chameau et thé", "Dîner barbecue et boissons", "Spectacle oriental et cracheur de feu"],
+        "pl": ["Transfer z/do hotelu", "Jazda na quadzie i buggy", "Przejażdżka na wielbłądzie i herbata", "Kolacja grillowa z napojami", "Pokaz orientalny i fireshow"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 3,
+      "city_id": "hurghada",
+      "category": "diving",
+      "names": {
+        "en": "Scuba Diving Day: 2 Intro Dives & Coral Reefs",
+        "ru": "Дайвинг на яхте: 2 погружения с инструктором",
+        "fr": "Journée Plongée Sous-Marine: 2 immersions guidées",
+        "pl": "Całodniowe nurkowanie: 2 zejścia pod wodę z instruktorem"
+      },
+      "short_descriptions": {
+        "en": "Discover the underwater wonder of the Red Sea. 2 dives with private instructor, full gear, and hot lunch onboard.",
+        "ru": "Откройте для себя подводный мир Красного моря. 2 погружения с русскоязычным инструктором, полное снаряжение и обед.",
+        "fr": "Explorez les fonds marins de la Mer Rouge. 2 plongées avec moniteur certifié, équipement complet et déjeuner à bord.",
+        "pl": "Odkryj niezwykły podwodny świat Morza Czerwonego. 2 nurkowania z instruktorem, pełny sprzęt i obiad na jachcie."
+      },
+      "descriptions": {
+        "en": "Whether you are a beginner or experienced diver, embark on our luxury yacht to two premier dive sites in Hurghada. Accompanied by PADI certified instructors, you will encounter sea turtles, rays, and thousands of exotic fish in pristine coral gardens.",
+        "ru": "Независимо от опыта, наш круиз на комфортабельной яхте доставит вас к лучшим рифам Хургады. В сопровождении сертифицированных инструкторов вы совершите 2 безопасных погружения на глубину до 8 метров, увидите черепах, скатов и сотни видов ярких рыбок.",
+        "fr": "Que vous soyez débutant ou expérimenté, embarquez pour deux superbes spots de plongée. Accompagné d'un instructeur diplômé, admirez tortues de mer, raies et coraux multicolores en toute sécurité.",
+        "pl": "Niezależnie od doświadczenia, wybierz się na rejs jachtem na dwa najlepsze miejsca nurkowe. Pod opieką certyfikowanego instruktora zobaczysz żółwie morskie, płaszczki i bajeczne ogrody koralowe."
+      },
+      "price": 35,
+      "price_child": 20,
+      "duration": "7 Hours (08:30 - 15:30)",
+      "rating": 5.0,
+      "reviews_count": 198,
+      "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip transfer", "2 introductory dives with instructor", "Full modern scuba equipment", "Freshly cooked lunch & drinks", "Snorkeling equipment"],
+        "ru": ["Трансфер туда и обратно", "2 погружения с инструктором", "Полное снаряжение для дайвинга", "Вкусный обед и напитки", "Маски и ласты для снорклинга"],
+        "fr": ["Transfert aller-retour", "2 plongées avec moniteur", "Équipement complet de plongée", "Déjeuner chaud et boissons", "Matériel de snorkeling"],
+        "pl": ["Transfer w obie strony", "2 nurkowania z instruktorem", "Kompletny sprzęt nurkowy", "Ciepły obiad i napoje", "Sprzęt do snorkelingu"]
+      },
+      "featured": false,
+      "active": true
+    },
+    {
+      "id": 4,
+      "city_id": "sharm",
+      "category": "marine",
+      "names": {
+        "en": "Ras Mohammed National Park & White Island Cruise",
+        "ru": "Заповедник Рас Мохаммед и Белый Остров на VIP яхте",
+        "fr": "Parc National de Ras Mohammed & Île Blanche en Yacht",
+        "pl": "Park Narodowy Ras Mohammed i Biała Wyspa luksusowym jachtem"
+      },
+      "short_descriptions": {
+        "en": "Sail to the Maldives of Egypt: the magical sandbank of White Island and the protected reefs of Ras Mohammed.",
+        "ru": "Круиз на египетские Мальдивы: песчаная коса Белый Остров и охраняемые рифы всемирно известного парка Рас Мохаммед.",
+        "fr": "Naviguez vers les Maldives d'Égypte: le banc de sable féerique de l'Île Blanche et les coraux protégés de Ras Mohammed.",
+        "pl": "Popłyń na egipskie Malediwy: magiczną łachę piasku Biała Wyspa i chronione rafy Ras Mohammed."
+      },
+      "descriptions": {
+        "en": "Voted the #1 excursion in Sharm El Sheikh! Cruise towards the southernmost tip of the Sinai Peninsula. Stop at the ethereal White Island sandbank where emerald waters meet golden sand. Swim through Ras Mohammed's world-famous coral drop-offs teeming with marine biodiversity.",
+        "ru": "Экскурсия №1 в Шарм-эль-Шейхе! Круиз на великолепной яхте к самой южной точке Синайского полуострова. Высадка на завораживающий Белый Остров, где лазурные воды сливаются с мягким песком. 2 длительные остановки для снорклинга на заповедных рифах.",
+        "fr": "L'excursion incontournable à Charm el-Cheikh! Croisière vers la pointe sud du Sinaï. Arrêt sur l'incroyable Île Blanche et snorkeling le long des tombants coralliens spectaculaires de Ras Mohammed.",
+        "pl": "Wycieczka nr 1 w Szarm el-Szejk! Rejs na południowy kraniec Synaju. Lądowanie na zjawiskowej Białej Wyspie i snorkeling wzdłuż słynnych ścian koralowych Ras Mohammed."
+      },
+      "price": 30,
+      "price_child": 18,
+      "duration": "8 Hours (08:00 - 16:30)",
+      "rating": 4.9,
+      "reviews_count": 412,
+      "image": "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip transfer", "Ras Mohammed Marine Reserve entry", "White Island stopover", "Delicious buffet lunch & drinks", "Snorkeling guide"],
+        "ru": ["Трансфер из/в отель", "Билеты в морской заповедник", "Высадка на Белый Остров", "Обед (шведский стол) и напитки", "Инструктор по снорклингу"],
+        "fr": ["Transfert de l'hôtel", "Entrée de la réserve marine", "Arrêt sur l'Île Blanche", "Déjeuner buffet et boissons", "Guide de snorkeling"],
+        "pl": ["Transfer hotelowy", "Opłaty wstępu do rezerwatu", "Pobyt na Białej Wyspie", "Lunch w formie bufetu i napoje", "Przewodnik snorkelingu"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 5,
+      "city_id": "sharm",
+      "category": "adventure",
+      "names": {
+        "en": "Dahab Blue Hole & Canyon Jeep Adventure",
+        "ru": "Джип-тур в Дахаб: Голубая Дыра и Цветной Каньон",
+        "fr": "Aventure Jeep à Dahab: Blue Hole & Canyon Coloré",
+        "pl": "Wyprawa jeepem do Dahab: Blue Hole i Kolorowy Kanion"
+      },
+      "short_descriptions": {
+        "en": "4x4 Safari across Sinai mountains, hike the stunning canyon, snorkel the legendary Blue Hole, camel trek & Dahab bazaar.",
+        "ru": "Джип-сафари 4х4 по горам Синая, пешая прогулка по каньону, снорклинг в знаменитой Голубой Дырке и шопинг в Дахабе.",
+        "fr": "Safari 4x4 dans les montagnes du Sinaï, canyon, snorkeling au légendaire Blue Hole, chameau et souk de Dahab.",
+        "pl": "Safari jeepem 4x4 przez góry Synaju, wędrówka kanionem, snorkeling w słynnym Blue Hole i spacer po Dahab."
+      },
+      "descriptions": {
+        "en": "A legendary day tour combining adventure and natural wonders. Travel by 4WD jeep through Sinai's rugged canyons. Snorkel at the world-renowned Blue Hole coral wall, ride a camel along the seashore, and enjoy lunch at a seaside Bedouin tent before visiting Dahab town.",
+        "ru": "Легендарная экскурсия полного дня, сочетающая экстрим и чудеса природы. Поездка на джипах через живописные каньоны, снорклинг у легендарного кораллового провала 'Голубая Дыра', катание на верблюдах вдоль берега моря и восточный обед.",
+        "fr": "Une journée mémorable alliant aventure et beauté naturelle. Parcourez les canyons en 4x4, nagez dans le célèbre Blue Hole, chevauchez un dromadaire au bord de l'eau et visitez la charmante ville bohème de Dahab.",
+        "pl": "Niezapomniana wyprawa łącząca przygodę i piękno przyrody. Przejazd jeepem 4x4 przez kaniony, nurkowanie powierzchniowe w Blue Hole, przejażdżka na wielbłądach wzdłuż plaży i czas wolny w klimatycznym Dahab."
+      },
+      "price": 32,
+      "price_child": 18,
+      "duration": "10 Hours (07:30 - 17:30)",
+      "rating": 4.9,
+      "reviews_count": 275,
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["4x4 Jeep transport from Sharm", "Canyon hike with local Bedouin guide", "Blue Hole entrance & snorkeling", "Bedouin camel ride along the coast", "Lunch at coastal restaurant in Dahab"],
+        "ru": ["Трансфер на джипах 4х4", "Пешая прогулка по каньону с гидом", "Вход в Голубую Дыру и снорклинг", "Катание на верблюдах у моря", "Обед в ресторане на берегу"],
+        "fr": ["Transport en Jeep 4x4", "Randonnée dans le canyon avec guide", "Baignade au Blue Hole", "Balade à dos de chameau", "Déjeuner en bord de mer à Dahab"],
+        "pl": ["Transport jeepem 4x4 z hotelu", "Wędrówka kanionem z przewodnikiem", "Wstęp do Blue Hole i snorkeling", "Jazda na wielbłądzie przy plaży", "Obiad w restauracji nad brzegiem morza"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 6,
+      "city_id": "sharm",
+      "category": "culture",
+      "names": {
+        "en": "Mount Sinai Sunrise Hike & St. Catherine Monastery",
+        "ru": "Встреча рассвета на горе Моисея и монастырь Св. Екатерины",
+        "fr": "Lever de soleil sur le Mont Sinaï & Monastère Sainte-Catherine",
+        "pl": "Wschód słońca na Górze Synaj i Klasztor św. Katarzyny"
+      },
+      "short_descriptions": {
+        "en": "Spiritual night trek to the 2,285m summit where Moses received the Ten Commandments, followed by visiting the ancient UNESCO monastery.",
+        "ru": "Ночное восхождение на вершину (2285 м), где Моисей получил скрижали, и посещение древнейшего монастыря ЮНЕСКО.",
+        "fr": "Ascension nocturne du sommet où Moïse reçut les Tables de la Loi, puis visite du monastère historique classé à l'UNESCO.",
+        "pl": "Nocna wędrówka na szczyt (2285 m), gdzie Mojżesz otrzymał tablice przykazań, a następnie zwiedzanie klasztoru UNESCO."
+      },
+      "descriptions": {
+        "en": "An awe-inspiring pilgrimage and trekking journey. Climb Mount Sinai under a blanket of desert stars to watch one of the world's most glorious sunrises break over the rugged mountain peaks. Descend to explore St. Catherine's Monastery, the Burning Bush, and centuries of preserved holy relics.",
+        "ru": "Уникальное духовное и историческое путешествие. Поднимитесь на вершину горы Синай под звездным небом, чтобы встретить незабываемый рассвет солнца над горными хребтами. Затем посетите действующий монастырь Св. Екатерины с Неопалимой Купиной и древними иконами.",
+        "fr": "Un pèlerinage inoubliable au sommet du Mont Sinaï sous un ciel étoilé pour assister au lever du soleil majestueux. Visitez ensuite le plus ancien monastère chrétien en activité au monde et le Buisson Ardent.",
+        "pl": "Niezwykłe przeżycie duchowe i trekkingowe. Wejście na szczyt Góry Synaj pod rozgwieżdżonym niebem na spektakularny wschód słońca. Następnie zwiedzanie Klasztoru św. Katarzyny z Krzewem Gorejącym."
+      },
+      "price": 38,
+      "price_child": 25,
+      "duration": "14 Hours (20:30 - 11:30 Next Day)",
+      "rating": 4.8,
+      "reviews_count": 164,
+      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel pickup and drop-off", "Professional Bedouin mountain guide", "St. Catherine Monastery entrance", "Torch/flashlight for the night trek", "Breakfast box"],
+        "ru": ["Трансфер из отеля и обратно", "Бедуинский горный проводник", "Посещение монастыря Св. Екатерины", "Фонарики для ночного подъема", "Завтрак"],
+        "fr": ["Prise en charge à l'hôtel", "Guide bédouin de montagne", "Entrée au monastère Sainte-Catherine", "Lampe de poche pour la randonnée", "Petit-déjeuner"],
+        "pl": ["Transfer z i do hotelu", "Lokalny przewodnik górski", "Zwiedzanie klasztoru św. Katarzyny", "Latarki na nocne wejście", "Pudełko śniadaniowe"]
+      },
+      "featured": false,
+      "active": true
+    },
+    {
+      "id": 7,
+      "city_id": "marsa-alam",
+      "category": "marine",
+      "names": {
+        "en": "Sataya Dolphin Reef (Dolphin House) Boat Trip",
+        "ru": "Круиз к рифу Сатая: Плавание с дикими дельфинами",
+        "fr": "Récif des Dauphins de Sataya: Nage avec les Dauphins",
+        "pl": "Rejs na Rafę Sataya: Pływanie z dzikimi delfinami"
+      },
+      "short_descriptions": {
+        "en": "A 99% guaranteed encounter swimming alongside pods of playful spinner dolphins in their natural crystal lagoon.",
+        "ru": "Гарантия 99%: плавание бок о бок со стаями игривых длиннорылых дельфинов в их природной бирюзовой лагуне.",
+        "fr": "99% de chance de nager aux côtés de bancs de dauphins sauvages dans leur lagon turquoise protégé.",
+        "pl": "99% szansy na pływanie z dzikimi delfinami w ich naturalnej, turkusowej lagunie."
+      },
+      "descriptions": {
+        "en": "Sataya Reef, known as the Dolphin House of southern Egypt, is home to large pods of wild spinner dolphins. Sail out on a spacious yacht, dive into calm turquoise waters and swim naturally alongside dozens of friendly dolphins as they play, leap, and communicate.",
+        "ru": "Риф Сатая — главная жемчужина Марса Алама, где обитают большие семьи диких дельфинов. На комфортабельной яхте вы отправитесь в закрытую лагуну и сможете поплавать рядом с дельфинами в их естественной среде обитания.",
+        "fr": "Le récif de Sataya abrite des familles entières de dauphins à long bec. Embarquez sur un yacht spacieux pour vivre le rêve de nager en liberté avec ces créatures magiques dans un lagon aux eaux calmes et limpides.",
+        "pl": "Rafa Sataya to słynny 'Dom Delfinów', w którym żyją stada przyjaznych dzikich delfinów. Wypłyń przestronnym jachtem i zanurz się w krystalicznych wodach, pływając ramię w ramię z tymi wspaniałymi ssakami."
+      },
+      "price": 45,
+      "price_child": 25,
+      "duration": "9 Hours (06:30 - 16:00)",
+      "rating": 5.0,
+      "reviews_count": 310,
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip transport", "Yacht cruise to Sataya Lagoon", "2 Guided dolphin swimming sessions", "Full snorkeling gear & life vests", "Chef-prepared lunch buffet & drinks"],
+        "ru": ["Трансфер туда и обратно", "Круиз на яхте к лагуне Сатая", "2 сессии плавания с дельфинами с гидом", "Маски, трубки, ласты и жилеты", "Обед от шеф-повара и напитки"],
+        "fr": ["Transfert de votre hôtel", "Croisière en yacht vers Sataya", "2 sessions guidées de nage avec dauphins", "Équipement de snorkeling et gilets", "Déjeuner buffet frais et boissons"],
+        "pl": ["Transfer z/do hotelu", "Rejs jachtem do laguny Sataya", "2 sesje pływania z delfinami z przewodnikiem", "Kompletny sprzęt do snorkelingu", "Lunch w formie bufetu i napoje"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 8,
+      "city_id": "marsa-alam",
+      "category": "nature",
+      "names": {
+        "en": "Abu Dabbab Bay: Giant Sea Turtles & Dugong",
+        "ru": "Бухта Абу Даббаб: Гигантские морские черепахи и Дюгонь",
+        "fr": "Baie d'Abu Dabbab: Tortues Géantes & Dugong",
+        "pl": "Zatoka Abu Dabbab: Olbrzymie żółwie morskie i Diugoń"
+      },
+      "short_descriptions": {
+        "en": "Snorkel from the sandy shore to encounter massive green sea turtles and the rare endangered sea cow (dugong).",
+        "ru": "Снорклинг прямо с песчаного пляжа: гигантские зеленые черепахи и редчайшая морская корова (дюгонь).",
+        "fr": "Snorkeling direct depuis la plage pour observer les immenses tortues vertes et le rare dugong.",
+        "pl": "Snorkeling z piaszczystego brzegu: spotkanie z ogromnymi żółwiami zielonymi i unikalną krową morską."
+      },
+      "descriptions": {
+        "en": "Abu Dabbab is one of the world's most celebrated marine sanctuaries. With its gentle sandy entry, it is perfect for all ages. Swim with peaceful 2-meter long green sea turtles grazing on sea grass, and keep watch for the legendary, elusive Dugong.",
+        "ru": "Абу Даббаб — один из известнейших природных заповедников в мире. Удобный пологий песчаный заход в море идеален для детей и взрослых. Здесь можно вблизи наблюдать за двухметровыми черепахами и, если повезет, встретить морскую корову.",
+        "fr": "Abu Dabbab est une réserve naturelle mondialement réputée. Son accès facile par la plage permet à toute la famille d'admirer les majestueuses tortues marines broutant les herbiers marins et d'apercevoir le mythique dugong.",
+        "pl": "Zatoka Abu Dabbab to jedno z najbardziej znanych sanktuariów morskich na świecie. Łagodne piaszczyste wejście do wody sprawia, że jest to idealne miejsce dla każdego, aby pływać z potężnymi żółwiami morskimi."
+      },
+      "price": 28,
+      "price_child": 15,
+      "duration": "6 Hours (08:30 - 14:30)",
+      "rating": 4.9,
+      "reviews_count": 220,
+      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip air-conditioned transfer", "Abu Dabbab protected beach entry ticket", "Beach umbrella, sunbed & shower facilities", "Snorkeling guide in water", "Snorkeling equipment"],
+        "ru": ["Трансфер на комфортабельном автобусе", "Входной билет на пляж заповедника", "Шезлонги, зонтики и душ на пляже", "Инструктор по снорклингу в воде", "Маски и ласты"],
+        "fr": ["Transport climatisé aller-retour", "Billet d'entrée à la plage protégée", "Transat, parasol et douches", "Guide de snorkeling dans l'eau", "Matériel de snorkeling"],
+        "pl": ["Klimatyzowany transfer w obie strony", "Bilet wstępu na chronioną plażę", "Leżak, parasol i prysznice", "Przewodnik snorkelingu w wodzie", "Sprzęt do snorkelingu"]
+      },
+      "featured": false,
+      "active": true
+    },
+    {
+      "id": 9,
+      "city_id": "marsa-alam",
+      "category": "island",
+      "names": {
+        "en": "Hamata Islands: The Egyptian Maldives Cruise",
+        "ru": "Острова Хамата: Египетские Мальдивы на яхте",
+        "fr": "Îles Hamata: Croisière aux Maldives Égyptiennes",
+        "pl": "Wyspy Hamata: Rejs na Egipskie Malediwy"
+      },
+      "short_descriptions": {
+        "en": "Visit 3 uninhabited virgin islands near Berenice with powdery white sands, turquoise lagoons & untouched coral gardens.",
+        "ru": "3 необитаемых девственных острова с белым песком, лазурными лагунами и нетронутыми коралловыми рифами.",
+        "fr": "Visite de 3 îles sauvages immaculées aux lagons turquoise et coraux extraordinaires près de Bérénice.",
+        "pl": "Wyprawa na 3 bezludne wyspy z białym piaskiem, turkusowymi lagunami i dziewiczymi ogrodami koralowymi."
+      },
+      "descriptions": {
+        "en": "Known as the Egyptian Maldives, the Hamata archipelago is located in the pristine deep south. Walk on deserted sandbars, photograph rare osprey birds, and snorkel in shallow crystal lagoons filled with vibrant coral formations.",
+        "ru": "Архипелаг Хамата — это настоящий нетронутый рай на юге Египта. Вы высадитесь на необитаемом песчаном острове, сделаете сказочные фотографии на фоне бирюзовой воды и совершите 2 снорклинга на богатейших рифах.",
+        "fr": "Surnommé les Maldives égyptiennes, l'archipel de Hamata offre des paysages paradisiaques préservés du tourisme de masse. Plages blanches désertes, eaux peu profondes d'un bleu saisissant et vie marine abondante.",
+        "pl": "Archipelag Hamata to prawdziwe egipskie Malediwy na dziewiczym południu kraju. Pospaceruj po bezludnych piaszczystych łachach i nurkuj w płytkich lagunach pełnych bajecznych koralowców."
+      },
+      "price": 40,
+      "price_child": 22,
+      "duration": "9 Hours (06:30 - 16:30)",
+      "rating": 5.0,
+      "reviews_count": 140,
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip transport", "Luxury boat cruise through the archipelago", "Island walking stopover & photography", "2 Snorkeling stops with guide", "Lunch buffet and soft drinks"],
+        "ru": ["Трансфер из отеля и обратно", "Круиз на комфортабельной яхте", "Высадка на песчаный остров и фотосессия", "2 остановки для снорклинга с гидом", "Обед и прохладительные напитки"],
+        "fr": ["Transfert aller-retour", "Croisière en bateau tout confort", "Arrêt débarquement sur l'île", "2 arrêts snorkeling avec guide", "Déjeuner buffet et boissons fraîches"],
+        "pl": ["Transfer w obie strony z hotelu", "Rejs komfortowym statkiem", "Zejście na bezludną wyspę i czas na zdjęcia", "2 przystanki na snorkeling z przewodnikiem", "Lunch w formie bufetu i napoje"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 10,
+      "city_id": "alamein",
+      "category": "yacht",
+      "names": {
+        "en": "North Coast Luxury Yacht & Crystal Bay Day Pass",
+        "ru": "VIP Яхта на Средиземном море и бирюзовые бухты",
+        "fr": "Yacht VIP Côte Nord & Baies Cristallines de la Méditerranée",
+        "pl": "Luksusowy jacht na Wybrzeżu Śródziemnomorskim i krystaliczne zatoki"
+      },
+      "short_descriptions": {
+        "en": "Exclusive yacht experience across New Alamein marina and crystal Mediterranean waters, seafood dining & sun loungers.",
+        "ru": "Эксклюзивная морская прогулка на яхте из марины Эль-Аламейна по лазурному Средиземному морю с обедом из морепродуктов.",
+        "fr": "Sortie exclusive en yacht depuis la marina du Nouvel Alamein sur les eaux turquoise de la Méditerranée.",
+        "pl": "Ekskluzywny rejs jachtem z mariny Nowego Alamein po turkusowych wodach Morza Śródziemnego z lunchem rybnym."
+      },
+      "descriptions": {
+        "en": "Discover the opulent Mediterranean coastline of Egypt. Board a private or small-group luxury yacht from New Alamein Marina. Anchor in calm turquoise coves with pure white powdery sand, swim in crystal-clear waters, and savor a five-star fresh seafood lunch prepared onboard.",
+        "ru": "Откройте роскошное Средиземноморское побережье Египта. Отправление на современной VIP-яхте из новой марины Эль-Аламейна. Плавание в прозрачных лагунах с белоснежным песком, отдых на солнечной палубе и изысканный обед со свежими морепродуктами.",
+        "fr": "Découvrez le littoral méditerranéen le plus chic d'Égypte. Embarquez sur un yacht de prestige depuis la marina du Nouvel Alamein, nagez dans des criques aux eaux transparentes et dégustez un somptueux repas de fruits de mer.",
+        "pl": "Odkryj najbardziej luksusowe wybrzeże Morza Śródziemnego w Egipcie. Wypłyń z nowoczesnej mariny New Alamein, pływaj w lazurowych zatokach z białym piaskiem i delektuj się świeżymi owocami morza na pokładzie."
+      },
+      "price": 55,
+      "price_child": 30,
+      "duration": "7 Hours (10:00 - 17:00)",
+      "rating": 4.9,
+      "reviews_count": 89,
+      "image": "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel / resort pickup in Alamein & North Coast", "Luxury yacht cruise with captain & crew", "Fresh seafood & grilled lunch", "Non-alcoholic beverages & seasonal fruits", "Stand-up paddle boards & swimming gear"],
+        "ru": ["Трансфер из отелей Эль-Аламейна и побережья", "Круиз на современной яхте с экипажем", "Обед с морепродуктами и грилем", "Напитки, свежие фрукты и кофе", "Сапборды и снаряжение для плавания"],
+        "fr": ["Transfert depuis votre hôtel ou résidence", "Croisière en yacht avec capitaine et équipage", "Déjeuner gastronomique poissons et grillades", "Boissons fraîches et fruits de saison", "Paddles et matériel de baignade"],
+        "pl": ["Transfer z hoteli w Alamein i na wybrzeżu", "Rejs luksusowym jachtem z załogą", "Wykwintny obiad z rybami i owocami morza", "Napoje, owoce i kawa", "Deski SUP i sprzęt do pływania"]
+      },
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": 11,
+      "city_id": "alamein",
+      "category": "heritage",
+      "names": {
+        "en": "WWII Historic Tour: Military Museum & Memorials",
+        "ru": "Исторический тур Второй мировой: Музей и Мемориалы",
+        "fr": "Tour Historique Seconde Guerre Mondiale: Musée & Mémoriaux",
+        "pl": "Historyczna wycieczka II Wojny Światowej: Muzeum i Miejsca Pamięci"
+      },
+      "short_descriptions": {
+        "en": "Step into history where the famous Battle of El Alamein took place. Visit the War Museum, German, Italian & Commonwealth Cemeteries.",
+        "ru": "Погрузитесь в историю решающей битвы за Эль-Аламейн. Посещение военного музея, мемориалов стран содружества, Германии и Италии.",
+        "fr": "Plongez dans l'histoire de la célèbre bataille d'El Alamein. Visite du musée militaire et des mémoriaux internationaux.",
+        "pl": "Poznaj historię przełomowej bitwy pod El Alamein. Zwiedzanie Muzeum Wojskowego oraz cmentarzy i pomników wojennych."
+      },
+      "descriptions": {
+        "en": "Walk on the historic battlegrounds that changed the course of World War II in 1942. Accompanied by a historian guide, explore the El Alamein Military Museum featuring original tanks, aircraft, and weapons, followed by visits to the solemn Commonwealth, German, and Italian memorials.",
+        "ru": "Побывайте на полях сражений, изменивших ход Второй мировой войны в 1942 году. В сопровождении профессионального гида-историка вы осмотрите музей военной техники с танками, самолетами и орудиями, а также посетите величественные мемориалы памяти.",
+        "fr": "Visitez les lieux emblématiques qui ont changé le cours de l'histoire en 1942. Avec un guide spécialisé, découvrez le musée militaire exposant chars et avions d'époque, ainsi que les émouvants cimetières et mémoriaux.",
+        "pl": "Odwiedź historyczne pole bitwy, które odmieniło losy II Wojny Światowej w 1942 roku. Z przewodnikiem historycznym zwiedzisz Muzeum Wojenne z czołgami i samolotami oraz cmentarze alianckie i państw Osi."
+      },
+      "price": 35,
+      "price_child": 20,
+      "duration": "5 Hours (09:00 - 14:00)",
+      "rating": 4.8,
+      "reviews_count": 92,
+      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel pickup and drop-off", "Expert multilingual historian guide", "Entry tickets to Military Museum", "Visits to German, Italian & Commonwealth memorials", "Bottled water and soft drinks"],
+        "ru": ["Трансфер из отеля и обратно", "Профессиональный гид-историк", "Входные билеты в военный музей", "Посещение мемориалов трех сторон", "Минеральная вода и напитки"],
+        "fr": ["Transport privé aller-retour", "Guide conférencier historien", "Billets d'entrée au musée militaire", "Visite des différents mémoriaux", "Bouteilles d'eau et rafraîchissements"],
+        "pl": ["Transfer w obie strony", "Przewodnik historyk", "Bilety wstępu do Muzeum Wojskowego", "Wizyty na cmentarzach wojennych", "Woda mineralna i napoje"]
+      },
+      "featured": false,
+      "active": true
+    },
+    {
+      "id": 12,
+      "city_id": "hurghada",
+      "category": "family",
+      "names": {
+        "en": "Semi-Submarine Sea Scope & Royal Sea Aquarium",
+        "ru": "Батискаф Sea Scope: Подводный мир сквозь панорамные окна",
+        "fr": "Semi-Sous-Marin Sea Scope: Panorama Sous-Marin",
+        "pl": "Pół-łódź podwodna Sea Scope: Podwodny świat przez panoramiczne okna"
+      },
+      "short_descriptions": {
+        "en": "Ideal for families and non-swimmers! Descend 4 meters below surface in air-conditioned hull with panoramic viewing windows.",
+        "ru": "Идеально для семей с детьми! Спуск на 4 метра под воду в кондиционированном трюме с большими панорамными иллюминаторами.",
+        "fr": "Parfait pour les familles! Descendez à 4 mètres sous la surface dans une coque climatisée avec larges vitres panoramiques.",
+        "pl": "Idealne dla rodzin i osób niepływających! Zejście na 4 metry pod wodę w klimatyzowanym kadłubie z wielkimi oknami."
+      },
+      "descriptions": {
+        "en": "Discover the Red Sea's breathtaking coral reefs without getting wet! Sit comfortably in an air-conditioned underwater cabin with huge panoramic windows. Watch scuba divers feed thousands of tropical fish right in front of your eyes, with an optional 30-minute snorkeling session.",
+        "ru": "Уникальная возможность увидеть подводные красоты Красного моря, оставаясь сухими! Вы спуститесь в кондиционированную подводную смотровую каюту с огромными окнами. Водолазы кормят стаи разноцветных рыбок прямо перед вашим стеклом.",
+        "fr": "Admirez la beauté spectaculaire des fonds marins sans vous mouiller! Installez-vous dans une cabine sous-marine climatisée avec d'immenses baies vitrées et observez le spectacle des plongeurs nourrissant les poissons tropicaux.",
+        "pl": "Poznaj niezwykłe rafy koralowe Morza Czerwonego bez wchodzenia do wody! Usiądź w klimatyzowanej kabinie podwodnej z wielkimi oknami i podziwiaj pokaz karmienia ryb przez nurka."
+      },
+      "price": 18,
+      "price_child": 10,
+      "duration": "2.5 Hours",
+      "rating": 4.7,
+      "reviews_count": 310,
+      "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+      ],
+      "included": {
+        "en": ["Hotel round-trip transport", "2-Hour semi-submarine cruise", "Underwater viewing cabin seat", "Fish feeding show by professional diver", "Soft drinks and water onboard"],
+        "ru": ["Трансфер из/в отель", "Морская прогулка на батискафе", "Место в панорамной подводной каюте", "Шоу кормления рыб аквалангистом", "Безалкогольные напитки и вода"],
+        "fr": ["Transfert aller-retour", "Croisière en semi-sous-marin", "Siège dans la cabine sous-marine vitrée", "Spectacle de nourrissage des poissons", "Boissons fraîches incluses"],
+        "pl": ["Transfer hotelowy", "Rejs pół-łodzią podwodną", "Miejsce w panoramicznej kabinie podwodnej", "Pokaz karmienia ryb przez nurka", "Napoje bezalkoholowe"]
+      },
+      "featured": false,
+      "active": true
+    }
+  ],
+  "bookings": []
+}

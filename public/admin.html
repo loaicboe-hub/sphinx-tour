@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Egypt Voyage Tours</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ==================== LOGIN VIEW ==================== -->
+  <div class="login-wrapper" id="loginWrapper">
+    <div class="login-card">
+      <div class="login-badge">🔒</div>
+      <h2 class="login-title">Admin Control Panel</h2>
+      <p class="login-sub">Enter your security PIN to manage excursions and settings</p>
+      
+      <form id="loginForm">
+        <input type="password" class="login-input" id="pinInput" placeholder="••••••••" required autofocus />
+        <button type="submit" class="login-btn">Unlock Dashboard →</button>
+      </form>
+      <div style="margin-top: 18px; font-size: 0.8rem; color: var(--text-dim);">
+        Default PIN: <strong style="color: var(--admin-accent);">admin123</strong>
+      </div>
+      <div style="margin-top: 14px;">
+        <a href="/" style="color: var(--text-muted); font-size: 0.85rem;">← Back to Website</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD LAYOUT ==================== -->
+  <div class="admin-layout" id="adminLayout" style="display: none;">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <div style="font-size: 1.5rem;">🌴</div>
+        <div>EgyptVoyage <span style="color: var(--admin-accent); font-size: 0.8rem; display: block;">ADMIN PANEL</span></div>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li class="sidebar-link active" data-tab="tours">
+          <span>⛵</span> Tours & Excursions
+        </li>
+        <li class="sidebar-link" data-tab="cities">
+          <span>📍</span> Destinations (4 Cities)
+        </li>
+        <li class="sidebar-link" data-tab="bookings">
+          <span>📋</span> WhatsApp Leads
+        </li>
+        <li class="sidebar-link" data-tab="settings">
+          <span>⚙️</span> Site & WhatsApp Settings
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" class="btn-sidebar-secondary">
+          🌐 View Live Website
+        </a>
+        <button onclick="logout()" class="btn-sidebar-secondary" style="border: none; cursor: pointer; color: var(--admin-danger);">
+          🚪 Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      
+      <!-- TAB 1: TOURS -->
+      <section class="admin-tab-pane active" id="tab-tours">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">Tours & Excursions</h1>
+            <p class="topbar-sub">Manage excursions, live prices, photos, and translations</p>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-admin-primary" onclick="openAddTourModal()">
+              <span>+</span> Add New Excursion
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">⛵</div>
+            <div>
+              <div class="stat-val" id="statTotalTours">0</div>
+              <div class="stat-label">Total Excursions</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <div>
+              <div class="stat-val" id="statActiveTours">0</div>
+              <div class="stat-label">Active on Site</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📍</div>
+            <div>
+              <div class="stat-val" id="statTotalCities">4</div>
+              <div class="stat-label">Cities Covered</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div>
+              <div class="stat-val" id="statTotalBookings">0</div>
+              <div class="stat-label">WhatsApp Inquiries</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tours Table Card -->
+        <div class="data-card">
+          <div class="data-header">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">All Excursions</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Tip: Edit prices directly in the box below!</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Tour Name (EN / RU)</th>
+                  <th>City</th>
+                  <th>Price (€)</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="toursTableBody">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: CITIES -->
+      <section class="admin-tab-pane" id="tab-cities">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">Destinations & Cities</h1>
+            <p class="topbar-sub">The 4 primary seaside tourist hubs displayed in the showcase</p>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>English</th>
+                  <th>Русский</th>
+                  <th>Français</th>
+                  <th>Polski</th>
+                  <th>Available Tours</th>
+                </tr>
+              </thead>
+              <tbody id="citiesTableBody">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: BOOKINGS / LEADS -->
+      <section class="admin-tab-pane" id="tab-bookings">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">WhatsApp Booking Leads</h1>
+            <p class="topbar-sub">Clients who initiated bookings through the website WhatsApp button</p>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Lead ID</th>
+                  <th>Excursion & City</th>
+                  <th>Requested Date</th>
+                  <th>Guests</th>
+                  <th>Hotel</th>
+                  <th>Language</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableBody">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: SETTINGS -->
+      <section class="admin-tab-pane" id="tab-settings">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">Site & WhatsApp Settings</h1>
+            <p class="topbar-sub">Update receiving WhatsApp number, currency, and security PIN</p>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <form id="settingsForm">
+            <div class="settings-form-grid">
+              <div class="settings-group">
+                <label class="settings-label">WhatsApp Receiving Number (International format without +)</label>
+                <input type="text" class="settings-input" id="settingWhatsapp" placeholder="e.g. 201012345678" required />
+                <small style="color: var(--text-dim); display: block; margin-top: 4px;">All "Book via WhatsApp" buttons will immediately direct to this number.</small>
+              </div>
+
+              <div class="settings-group">
+                <label class="settings-label">Contact Phone (Display on site)</label>
+                <input type="text" class="settings-input" id="settingPhone" placeholder="+20 101 234 5678" />
+              </div>
+
+              <div class="settings-group">
+                <label class="settings-label">Contact Email</label>
+                <input type="email" class="settings-input" id="settingEmail" placeholder="info@egyptvoyage.com" />
+              </div>
+
+              <div class="settings-group">
+                <label class="settings-label">Currency Symbol</label>
+                <input type="text" class="settings-input" id="settingCurrency" placeholder="€" />
+              </div>
+
+              <div class="settings-group" style="grid-column: 1/-1; border-top: 1px solid var(--admin-border); padding-top: 20px;">
+                <label class="settings-label" style="color: var(--admin-accent);">Change Admin Security PIN (Optional)</label>
+                <input type="password" class="settings-input" id="settingNewPin" placeholder="Leave blank to keep current PIN" />
+              </div>
+            </div>
+
+            <div style="padding: 0 24px 24px;">
+              <button type="submit" class="btn-admin-primary">
+                💾 Save Settings
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== TOUR ADD / EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="tourModalOverlay">
+    <div class="modal-content" style="max-width: 780px;">
+      <button class="modal-close-btn" onclick="closeTourModal()">✕</button>
+      
+      <div class="modal-header">
+        <h3 class="modal-title" id="tourFormModalTitle">Add New Excursion</h3>
+        <p class="modal-subtitle">Fill in details across the 4 languages. You can leave non-English fields empty to auto-use English.</p>
+      </div>
+
+      <div class="modal-body">
+        <form id="tourEditForm">
+          <input type="hidden" id="tourEditId" />
+
+          <!-- Row 1: City & Category -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City / Destination *</label>
+              <select class="form-select" id="tourCitySelect" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="tourCategorySelect">
+                <option value="island">Islands & Sea (جزر وبحر)</option>
+                <option value="safari">Desert Safari (سفاري)</option>
+                <option value="diving">Scuba Diving (غوص)</option>
+                <option value="marine">Marine & Snorkeling (سنوركلينج)</option>
+                <option value="adventure">Adventure & Jeeps (مغامرات)</option>
+                <option value="yacht">VIP Luxury Yacht (يخوت فاخرة)</option>
+                <option value="culture">History & Culture (تاريخ وثقافة)</option>
+                <option value="family">Family & Submarine (عائلات وغواصة)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Price & Duration -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Adult Price (€) *</label>
+              <input type="number" class="form-input" id="tourPriceInput" placeholder="28" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Child Price (€)</label>
+              <input type="number" class="form-input" id="tourChildPriceInput" placeholder="15" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration *</label>
+              <input type="text" class="form-input" id="tourDurationInput" placeholder="8 Hours (08:30 - 16:30)" required />
+            </div>
+          </div>
+
+          <!-- Row 3: Photo Upload or URL -->
+          <div class="form-group">
+            <label class="form-label">Tour Photo (Upload from PC or paste image link)</label>
+            <div class="upload-dropzone" onclick="document.getElementById('tourImageFile').click()">
+              <div class="upload-icon">📷</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Click to upload an image from your device</div>
+              <small style="color: var(--text-dim);" id="uploadStatusText">JPG, PNG, WebP up to 10MB</small>
+              <input type="file" id="tourImageFile" accept="image/*" style="display: none;" />
+            </div>
+            <div style="margin-top: 10px;">
+              <input type="text" class="form-input" id="tourImageUrlInput" placeholder="Or paste image URL (e.g. https://...)" />
+            </div>
+            <img id="tourImagePreview" src="" alt="Preview" style="display: none; height: 120px; border-radius: 8px; margin-top: 10px; object-fit: cover;" />
+          </div>
+
+          <!-- Multilingual Section -->
+          <h4 style="font-size: 1rem; color: var(--admin-accent); margin: 24px 0 14px;">🌍 Tour Titles & Descriptions (4 Languages)</h4>
+
+          <!-- English (Primary) -->
+          <div class="lang-box">
+            <div class="lang-box-title">🇬🇧 English (Primary / Default)</div>
+            <div class="form-group">
+              <label class="form-label">Tour Title (English) *</label>
+              <input type="text" class="form-input" id="tourNameEn" placeholder="Orange Bay Island VIP Cruise" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Description (English) *</label>
+              <textarea class="form-textarea" id="tourDescEn" rows="3" placeholder="Full details, itinerary, and highlights..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Included Items (One per line)</label>
+              <textarea class="form-textarea" id="tourIncEn" rows="3" placeholder="Hotel pickup & drop-off&#10;Lunch & soft drinks&#10;Snorkeling equipment"></textarea>
+            </div>
+          </div>
+
+          <!-- Russian -->
+          <div class="lang-box">
+            <div class="lang-box-title">🇷🇺 Русский (Russian)</div>
+            <div class="form-group">
+              <label class="form-label">Название экскурсии (Русский)</label>
+              <input type="text" class="form-input" id="tourNameRu" placeholder="VIP Морская прогулка на остров Оранж Бей" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Описание экскурсии (Русский)</label>
+              <textarea class="form-textarea" id="tourDescRu" rows="3" placeholder="Подробное описание программы..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">В стоимость включено (По строкам)</label>
+              <textarea class="form-textarea" id="tourIncRu" rows="3" placeholder="Трансфер из отеля&#10;Обед и напитки&#10;Снаряжение"></textarea>
+            </div>
+          </div>
+
+          <!-- French -->
+          <div class="lang-box">
+            <div class="lang-box-title">🇫🇷 Français (French)</div>
+            <div class="form-group">
+              <label class="form-label">Titre de l'excursion (Français)</label>
+              <input type="text" class="form-input" id="tourNameFr" placeholder="Croisière VIP sur l'Île Orange Bay" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description (Français)</label>
+              <textarea class="form-textarea" id="tourDescFr" rows="2" placeholder="Description de l'excursion..."></textarea>
+            </div>
+          </div>
+
+          <!-- Polish -->
+          <div class="lang-box">
+            <div class="lang-box-title">🇵🇱 Polski (Polish)</div>
+            <div class="form-group">
+              <label class="form-label">Nazwa wycieczki (Polski)</label>
+              <input type="text" class="form-input" id="tourNamePl" placeholder="Rejs jachtem na wyspę Orange Bay" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Opis wycieczki (Polski)</label>
+              <textarea class="form-textarea" id="tourDescPl" rows="2" placeholder="Opis wycieczki po polsku..."></textarea>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; gap: 14px;">
+            <button type="submit" class="btn-admin-primary" style="flex-grow: 1; justify-content: center; padding: 14px; font-size: 1rem;">
+              💾 Save Excursion
+            </button>
+            <button type="button" class="btn-card-details" onclick="closeTourModal()" style="padding: 14px 24px;">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

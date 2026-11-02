@@ -1,0 +1,562 @@
+/* ============================================================
+   EGYPT VOYAGE TOURS - CLIENT APPLICATION LOGIC
+   ============================================================ */
+
+let appData = {
+  settings: {},
+  cities: [],
+  tours: []
+};
+
+let currentLang = localStorage.getItem('egypt_voyage_lang') || 'en';
+let selectedCityFilter = 'all';
+let searchQuery = '';
+let selectedBookingTour = null;
+let bookingAdults = 2;
+let bookingChildren = 0;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  initLanguage();
+  fetchData();
+  setupEventListeners();
+  setDefaultBookingDate();
+});
+
+// Fetch all public data from server
+async function fetchData() {
+  try {
+    const res = await fetch('/api/data');
+    if (!res.ok) throw new Error('Failed to load data');
+    const data = await res.json();
+    appData = data;
+
+    updateSiteSettings();
+    renderCities();
+    renderCityFilters();
+    renderTours();
+    applyTranslations();
+  } catch (err) {
+    console.error('Error loading site data:', err);
+  }
+}
+
+// Update site settings from backend
+function updateSiteSettings() {
+  const { settings } = appData;
+  if (!settings) return;
+
+  // Floating WhatsApp button
+  const floatingWa = document.getElementById('floatingWhatsappBtn');
+  if (floatingWa && settings.whatsapp_number) {
+    const generalMsg = encodeURIComponent(
+      currentLang === 'ru' ? 'Здравствуйте! Подскажите, пожалуйста, по поводу экскурсий.' :
+      currentLang === 'fr' ? 'Bonjour! J\'aimerais avoir des informations sur vos excursions.' :
+      currentLang === 'pl' ? 'Dzień dobry! Chciałbym zapytać o wycieczki.' :
+      'Hello! I would like to inquire about your excursions.'
+    );
+    floatingWa.href = `https://wa.me/${settings.whatsapp_number}?text=${generalMsg}`;
+  }
+
+  // Nav WhatsApp button
+  const navWa = document.getElementById('navWhatsappBtn');
+  if (navWa && settings.whatsapp_number) {
+    navWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  }
+
+  // Hero WhatsApp button
+  const heroWa = document.getElementById('heroWhatsappBtn');
+  if (heroWa && settings.whatsapp_number) {
+    heroWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  }
+
+  // Footer phone and email
+  const footerPhone = document.getElementById('footerPhone');
+  if (footerPhone && settings.phone) {
+    footerPhone.textContent = settings.phone;
+    footerPhone.href = `tel:${settings.phone}`;
+  }
+  const footerEmail = document.getElementById('footerEmail');
+  if (footerEmail && settings.contact_email) {
+    footerEmail.textContent = settings.contact_email;
+    footerEmail.href = `mailto:${settings.contact_email}`;
+  }
+}
+
+// Setup Event Listeners
+function setupEventListeners() {
+  // Language Selector toggle
+  const langBtn = document.getElementById('langSelectorBtn');
+  const langDropdown = document.getElementById('langDropdown');
+
+  if (langBtn && langDropdown) {
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+      langDropdown.classList.remove('show');
+    });
+
+    document.querySelectorAll('.lang-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const lang = item.getAttribute('data-lang');
+        switchLanguage(lang);
+        langDropdown.classList.remove('show');
+      });
+    });
+  }
+
+  // Search input
+  const searchInput = document.getElementById('tourSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      renderTours();
+    });
+  }
+
+  // Booking counter buttons
+  const adultMinus = document.getElementById('adultMinus');
+  const adultPlus = document.getElementById('adultPlus');
+  const childMinus = document.getElementById('childMinus');
+  const childPlus = document.getElementById('childPlus');
+
+  if (adultMinus && adultPlus) {
+    adultMinus.addEventListener('click', () => {
+      if (bookingAdults > 1) {
+        bookingAdults--;
+        updateBookingCounters();
+      }
+    });
+    adultPlus.addEventListener('click', () => {
+      bookingAdults++;
+      updateBookingCounters();
+    });
+  }
+
+  if (childMinus && childPlus) {
+    childMinus.addEventListener('click', () => {
+      if (bookingChildren > 0) {
+        bookingChildren--;
+        updateBookingCounters();
+      }
+    });
+    childPlus.addEventListener('click', () => {
+      bookingChildren++;
+      updateBookingCounters();
+    });
+  }
+
+  // Booking Form Submit
+  const bookingForm = document.getElementById('quickBookingForm');
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      executeWhatsAppBooking();
+    });
+  }
+}
+
+// Set default booking date to tomorrow
+function setDefaultBookingDate() {
+  const dateInput = document.getElementById('bookingDate');
+  if (dateInput) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().split('T')[0];
+    dateInput.min = new Date().toISOString().split('T')[0];
+  }
+}
+
+// Initialize Language
+function initLanguage() {
+  updateLangButtonText();
+}
+
+function switchLanguage(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  currentLang = lang;
+  localStorage.setItem('egypt_voyage_lang', lang);
+  updateLangButtonText();
+  applyTranslations();
+  renderCities();
+  renderCityFilters();
+  renderTours();
+  updateSiteSettings();
+}
+
+function updateLangButtonText() {
+  const label = document.getElementById('currentLangLabel');
+  const flag = document.getElementById('currentLangFlag');
+  const map = {
+    en: { name: 'English', flag: '🇬🇧' },
+    ru: { name: 'Русский', flag: '🇷🇺' },
+    fr: { name: 'Français', flag: '🇫🇷' },
+    pl: { name: 'Polski', flag: '🇵🇱' }
+  };
+  if (label && map[currentLang]) label.textContent = map[currentLang].name;
+  if (flag && map[currentLang]) flag.textContent = map[currentLang].flag;
+
+  document.querySelectorAll('.lang-item').forEach(item => {
+    item.classList.toggle('active', item.getAttribute('data-lang') === currentLang);
+  });
+}
+
+function t(key) {
+  return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) ||
+         (TRANSLATIONS['en'] && TRANSLATIONS['en'][key]) || key;
+}
+
+// Apply static translations to elements with data-i18n
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const text = t(key);
+    if (text) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = text;
+      } else {
+        el.textContent = text;
+      }
+    }
+  });
+  document.title = t('site_title');
+}
+
+// Render 4 Cities Showcase
+function renderCities() {
+  const container = document.getElementById('citiesContainer');
+  if (!container) return;
+
+  container.innerHTML = '';
+  appData.cities.forEach(city => {
+    const cityName = city.names?.[currentLang] || city.names?.en || city.id;
+    const cityTagline = city.taglines?.[currentLang] || city.taglines?.en || '';
+    const cityDesc = city.descriptions?.[currentLang] || city.descriptions?.en || '';
+
+    // Count tours in this city
+    const tourCount = appData.tours.filter(t => t.city_id === city.id).length;
+
+    const card = document.createElement('div');
+    card.className = 'city-card';
+    card.onclick = () => filterByCity(city.id);
+    card.innerHTML = `
+      <div class="city-img-wrapper">
+        <img class="city-img" src="${city.image}" alt="${cityName}" loading="lazy" />
+      </div>
+      <div class="city-gradient-overlay"></div>
+      <div class="city-badge">
+        <span>📍</span> ${tourCount} ${t('nav_tours')}
+      </div>
+      <div class="city-content">
+        <h3 class="city-name">${cityName}</h3>
+        <p class="city-tagline">${cityTagline}</p>
+        <p class="city-desc">${cityDesc}</p>
+        <div class="city-btn">
+          <span>${t('hero_cta_explore')}</span>
+          <span>→</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Render dynamic City Filter pills
+function renderCityFilters() {
+  const container = document.getElementById('cityFiltersContainer');
+  if (!container) return;
+
+  container.innerHTML = `
+    <button class="filter-pill ${selectedCityFilter === 'all' ? 'active' : ''}" onclick="filterByCity('all')">
+      ✨ ${t('filter_all_cities')}
+    </button>
+  `;
+
+  appData.cities.forEach(city => {
+    const cityName = city.names?.[currentLang] || city.names?.en || city.id;
+    const isActive = selectedCityFilter === city.id ? 'active' : '';
+    const btn = document.createElement('button');
+    btn.className = `filter-pill ${isActive}`;
+    btn.onclick = () => filterByCity(city.id);
+    btn.innerHTML = `📍 ${cityName}`;
+    container.appendChild(btn);
+  });
+}
+
+function filterByCity(cityId) {
+  selectedCityFilter = cityId;
+  renderCityFilters();
+  renderTours();
+
+  const toursSec = document.getElementById('toursSection');
+  if (toursSec) {
+    toursSec.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// Render Tours Grid
+function renderTours() {
+  const container = document.getElementById('toursContainer');
+  if (!container) return;
+
+  const curr = appData.settings?.currency || '€';
+
+  let filtered = appData.tours.filter(t => {
+    // City filter
+    if (selectedCityFilter !== 'all' && t.city_id !== selectedCityFilter) {
+      return false;
+    }
+    // Search query
+    if (searchQuery) {
+      const name = (t.names?.[currentLang] || t.names?.en || '').toLowerCase();
+      const desc = (t.descriptions?.[currentLang] || t.descriptions?.en || '').toLowerCase();
+      return name.includes(searchQuery) || desc.includes(searchQuery);
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-glass);">
+        <p style="font-size: 1.2rem; color: var(--text-muted);">${t('no_tours_found')}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = '';
+  filtered.forEach(tour => {
+    const tourName = tour.names?.[currentLang] || tour.names?.en || 'Excursion';
+    const tourDesc = tour.short_descriptions?.[currentLang] || tour.short_descriptions?.en || '';
+    
+    // Find city name
+    const cityObj = appData.cities.find(c => c.id === tour.city_id);
+    const cityName = cityObj ? (cityObj.names?.[currentLang] || cityObj.names?.en) : tour.city_id;
+
+    const card = document.createElement('div');
+    card.className = 'tour-card';
+    card.innerHTML = `
+      <div class="tour-thumb">
+        <img src="${tour.image}" alt="${tourName}" loading="lazy" />
+        ${tour.featured ? `<div class="tour-featured-badge">★ ${t('badge_bestseller')}</div>` : ''}
+        <div class="tour-city-tag">📍 ${cityName}</div>
+      </div>
+      <div class="tour-body">
+        <div class="tour-meta">
+          <div class="tour-duration">
+            <span>⏱</span> ${tour.duration || 'Full Day'}
+          </div>
+          <div class="tour-rating">
+            ★ ${tour.rating || '4.9'} <span>(${tour.reviews_count || 120})</span>
+          </div>
+        </div>
+        <h3 class="tour-title">${tourName}</h3>
+        <p class="tour-short-desc">${tourDesc}</p>
+        <div class="tour-price-box">
+          <div>
+            <div class="tour-price-from">${t('from_price')}</div>
+            <div class="tour-price-val">${curr}${tour.price} <span>/ ${t('per_person')}</span></div>
+          </div>
+          ${tour.price_child ? `<div style="font-size: 0.85rem; color: var(--accent-gold);">${t('child_price')}: ${curr}${tour.price_child}</div>` : ''}
+        </div>
+        <div class="tour-actions">
+          <button class="btn-card-details" onclick="openDetailsModal(${tour.id})">
+            ${t('btn_details')}
+          </button>
+          <button class="btn-card-whatsapp" onclick="openBookingModal(${tour.id})">
+            <span>💬</span> ${t('btn_book_whatsapp')}
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Open Tour Details Modal
+function openDetailsModal(tourId) {
+  const tour = appData.tours.find(t => t.id === tourId);
+  if (!tour) return;
+
+  const curr = appData.settings?.currency || '€';
+  const tourName = tour.names?.[currentLang] || tour.names?.en || '';
+  const tourDesc = tour.descriptions?.[currentLang] || tour.descriptions?.en || '';
+
+  const cityObj = appData.cities.find(c => c.id === tour.city_id);
+  const cityName = cityObj ? (cityObj.names?.[currentLang] || cityObj.names?.en) : tour.city_id;
+
+  const modal = document.getElementById('detailsModal');
+  const body = document.getElementById('detailsModalBody');
+
+  const includedList = (tour.included?.[currentLang] || tour.included?.en || [])
+    .map(item => `<li class="included-item">${item}</li>`).join('');
+
+  body.innerHTML = `
+    <div class="modal-gallery">
+      <img src="${tour.image}" alt="${tourName}" />
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+      <div>
+        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${cityName} • ⏱ ${tour.duration}</span>
+        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px;">${tourName}</h2>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">${t('from_price')}</span>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan);">${curr}${tour.price}</div>
+      </div>
+    </div>
+    <div style="margin-bottom: 24px;">
+      <h4 style="font-size: 1rem; color: #FFFFFF; margin-bottom: 8px;">${t('modal_details_itinerary')}</h4>
+      <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">${tourDesc}</p>
+    </div>
+    ${includedList ? `
+      <div style="margin-bottom: 24px;">
+        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 8px;">${t('modal_details_included')}</h4>
+        <ul class="included-list">${includedList}</ul>
+      </div>
+    ` : ''}
+    <div style="margin-top: 30px; display: flex; gap: 14px;">
+      <button class="btn-whatsapp-large" style="width: 100%; justify-content: center;" onclick="closeDetailsModal(); openBookingModal(${tour.id})">
+        <span>💬</span> ${t('btn_book_whatsapp')}
+      </button>
+    </div>
+  `;
+
+  modal.classList.add('active');
+}
+
+function closeDetailsModal() {
+  document.getElementById('detailsModal').classList.remove('active');
+}
+
+// Open Quick WhatsApp Booking Modal
+function openBookingModal(tourId) {
+  const tour = appData.tours.find(t => t.id === tourId);
+  if (!tour) return;
+
+  selectedBookingTour = tour;
+  bookingAdults = 2;
+  bookingChildren = 0;
+
+  const tourName = tour.names?.[currentLang] || tour.names?.en || '';
+  const cityObj = appData.cities.find(c => c.id === tour.city_id);
+  const cityName = cityObj ? (cityObj.names?.[currentLang] || cityObj.names?.en) : tour.city_id;
+
+  document.getElementById('bookingModalTourName').textContent = tourName;
+  document.getElementById('bookingModalCity').textContent = `📍 ${cityName}`;
+
+  updateBookingCounters();
+  document.getElementById('bookingModal').classList.add('active');
+}
+
+function closeBookingModal() {
+  document.getElementById('bookingModal').classList.remove('active');
+}
+
+function updateBookingCounters() {
+  document.getElementById('adultCount').textContent = bookingAdults;
+  document.getElementById('childCount').textContent = bookingChildren;
+
+  if (selectedBookingTour) {
+    const curr = appData.settings?.currency || '€';
+    const adultPrice = selectedBookingTour.price || 0;
+    const childPrice = selectedBookingTour.price_child || (adultPrice * 0.6);
+    const total = (bookingAdults * adultPrice) + (bookingChildren * childPrice);
+
+    document.getElementById('bookingEstimatedPrice').textContent = `${curr}${Math.round(total)}`;
+  }
+}
+
+// Execute WhatsApp Booking with smart pre-filled message
+async function executeWhatsAppBooking() {
+  if (!selectedBookingTour) return;
+
+  const tour = selectedBookingTour;
+  const tourName = tour.names?.[currentLang] || tour.names?.en || '';
+  const cityObj = appData.cities.find(c => c.id === tour.city_id);
+  const cityName = cityObj ? (cityObj.names?.[currentLang] || cityObj.names?.en) : tour.city_id;
+
+  const date = document.getElementById('bookingDate').value;
+  const hotel = document.getElementById('bookingHotel').value.trim() || 'To be specified';
+  const notes = document.getElementById('bookingNotes').value.trim();
+
+  const curr = appData.settings?.currency || '€';
+  const adultPrice = tour.price || 0;
+  const childPrice = tour.price_child || (adultPrice * 0.6);
+  const total = Math.round((bookingAdults * adultPrice) + (bookingChildren * childPrice));
+
+  // Log to backend
+  try {
+    fetch('/api/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tour_id: tour.id,
+        tour_name: tourName,
+        city: cityName,
+        date,
+        adults: bookingAdults,
+        children: bookingChildren,
+        hotel,
+        notes,
+        lang: currentLang
+      })
+    });
+  } catch (e) {
+    console.error('Failed to log booking lead', e);
+  }
+
+  // Generate localized message for WhatsApp
+  let msg = '';
+  if (currentLang === 'ru') {
+    msg = `Здравствуйте! Я хочу забронировать экскурсию:\n` +
+          `🌴 Экскурсия: *${tourName}*\n` +
+          `📍 Курорт: ${cityName}\n` +
+          `📅 Дата: ${date}\n` +
+          `👥 Гости: ${bookingAdults} взр. + ${bookingChildren} дет.\n` +
+          `🏨 Отель: ${hotel}\n` +
+          (notes ? `📝 Пожелания: ${notes}\n` : '') +
+          `💰 Примерная сумма: ${curr}${total}\n\n` +
+          `Подскажите, пожалуйста, во сколько будет выезд из отеля?`;
+  } else if (currentLang === 'fr') {
+    msg = `Bonjour! Je souhaite réserver l'excursion :\n` +
+          `🌴 Excursion : *${tourName}*\n` +
+          `📍 Ville : ${cityName}\n` +
+          `📅 Date : ${date}\n` +
+          `👥 Participants : ${bookingAdults} Adultes, ${bookingChildren} Enfants\n` +
+          `🏨 Hôtel : ${hotel}\n` +
+          (notes ? `📝 Remarques : ${notes}\n` : '') +
+          `💰 Total estimé : ${curr}${total}\n\n` +
+          `Pourriez-vous me confirmer l'heure de prise en charge à l'hôtel ?`;
+  } else if (currentLang === 'pl') {
+    msg = `Dzień dobry! Chciałbym zarezerwować wycieczkę:\n` +
+          `🌴 Wycieczka: *${tourName}*\n` +
+          `📍 Miasto: ${cityName}\n` +
+          `📅 Data: ${date}\n` +
+          `👥 Uczestnicy: ${bookingAdults} Dorosłych, ${bookingChildren} Dzieci\n` +
+          `🏨 Hotel: ${hotel}\n` +
+          (notes ? `📝 Uwagi: ${notes}\n` : '') +
+          `💰 Szacowany koszt: ${curr}${total}\n\n` +
+          `Proszę o informację o której godzinie odbiór z hotelu?`;
+  } else {
+    // English default
+    msg = `Hello! I would like to book the excursion:\n` +
+          `🌴 Tour: *${tourName}*\n` +
+          `📍 City: ${cityName}\n` +
+          `📅 Date: ${date}\n` +
+          `👥 Guests: ${bookingAdults} Adults, ${bookingChildren} Children\n` +
+          `🏨 Hotel: ${hotel}\n` +
+          (notes ? `📝 Notes: ${notes}\n` : '') +
+          `💰 Estimated Total: ${curr}${total}\n\n` +
+          `Could you please confirm the hotel pickup time?`;
+  }
+
+  const waNum = appData.settings?.whatsapp_number || '201012345678';
+  const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
+
+  closeBookingModal();
+  window.open(waUrl, '_blank');
+}

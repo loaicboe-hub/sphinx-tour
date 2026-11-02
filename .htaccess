@@ -1,0 +1,26 @@
+# ============================================================
+# EGYPT VOYAGE - HOSTINGER APACHE CONFIGURATION
+# ============================================================
+
+RewriteEngine On
+
+# Enable CORS for API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, x-admin-pin"
+</IfModule>
+
+# Protect data/database.json from direct browser download
+<Files "data/database.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Route requests to index.html if file doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/?$ public/admin.html [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ public/$1 [L]

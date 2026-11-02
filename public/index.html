@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Egypt Voyage | Red Sea & Sinai Excursions</title>
+  <meta name="description" content="Book top-rated sea excursions, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein directly via WhatsApp." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌴</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <div class="logo-badge">🌴</div>
+        <div class="logo-text">Egypt<span>Voyage</span></div>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#" class="nav-link active" data-i18n="nav_home">Home</a></li>
+          <li><a href="#destinationsSection" class="nav-link" data-i18n="nav_destinations">Destinations</a></li>
+          <li><a href="#toursSection" class="nav-link" data-i18n="nav_tours">Excursions</a></li>
+          <li><a href="#whyUsSection" class="nav-link" data-i18n="nav_why_us">Why Us</a></li>
+          <li><a href="#contactSection" class="nav-link" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Multi-Language Selector -->
+        <div class="lang-selector">
+          <button class="lang-btn" id="langSelectorBtn" aria-label="Select Language">
+            <span id="currentLangFlag">🇬🇧</span>
+            <span id="currentLangLabel">English</span>
+            <span style="font-size: 0.7rem;">▼</span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-item active" data-lang="en">
+              <span class="lang-flag">🇬🇧</span> English
+            </button>
+            <button class="lang-item" data-lang="ru">
+              <span class="lang-flag">🇷🇺</span> Русский
+            </button>
+            <button class="lang-item" data-lang="fr">
+              <span class="lang-flag">🇫🇷</span> Français
+            </button>
+            <button class="lang-item" data-lang="pl">
+              <span class="lang-flag">🇵🇱</span> Polski
+            </button>
+          </div>
+        </div>
+
+        <!-- WhatsApp Header Button -->
+        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-pill" id="navWhatsappBtn">
+          <span>💬</span>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero">
+    <div class="hero-bg-overlay"></div>
+    <div class="container hero-content">
+      <div class="badge-glow" data-i18n="hero_badge">
+        ✨ Official Egypt Excursions & Boat Trips
+      </div>
+      <h1 class="hero-title" data-i18n="hero_title">
+        Unforgettable Excursions in Egypt
+      </h1>
+      <p class="hero-subtitle" data-i18n="hero_subtitle">
+        Book premium sea cruises, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein with instant WhatsApp confirmation.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#toursSection" class="btn-primary" data-i18n="hero_cta_explore">
+          <span>🔍</span> Explore Tours
+        </a>
+        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-large" id="heroWhatsappBtn" data-i18n="hero_cta_whatsapp">
+          <span>💬</span> WhatsApp Support
+        </a>
+      </div>
+
+      <!-- Hero Trust Bar -->
+      <div class="hero-trust-bar">
+        <div class="trust-item">
+          <div class="trust-icon">💎</div>
+          <div>
+            <div class="trust-title" data-i18n="why_1_title">Best Price Guarantee</div>
+            <div class="trust-sub">Direct local rates</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">💬</div>
+          <div>
+            <div class="trust-title" data-i18n="why_2_title">Direct WhatsApp Booking</div>
+            <div class="trust-sub">No prepayment required</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">🌍</div>
+          <div>
+            <div class="trust-title" data-i18n="why_3_title">Multi-Language Guides</div>
+            <div class="trust-sub">RU • EN • FR • PL</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">🛡️</div>
+          <div>
+            <div class="trust-title" data-i18n="why_4_title">Safety & Quality First</div>
+            <div class="trust-sub">Certified luxury boats</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4 CITIES SHOWCASE ==================== -->
+  <section class="section" id="destinationsSection">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="nav_destinations">Destinations</div>
+        <h2 class="section-title" data-i18n="destinations_title">Top 4 Destinations in Egypt</h2>
+        <p class="section-subtitle" data-i18n="destinations_subtitle">
+          Discover the best seaside paradises, coral reefs, and vibrant coastal cities
+        </p>
+      </div>
+
+      <div class="cities-grid" id="citiesContainer">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TOURS & EXCURSIONS ==================== -->
+  <section class="section" id="toursSection" style="background: rgba(5, 13, 23, 0.4);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="nav_tours">Excursions</div>
+        <h2 class="section-title" data-i18n="tours_title">Handpicked Daily Excursions</h2>
+        <p class="section-subtitle" data-i18n="tours_subtitle">
+          Browse best-selling adventures with certified guides and guaranteed best prices
+        </p>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="filters-bar">
+        <div class="city-pills" id="cityFiltersContainer">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="tourSearchInput" placeholder="Search excursions..." data-i18n="search_placeholder" />
+        </div>
+      </div>
+
+      <!-- Tours Grid -->
+      <div class="tours-grid" id="toursContainer">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== WHY CHOOSE US ==================== -->
+  <section class="section" id="whyUsSection">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="nav_why_us">Why Us</div>
+        <h2 class="section-title" data-i18n="why_title">Why Book With Us?</h2>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon-box">🏷️</div>
+          <h3 class="why-card-title" data-i18n="why_1_title">Best Price Guarantee</h3>
+          <p class="why-card-desc" data-i18n="why_1_desc">Direct booking without third-party agency commissions.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">⚡</div>
+          <h3 class="why-card-title" data-i18n="why_2_title">Direct WhatsApp Booking</h3>
+          <p class="why-card-desc" data-i18n="why_2_desc">No prepayment required. Confirm your hotel pickup directly with your local coordinator.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">🗣️</div>
+          <h3 class="why-card-title" data-i18n="why_3_title">Multi-Language Guides</h3>
+          <p class="why-card-desc" data-i18n="why_3_desc">Professional certified guides speaking Russian, English, French & Polish.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon-box">⚓</div>
+          <h3 class="why-card-title" data-i18n="why_4_title">Safety & Quality First</h3>
+          <p class="why-card-desc" data-i18n="why_4_desc">Modern air-conditioned vehicles and top-rated inspected luxury yachts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" id="contactSection">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-badge">🌴</div>
+            <div class="logo-text">Egypt<span>Voyage</span></div>
+          </a>
+          <p data-i18n="hero_subtitle">
+            Premium tours and boat excursions in Hurghada, Sharm El Sheikh, Marsa Alam, and El Alamein with multi-language support.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_quick_links">Destinations</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="filterByCity('hurghada')">Hurghada (Хургада)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('sharm')">Sharm El Sheikh (Шарм)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('marsa-alam')">Marsa Alam (Марса Алам)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('alamein')">El Alamein (العلمين)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_languages">Languages</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="switchLanguage('en')">🇬🇧 English</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('ru')">🇷🇺 Русский</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('fr')">🇫🇷 Français</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('pl')">🇵🇱 Polski</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_contact_info">24/7 Travel Desk</h4>
+          <ul class="footer-links">
+            <li><span>📞 Phone: </span> <a href="#" id="footerPhone">+20 101 234 5678</a></li>
+            <li><span>✉️ Email: </span> <a href="#" id="footerEmail">info@egyptvoyage.com</a></li>
+            <li><span>💬 WhatsApp: </span> <a href="https://wa.me/201012345678" target="_blank">Chat with Booking Agent</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 Egypt Voyage Tours. <span data-i18n="footer_rights">All rights reserved.</span>
+        </div>
+        <div>
+          <a href="/admin.html" class="admin-link-discreet">
+            <span>🔒</span> <span data-i18n="nav_admin">Admin Panel</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING WHATSAPP BUTTON ==================== -->
+  <a href="https://wa.me/201012345678" target="_blank" class="floating-whatsapp" id="floatingWhatsappBtn" aria-label="WhatsApp">
+    <svg class="whatsapp-icon-svg" viewBox="0 0 24 24">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.077-1.112-.057-.272-.088-.636-.213-1.141-.433-2.133-.932-3.526-3.1-3.633-3.242-.106-.142-.865-1.149-.865-2.193 0-1.043.548-1.558.742-1.77.195-.213.424-.266.566-.266.143 0 .285.002.409.008.131.006.307-.049.48.366.179.429.61 1.488.663 1.595.053.107.089.231.018.373-.071.142-.106.23-.213.355-.106.124-.224.278-.32.373-.106.107-.217.223-.093.436.124.213.551.908 1.18 1.468.81.722 1.492.946 1.705 1.053.213.107.338.089.462-.053.125-.142.533-.62.675-.833.142-.213.284-.177.48-.107.195.071 1.237.583 1.45.69.213.106.355.16.408.248.053.089.053.515-.091.92z"/>
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.309C8.423 21.524 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.25c-1.637 0-3.167-.47-4.47-1.285l-.32-.199-2.964.777.791-2.89-.219-.348C3.942 14.949 3.5 13.518 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.5-8.5 8.5z"/>
+    </svg>
+    <span data-i18n="floating_whatsapp">Chat on WhatsApp</span>
+  </a>
+
+  <!-- ==================== TOUR DETAILS MODAL ==================== -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeDetailsModal()">✕</button>
+      <div class="modal-body" id="detailsModalBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== WHATSAPP BOOKING MODAL ==================== -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeBookingModal()">✕</button>
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="modal_book_title">Fast WhatsApp Booking</h3>
+        <p class="modal-subtitle" data-i18n="modal_book_subtitle">
+          Fill details or click directly to chat with our booking specialist
+        </p>
+        <div style="margin-top: 10px;">
+          <strong id="bookingModalTourName" style="color: var(--accent-cyan); font-size: 1.1rem;"></strong>
+          <span id="bookingModalCity" style="color: var(--text-muted); font-size: 0.9rem; margin-left: 8px;"></span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form id="quickBookingForm">
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_date">Tour Date</label>
+            <input type="date" class="form-input" id="bookingDate" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" data-i18n="label_adults">Adults</label>
+              <div class="counter-input-wrap">
+                <button type="button" class="counter-btn" id="adultMinus">−</button>
+                <div class="counter-val" id="adultCount">2</div>
+                <button type="button" class="counter-btn" id="adultPlus">+</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="label_children">Children (under 11)</label>
+              <div class="counter-input-wrap">
+                <button type="button" class="counter-btn" id="childMinus">−</button>
+                <div class="counter-val" id="childCount">0</div>
+                <button type="button" class="counter-btn" id="childPlus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_hotel">Hotel Name & Room (optional)</label>
+            <input type="text" class="form-input" id="bookingHotel" placeholder="e.g. Albatros Palace, Hurghada" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_notes">Special Requests / Pick-up notes</label>
+            <textarea class="form-textarea" id="bookingNotes" rows="2" placeholder="Any special requirements or preferred pickup time..."></textarea>
+          </div>
+
+          <div class="modal-estimate-box">
+            <span class="estimate-label" data-i18n="total_estimate">Estimated Total:</span>
+            <span class="estimate-price" id="bookingEstimatedPrice">€56</span>
+          </div>
+
+          <button type="submit" class="btn-whatsapp-large" style="width: 100%; justify-content: center; font-size: 1.05rem;">
+            <span>💬</span> <span data-i18n="btn_send_whatsapp">Send Booking via WhatsApp</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/translations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
