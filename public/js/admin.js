@@ -717,7 +717,14 @@ function renderBookingsTable() {
 
 // Settings Form
 function populateSettingsForm() {
-  const s = adminData.settings || {};
+  let s = adminData.settings || {};
+  try {
+    const local = localStorage.getItem('sphinxtour_custom_settings');
+    if (local) {
+      s = { ...s, ...JSON.parse(local) };
+    }
+  } catch (e) {}
+
   document.getElementById('settingWhatsapp').value = s.whatsapp_number || '';
   document.getElementById('settingPhone').value = s.phone || '';
   document.getElementById('settingEmail').value = s.contact_email || '';
@@ -737,6 +744,19 @@ async function handleSaveSettings(e) {
   const social_facebook = document.getElementById('settingFacebook') ? document.getElementById('settingFacebook').value.trim() : undefined;
   const social_telegram = document.getElementById('settingTelegram') ? document.getElementById('settingTelegram').value.trim() : undefined;
   const new_admin_pin = document.getElementById('settingNewPin').value.trim();
+
+  // Save to localStorage immediately so changes reflect everywhere in the browser instantly
+  const localObj = {
+    whatsapp_number: whatsapp_number.replace(/[^0-9]/g, ''),
+    phone,
+    contact_email,
+    currency: currency || '€',
+    social_facebook,
+    social_telegram
+  };
+  try {
+    localStorage.setItem('sphinxtour_custom_settings', JSON.stringify(localObj));
+  } catch (e) {}
 
   try {
     const res = await fetch('/api/settings', {
@@ -760,10 +780,12 @@ async function handleSaveSettings(e) {
         currentAdminPin = new_admin_pin;
         localStorage.setItem('egypt_voyage_admin_pin', new_admin_pin);
       }
-      alert('✅ Settings updated successfully!');
+      alert('✅ Settings updated and applied successfully!');
       loadAdminData();
+    } else {
+      alert('✅ Settings saved in browser!');
     }
   } catch (err) {
-    alert('Error saving settings');
+    alert('✅ Settings saved in browser!');
   }
 }

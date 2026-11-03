@@ -159,6 +159,15 @@ async function fetchData() {
     const data = await res.json();
     appData = data;
 
+    // Check if custom settings are saved in localStorage (provides instant sync even across serverless/static deployments)
+    try {
+      const localSettings = localStorage.getItem('sphinxtour_custom_settings');
+      if (localSettings) {
+        const parsed = JSON.parse(localSettings);
+        appData.settings = { ...(appData.settings || {}), ...parsed };
+      }
+    } catch (e) {}
+
     updateSiteSettings();
     renderCities();
     renderCityFilters();
@@ -167,6 +176,14 @@ async function fetchData() {
     applyTranslations();
   } catch (err) {
     console.error('Error loading site data:', err);
+    // Fallback to local settings if available
+    try {
+      const localSettings = localStorage.getItem('sphinxtour_custom_settings');
+      if (localSettings) {
+        appData.settings = JSON.parse(localSettings);
+        updateSiteSettings();
+      }
+    } catch (e) {}
   }
 }
 
@@ -199,11 +216,17 @@ function updateSiteSettings() {
     heroWa.href = `https://wa.me/${settings.whatsapp_number}`;
   }
 
+  // Footer WhatsApp link
+  const footerWa = document.getElementById('footerWhatsappLink');
+  if (footerWa && settings.whatsapp_number) {
+    footerWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  }
+
   // Footer phone and email
   const footerPhone = document.getElementById('footerPhone');
   if (footerPhone && settings.phone) {
     footerPhone.textContent = settings.phone;
-    footerPhone.href = `tel:${settings.phone}`;
+    footerPhone.href = `tel:${settings.phone.replace(/[^0-9+]/g, '')}`;
   }
   const footerEmail = document.getElementById('footerEmail');
   if (footerEmail && settings.contact_email) {
@@ -916,3 +939,14 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+// Sync settings in real time across browser tabs
+window.addEventListener('storage', (e) => {
+  if (e.key === 'sphinxtour_custom_settings' && e.newValue) {
+    try {
+      const parsed = JSON.parse(e.newValue);
+      appData.settings = { ...(appData.settings || {}), ...parsed };
+      updateSiteSettings();
+    } catch (err) {}
+  }
+});

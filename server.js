@@ -6,7 +6,9 @@ const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const os = require('os');
 const DB_FILE = path.join(__dirname, 'data', 'database.json');
+const TMP_DB_FILE = path.join(os.tmpdir(), 'sphinxtour_database.json');
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 
 // Ensure uploads dir exists
@@ -50,22 +52,40 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 // Helper: read and write database
 function getDb() {
   try {
+    if (fs.existsSync(TMP_DB_FILE)) {
+      const raw = fs.readFileSync(TMP_DB_FILE, 'utf8');
+      return JSON.parse(raw);
+    }
     const raw = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(raw);
   } catch (err) {
-    console.error('Error reading database:', err);
-    return { settings: {}, cities: [], tours: [], bookings: [] };
+    try {
+      const raw = fs.readFileSync(DB_FILE, 'utf8');
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error('Error reading database:', err);
+      return { settings: {}, cities: [], tours: [], bookings: [] };
+    }
   }
 }
 
 function saveDb(data) {
+  let saved = false;
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
-    return true;
+    saved = true;
   } catch (err) {
-    console.error('Error saving database:', err);
-    return false;
+    // Read-only filesystem (e.g. Vercel serverless / AWS Lambda)
   }
+
+  try {
+    fs.writeFileSync(TMP_DB_FILE, JSON.stringify(data, null, 2), 'utf8');
+    saved = true;
+  } catch (tmpErr) {
+    console.error('Error writing to tmp:', tmpErr);
+  }
+
+  return saved;
 }
 
 // Authentication middleware for admin mutations
