@@ -1779,29 +1779,390 @@ button {
 }
 
 @media (max-width: 768px) {
-  .header-inner { height: 90px; }
-  .logo-img { height: 72px; }
-  .nav-menu { display: none; }
-  .mobile-menu-btn { display: block; }
-  .hero-section { padding: 110px 0 40px; }
-  .hero-title { font-size: 2.2rem; }
-  .hero-subtitle { font-size: 1rem; }
-  .rotating-banner-wrapper { height: 260px; border-radius: 16px; }
-  .banner-pill-tag { bottom: 12px; right: 12px; padding: 6px 14px; font-size: 0.72rem; }
-  .banner-nav-btn { width: 36px; height: 36px; }
-  .banner-nav-btn.prev { left: 10px; }
-  .banner-nav-btn.next { right: 10px; }
-  .banner-controls-capsule { bottom: 12px; padding: 5px 12px; gap: 8px; }
-  .hero-trust-bar { grid-template-columns: 1fr; }
-  .cities-grid { grid-template-columns: 1fr; }
-  .city-card { height: 360px; }
-  .tours-grid { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: 1fr; }
-  .reviews-grid { grid-template-columns: 1fr; }
-  .reviews-summary-bar { flex-direction: column; align-items: stretch; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .included-list, .excluded-list { grid-template-columns: 1fr; }
-  .floating-whatsapp span { display: none; }
-  .floating-whatsapp { padding: 14px; border-radius: var(--radius-full); }
+  .container {
+    padding: 0 14px;
+  }
+
+  /* Header & Navigation */
+  .header-inner {
+    height: 72px;
+  }
+
+  .logo-img {
+    height: 52px;
+    max-width: 175px;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .nav-actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .lang-btn {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    gap: 4px;
+  }
+
+  .btn-whatsapp-pill {
+    padding: 7px 12px;
+    font-size: 0.82rem;
+    gap: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 92px 0 36px;
+  }
+
+  .hero-header-box {
+    margin-bottom: 24px;
+  }
+
+  .badge-glow {
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    margin-bottom: 14px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 22px;
+    padding: 0 4px;
+  }
+
+  /* Rotating Banner */
+  .rotating-banner-wrapper {
+    height: 270px;
+    border-radius: 16px;
+  }
+
+  /* Place luxury pill tag cleanly at the TOP LEFT so it NEVER collides with bottom controls */
+  .banner-pill-tag {
+    top: 14px;
+    left: 14px;
+    bottom: auto;
+    right: auto;
+    padding: 5px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.4px;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .banner-nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .banner-nav-btn.prev {
+    left: 8px;
+  }
+
+  .banner-nav-btn.next {
+    right: 8px;
+  }
+
+  .banner-controls-capsule {
+    bottom: 12px;
+    padding: 6px 14px;
+    gap: 8px;
+  }
+
+  .banner-dot.active {
+    width: 22px;
+  }
+
+  /* Filter Pills */
+  .city-pills {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 2px 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .city-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .search-wrap {
+    max-width: 100%;
+  }
+
+  .search-input {
+    padding: 12px 16px 12px 42px;
+    font-size: 0.9rem;
+  }
+
+  .search-icon {
+    left: 14px;
+  }
+
+  /* Grids */
+  .hero-trust-bar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px 18px;
+  }
+
+  .cities-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .city-card {
+    height: 320px;
+  }
+
+  .tours-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .tour-thumb {
+    height: 210px;
+  }
+
+  .tour-body {
+    padding: 20px 18px;
+  }
+
+  .tour-title {
+    font-size: 1.18rem;
+    min-height: auto;
+    margin-bottom: 8px;
+  }
+
+  .tour-short-desc {
+    font-size: 0.88rem;
+    margin-bottom: 16px;
+  }
+
+  .tour-price-box {
+    padding: 10px 0;
+    margin-bottom: 14px;
+  }
+
+  .tour-price-val {
+    font-size: 1.55rem;
+  }
+
+  .tour-actions {
+    grid-template-columns: 1fr 1.25fr;
+    gap: 8px;
+  }
+
+  .btn-card-details,
+  .btn-card-whatsapp {
+    padding: 11px 10px;
+    font-size: 0.85rem;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .why-card {
+    padding: 24px 20px;
+  }
+
+  /* Reviews */
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .reviews-summary-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 18px;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .reviews-score-block {
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .reviews-big-number {
+    font-size: 2.6rem;
+  }
+
+  .btn-write-review {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+
+  .review-card {
+    padding: 20px 18px;
+  }
+
+  /* Modals */
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    border-radius: 16px;
+    max-height: 92vh;
+  }
+
+  .modal-header {
+    padding: 20px 20px 16px;
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+  }
+
+  .modal-body {
+    padding: 18px 20px;
+  }
+
+  .modal-close-btn {
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    padding: 11px 14px;
+  }
+
+  .included-list, .excluded-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 50px 0 24px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .social-links {
+    gap: 8px;
+  }
+
+  .social-icon-btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* Floating WhatsApp */
+  .floating-whatsapp span {
+    display: none;
+  }
+
+  .floating-whatsapp {
+    padding: 14px;
+    border-radius: var(--radius-full);
+    bottom: 20px;
+    right: 18px;
+  }
+}
+
+/* Extra small devices (<= 400px, like iPhone 12/13 mini, Galaxy A, etc.) */
+@media (max-width: 400px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .header-inner {
+    height: 66px;
+  }
+
+  .logo-img {
+    height: 46px;
+    max-width: 145px;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .lang-btn {
+    padding: 5px 8px;
+    font-size: 0.78rem;
+    gap: 3px;
+  }
+
+  .btn-whatsapp-pill {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .rotating-banner-wrapper {
+    height: 230px;
+  }
+
+  .tour-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ultra small devices (<= 340px) */
+@media (max-width: 340px) {
+  .logo-img {
+    height: 40px;
+    max-width: 120px;
+  }
+
+  .btn-whatsapp-text {
+    display: none;
+  }
+
+  .btn-whatsapp-pill {
+    padding: 8px 10px;
+    border-radius: 50%;
+  }
 }
