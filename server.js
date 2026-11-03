@@ -389,7 +389,7 @@ function startServer(port) {
     console.log(`\n======================================================`);
     console.log(`🚀 Tour Booking Platform is LIVE on http://localhost:${port}`);
     console.log(`🔑 Admin Panel available at: http://localhost:${port}/admin.html`);
-    console.log(`🔑 Default Admin PIN: admin123`);
+    console.log(`🔒 Security PIN: Protected`);
     console.log(`======================================================\n`);
   });
 

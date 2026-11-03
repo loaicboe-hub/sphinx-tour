@@ -8,7 +8,7 @@
 
 - **رابط الموقع الرئيسي:** [http://localhost:3001](http://localhost:3001)
 - **لوحة تحكم الأدمن:** [http://localhost:3001/admin.html](http://localhost:3001/admin.html)
-- **رمز الدخول للأدمن (Admin PIN):** `admin123`
+- **رمز الدخول للأدمن (Admin PIN):** يتم تعيينه من إعدادات النظام (Configured via System Settings)
 
 ---
 
