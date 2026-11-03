@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// EGYPT VOYAGE - HOSTINGER DATABASE CONFIGURATION
+// SPHINXTOUR - HOSTINGER DATABASE CONFIGURATION
 // ============================================================
 
 header("Access-Control-Allow-Origin: *");
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Hostinger MySQL Credentials
 // (Update these with the database credentials created in Hostinger hPanel -> Databases)
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u123456789_egyptvoyage');
+define('DB_NAME', 'u123456789_sphinxtour');
 define('DB_USER', 'u123456789_user');
 define('DB_PASS', 'YourPasswordHere');
 

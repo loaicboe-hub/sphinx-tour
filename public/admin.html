@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard | Egypt Voyage Tours</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <title>Admin Dashboard | SphinxTour</title>
+  <link rel="icon" type="image/png" href="/uploads/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/admin.css" />
-  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <!-- ==================== LOGIN VIEW ==================== -->
   <div class="login-wrapper" id="loginWrapper">
     <div class="login-card">
-      <div class="login-badge">🔒</div>
+      <div style="text-align: center; margin-bottom: 12px;">
+        <img src="/uploads/logo.png" alt="SphinxTour" style="height: 96px; width: auto; object-fit: contain;" />
+      </div>
       <h2 class="login-title">Admin Control Panel</h2>
       <p class="login-sub">Enter your security PIN to manage excursions and settings</p>
       
@@ -39,8 +40,8 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
-        <div style="font-size: 1.5rem;">🌴</div>
-        <div>EgyptVoyage <span style="color: var(--admin-accent); font-size: 0.8rem; display: block;">ADMIN PANEL</span></div>
+        <img src="/uploads/logo.png" alt="SphinxTour" style="height: 78px; width: auto; object-fit: contain; margin-bottom: 6px; background: #FFFFFF; padding: 4px 10px; border-radius: 8px; display: block;" />
+        <span style="color: var(--admin-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; display: block;">ADMIN PANEL</span>
       </div>
 
       <ul class="sidebar-nav">
@@ -50,11 +51,14 @@
         <li class="sidebar-link" data-tab="cities">
           <span>📍</span> Destinations (4 Cities)
         </li>
+        <li class="sidebar-link" data-tab="reviews">
+          <span>⭐</span> Guest Reviews <span class="badge-pending" id="reviewsPendingBadge" style="display: none; background: #EF4444; color: #FFFFFF; font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; margin-left: auto; font-weight: 700;">0</span>
+        </li>
         <li class="sidebar-link" data-tab="bookings">
           <span>📋</span> WhatsApp Leads
         </li>
         <li class="sidebar-link" data-tab="settings">
-          <span>⚙️</span> Site & WhatsApp Settings
+          <span>⚙️</span> Website & Contact Settings
         </li>
       </ul>
 
@@ -113,6 +117,13 @@
             <div>
               <div class="stat-val" id="statTotalBookings">0</div>
               <div class="stat-label">WhatsApp Inquiries</div>
+            </div>
+          </div>
+          <div class="stat-card" style="cursor: pointer;" onclick="switchTab('reviews')">
+            <div class="stat-icon">⭐</div>
+            <div>
+              <div class="stat-val" id="statPendingReviews">0</div>
+              <div class="stat-label">Pending Reviews</div>
             </div>
           </div>
         </div>
@@ -175,6 +186,42 @@
         </div>
       </section>
 
+      <!-- ==================== TAB: REVIEWS MODERATION ==================== -->
+      <section class="admin-tab-pane" id="tab-reviews">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">Guest Reviews & Approvals</h1>
+            <p class="topbar-sub">Approve or reject client reviews before they appear publicly on the website</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-review-tab active" id="btnFilterAllReviews" onclick="filterReviewsAdmin('all')">All (<span id="countReviewsAll">0</span>)</button>
+            <button type="button" class="btn-review-tab" id="btnFilterPendingReviews" onclick="filterReviewsAdmin('pending')" style="color: #B45309; border-color: #FCD34D;">⏳ Pending (<span id="countReviewsPending">0</span>)</button>
+            <button type="button" class="btn-review-tab" id="btnFilterApprovedReviews" onclick="filterReviewsAdmin('approved')" style="color: #047857; border-color: #A7F3D0;">✓ Approved (<span id="countReviewsApproved">0</span>)</button>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Client Name</th>
+                  <th>Excursion / Location</th>
+                  <th>Rating</th>
+                  <th style="min-width: 260px;">Feedback Comment</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Moderation Action</th>
+                </tr>
+              </thead>
+              <tbody id="reviewsTableBody">
+                <!-- Rendered dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <!-- TAB 3: BOOKINGS / LEADS -->
       <section class="admin-tab-pane" id="tab-bookings">
         <div class="admin-topbar">
@@ -209,48 +256,144 @@
       <section class="admin-tab-pane" id="tab-settings">
         <div class="admin-topbar">
           <div>
-            <h1 class="topbar-title">Site & WhatsApp Settings</h1>
-            <p class="topbar-sub">Update receiving WhatsApp number, currency, and security PIN</p>
+            <h1 class="topbar-title">Website & Contact Settings</h1>
+            <p class="topbar-sub">Manage your WhatsApp booking channel, public contact info, currency, social media, and admin security</p>
           </div>
         </div>
 
-        <div class="data-card">
-          <form id="settingsForm">
-            <div class="settings-form-grid">
-              <div class="settings-group">
-                <label class="settings-label">WhatsApp Receiving Number (International format without +)</label>
-                <input type="text" class="settings-input" id="settingWhatsapp" placeholder="e.g. 201012345678" required />
-                <small style="color: var(--text-dim); display: block; margin-top: 4px;">All "Book via WhatsApp" buttons will immediately direct to this number.</small>
+        <form id="settingsForm">
+          <!-- CARD 1: WHATSAPP BOOKING INTEGRATION -->
+          <div class="data-card" style="margin-bottom: 24px; border-left: 4px solid #25D366;">
+            <div class="data-header" style="background: rgba(37, 211, 102, 0.05);">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">📱</span> WhatsApp Booking Channel
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Direct hotline for customer inquiries and instant bookings</p>
               </div>
-
-              <div class="settings-group">
-                <label class="settings-label">Contact Phone (Display on site)</label>
-                <input type="text" class="settings-input" id="settingPhone" placeholder="+20 101 234 5678" />
-              </div>
-
-              <div class="settings-group">
-                <label class="settings-label">Contact Email</label>
-                <input type="email" class="settings-input" id="settingEmail" placeholder="info@egyptvoyage.com" />
-              </div>
-
-              <div class="settings-group">
-                <label class="settings-label">Currency Symbol</label>
-                <input type="text" class="settings-input" id="settingCurrency" placeholder="€" />
-              </div>
-
-              <div class="settings-group" style="grid-column: 1/-1; border-top: 1px solid var(--admin-border); padding-top: 20px;">
-                <label class="settings-label" style="color: var(--admin-accent);">Change Admin Security PIN (Optional)</label>
-                <input type="password" class="settings-input" id="settingNewPin" placeholder="Leave blank to keep current PIN" />
+              <span class="badge-status badge-active">Active WhatsApp Channel</span>
+            </div>
+            <div style="padding: 24px;">
+              <div class="form-group" style="max-width: 540px; margin-bottom: 8px;">
+                <label class="form-label">WhatsApp Receiving Number (International format without '+') *</label>
+                <div style="position: relative;">
+                  <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #25D366; font-size: 1rem;">💬 +</span>
+                  <input type="text" class="form-input" id="settingWhatsapp" placeholder="e.g. 201012345678" style="padding-left: 48px; font-weight: 600;" required />
+                </div>
+                <small style="color: var(--text-dim); display: block; margin-top: 8px; line-height: 1.4;">
+                  Enter country code + phone number without any '+' or spaces (e.g. Egypt: <strong>201012345678</strong>, Poland: <strong>48xxxxxxxxx</strong>, UK: <strong>44xxxxxxxxx</strong>). All "Book via WhatsApp" buttons across all excursions will immediately direct clients to this number with pre-filled tour details.
+                </small>
               </div>
             </div>
+          </div>
 
-            <div style="padding: 0 24px 24px;">
-              <button type="submit" class="btn-admin-primary">
-                💾 Save Settings
-              </button>
+          <!-- CARD 2: GENERAL WEBSITE CONTACT DETAILS (NON-WHATSAPP) -->
+          <div class="data-card" style="margin-bottom: 24px; border-left: 4px solid #3B82F6;">
+            <div class="data-header" style="background: rgba(59, 130, 246, 0.05);">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">📞</span> General Public Contact Details
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Public business information displayed on the website header and footer (separate from WhatsApp)</p>
+              </div>
+              <span class="badge-status" style="background: rgba(59, 130, 246, 0.15); color: #60A5FA;">Website Display</span>
             </div>
-          </form>
-        </div>
+            <div style="padding: 24px;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Customer Support Phone (Voice Calls)</label>
+                  <input type="text" class="form-input" id="settingPhone" placeholder="+20 101 234 5678" />
+                  <small style="color: var(--text-dim); display: block; margin-top: 6px;">Shown to visitors in the website header and footer for regular phone calls.</small>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Official Contact Email</label>
+                  <input type="email" class="form-input" id="settingEmail" placeholder="info@sphinxtour.com" />
+                  <small style="color: var(--text-dim); display: block; margin-top: 6px;">Public email address shown in the footer for customer inquiries.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3: CURRENCY & PRICING -->
+          <div class="data-card" style="margin-bottom: 24px; border-left: 4px solid #10B981;">
+            <div class="data-header" style="background: rgba(16, 185, 129, 0.05);">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">🌐</span> Currency & Price Display
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Primary currency symbol shown on all excursion price badges</p>
+              </div>
+              <span class="badge-status" style="background: rgba(16, 185, 129, 0.15); color: #34D399;">Multi-Currency Enabled</span>
+            </div>
+            <div style="padding: 24px;">
+              <div class="form-group" style="max-width: 320px; margin-bottom: 8px;">
+                <label class="form-label">Primary Currency Symbol</label>
+                <input type="text" class="form-input" id="settingCurrency" placeholder="€" style="font-weight: 700; font-size: 1.1rem; text-align: center; max-width: 140px;" />
+                <small style="color: var(--text-dim); display: block; margin-top: 8px; line-height: 1.4;">
+                  Default symbol displayed on excursion cards (e.g. € or $, £, PLN, EGP). Website automatically displays the guarantee: <em>"Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)"</em>.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 4: SOCIAL MEDIA CHANNELS -->
+          <div class="data-card" style="margin-bottom: 24px; border-left: 4px solid #8B5CF6;">
+            <div class="data-header" style="background: rgba(139, 92, 246, 0.05);">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">🔗</span> Official Social Media Channels
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Add your official social media profiles to display brand icons in the website footer</p>
+              </div>
+              <span class="badge-status" style="background: rgba(139, 92, 246, 0.15); color: #A78BFA;">Footer Brand Icons</span>
+            </div>
+            <div style="padding: 24px;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color: #1877F2; font-size: 1.2rem;">📘</span> Facebook Page / Group URL
+                  </label>
+                  <input type="url" class="form-input" id="settingFacebook" placeholder="https://facebook.com/sphinxtour" />
+                  <small style="color: var(--text-dim); display: block; margin-top: 6px;">Direct link to your company's Facebook page.</small>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color: #229ED9; font-size: 1.2rem;">✈️</span> Telegram Channel / Direct Chat
+                  </label>
+                  <input type="url" class="form-input" id="settingTelegram" placeholder="https://t.me/sphinxtour" />
+                  <small style="color: var(--text-dim); display: block; margin-top: 6px;">Direct link to your Telegram channel, group, or admin chat username.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 5: ADMIN SECURITY -->
+          <div class="data-card" style="margin-bottom: 28px; border-left: 4px solid var(--admin-accent);">
+            <div class="data-header" style="background: rgba(0, 210, 180, 0.05);">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">🔒</span> Admin Dashboard Security
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Manage access credentials for this administration control panel</p>
+              </div>
+              <span class="badge-status badge-featured">Security PIN</span>
+            </div>
+            <div style="padding: 24px;">
+              <div class="form-group" style="max-width: 420px; margin-bottom: 8px;">
+                <label class="form-label" style="color: var(--admin-accent);">Change Admin Security PIN (Optional)</label>
+                <input type="password" class="form-input" id="settingNewPin" placeholder="Leave blank to keep current PIN" />
+                <small style="color: var(--text-dim); display: block; margin-top: 8px;">Current default PIN is <strong>admin123</strong>. Leave blank if you do not wish to change it.</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMIT ACTION -->
+          <div style="margin-bottom: 40px; display: flex; align-items: center; gap: 16px;">
+            <button type="submit" class="btn-admin-primary" style="padding: 14px 36px; font-size: 1rem; border-radius: var(--radius-sm); cursor: pointer;">
+              💾 Save All Settings
+            </button>
+          </div>
+        </form>
       </section>
 
     </main>
@@ -258,8 +401,8 @@
 
   <!-- ==================== TOUR ADD / EDIT MODAL ==================== -->
   <div class="modal-overlay" id="tourModalOverlay">
-    <div class="modal-content" style="max-width: 780px;">
-      <button class="modal-close-btn" onclick="closeTourModal()">✕</button>
+    <div class="modal-content" style="max-width: 800px;">
+      <button class="modal-close-btn" onclick="closeTourModal()" type="button" aria-label="Close modal">✕</button>
       
       <div class="modal-header">
         <h3 class="modal-title" id="tourFormModalTitle">Add New Excursion</h3>
@@ -321,14 +464,28 @@
             <div style="margin-top: 10px;">
               <input type="text" class="form-input" id="tourImageUrlInput" placeholder="Or paste image URL (e.g. https://...)" />
             </div>
-            <img id="tourImagePreview" src="" alt="Preview" style="display: none; height: 120px; border-radius: 8px; margin-top: 10px; object-fit: cover;" />
+            <img id="tourImagePreview" src="" alt="Preview" style="display: none; height: 120px; border-radius: 8px; margin-top: 10px; object-fit: cover; border: 1px solid var(--admin-border);" />
           </div>
 
-          <!-- Multilingual Section -->
-          <h4 style="font-size: 1rem; color: var(--admin-accent); margin: 24px 0 14px;">🌍 Tour Titles & Descriptions (4 Languages)</h4>
+          <!-- Multilingual Section with Language Tabs -->
+          <div style="margin-top: 28px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <h4 style="font-size: 1rem; color: var(--admin-accent); font-weight: 700; margin: 0; display: flex; align-items: center; gap: 6px;">
+                <span>🌍</span> Tour Titles & Descriptions (4 Languages)
+              </h4>
+              <div class="tour-lang-tabs" style="display: flex; gap: 6px;">
+                <button type="button" class="tour-lang-btn active" onclick="switchTourModalLang('en', this)">🇬🇧 English *</button>
+                <button type="button" class="tour-lang-btn" onclick="switchTourModalLang('ru', this)">🇷🇺 Русский</button>
+                <button type="button" class="tour-lang-btn" onclick="switchTourModalLang('fr', this)">🇫🇷 Français</button>
+                <button type="button" class="tour-lang-btn" onclick="switchTourModalLang('pl', this)">🇵🇱 Polski</button>
+                <button type="button" class="tour-lang-btn" onclick="switchTourModalLang('all', this)">👁️ All 4</button>
+              </div>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 14px;">Fill English (required). Non-English fields can be left blank to automatically use English.</p>
+          </div>
 
           <!-- English (Primary) -->
-          <div class="lang-box">
+          <div class="lang-box" id="tourLangBox-en">
             <div class="lang-box-title">🇬🇧 English (Primary / Default)</div>
             <div class="form-group">
               <label class="form-label">Tour Title (English) *</label>
@@ -338,14 +495,14 @@
               <label class="form-label">Full Description (English) *</label>
               <textarea class="form-textarea" id="tourDescEn" rows="3" placeholder="Full details, itinerary, and highlights..." required></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label">Included Items (One per line)</label>
               <textarea class="form-textarea" id="tourIncEn" rows="3" placeholder="Hotel pickup & drop-off&#10;Lunch & soft drinks&#10;Snorkeling equipment"></textarea>
             </div>
           </div>
 
           <!-- Russian -->
-          <div class="lang-box">
+          <div class="lang-box" id="tourLangBox-ru" style="display: none;">
             <div class="lang-box-title">🇷🇺 Русский (Russian)</div>
             <div class="form-group">
               <label class="form-label">Название экскурсии (Русский)</label>
@@ -355,43 +512,43 @@
               <label class="form-label">Описание экскурсии (Русский)</label>
               <textarea class="form-textarea" id="tourDescRu" rows="3" placeholder="Подробное описание программы..."></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label">В стоимость включено (По строкам)</label>
               <textarea class="form-textarea" id="tourIncRu" rows="3" placeholder="Трансфер из отеля&#10;Обед и напитки&#10;Снаряжение"></textarea>
             </div>
           </div>
 
           <!-- French -->
-          <div class="lang-box">
+          <div class="lang-box" id="tourLangBox-fr" style="display: none;">
             <div class="lang-box-title">🇫🇷 Français (French)</div>
             <div class="form-group">
               <label class="form-label">Titre de l'excursion (Français)</label>
               <input type="text" class="form-input" id="tourNameFr" placeholder="Croisière VIP sur l'Île Orange Bay" />
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label">Description (Français)</label>
-              <textarea class="form-textarea" id="tourDescFr" rows="2" placeholder="Description de l'excursion..."></textarea>
+              <textarea class="form-textarea" id="tourDescFr" rows="3" placeholder="Description de l'excursion..."></textarea>
             </div>
           </div>
 
           <!-- Polish -->
-          <div class="lang-box">
+          <div class="lang-box" id="tourLangBox-pl" style="display: none;">
             <div class="lang-box-title">🇵🇱 Polski (Polish)</div>
             <div class="form-group">
               <label class="form-label">Nazwa wycieczki (Polski)</label>
               <input type="text" class="form-input" id="tourNamePl" placeholder="Rejs jachtem na wyspę Orange Bay" />
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label">Opis wycieczki (Polski)</label>
-              <textarea class="form-textarea" id="tourDescPl" rows="2" placeholder="Opis wycieczki po polsku..."></textarea>
+              <textarea class="form-textarea" id="tourDescPl" rows="3" placeholder="Opis wycieczki po polsku..."></textarea>
             </div>
           </div>
 
-          <div style="margin-top: 24px; display: flex; gap: 14px;">
-            <button type="submit" class="btn-admin-primary" style="flex-grow: 1; justify-content: center; padding: 14px; font-size: 1rem;">
+          <div style="margin-top: 24px; display: flex; gap: 14px; position: sticky; bottom: -24px; background: #0D1E36; padding: 16px 0; border-top: 1px solid var(--admin-border); z-index: 10;">
+            <button type="submit" class="btn-admin-primary" style="flex-grow: 1; justify-content: center; padding: 14px; font-size: 1rem; cursor: pointer;">
               💾 Save Excursion
             </button>
-            <button type="button" class="btn-card-details" onclick="closeTourModal()" style="padding: 14px 24px;">
+            <button type="button" class="btn-card-details" onclick="closeTourModal()" style="padding: 14px 28px; cursor: pointer;">
               Cancel
             </button>
           </div>

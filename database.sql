@@ -1,5 +1,5 @@
 -- ============================================================
--- EGYPT VOYAGE TOURS - HOSTINGER MYSQL DATABASE SCHEMA
+-- SPHINXTOUR - HOSTINGER MYSQL DATABASE SCHEMA
 -- ============================================================
 
 SET NAMES utf8mb4;
@@ -10,9 +10,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `site_name` varchar(255) NOT NULL DEFAULT 'Egypt Voyage Tours',
+  `site_name` varchar(255) NOT NULL DEFAULT 'SphinxTour',
   `whatsapp_number` varchar(50) NOT NULL DEFAULT '201012345678',
-  `contact_email` varchar(255) DEFAULT 'info@egyptvoyage.com',
+  `contact_email` varchar(255) DEFAULT 'info@sphinxtour.com',
   `phone` varchar(50) DEFAULT '+20 101 234 5678',
   `currency` varchar(10) DEFAULT '€',
   `currency_code` varchar(10) DEFAULT 'EUR',
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `settings` (`id`, `site_name`, `whatsapp_number`, `contact_email`, `phone`, `currency`, `currency_code`, `admin_pin`)
-VALUES (1, 'Egypt Voyage Tours', '201012345678', 'info@egyptvoyage.com', '+20 101 234 5678', '€', 'EUR', 'admin123')
+VALUES (1, 'SphinxTour', '201012345678', 'info@sphinxtour.com', '+20 101 234 5678', '€', 'EUR', 'admin123')
 ON DUPLICATE KEY UPDATE `site_name` = VALUES(`site_name`);
 
 -- ----------------------------
@@ -124,6 +124,21 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `hotel` varchar(255) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `lang` varchar(10) DEFAULT 'en',
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for reviews
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `reviews` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL,
+  `country` varchar(100) DEFAULT 'Verified Traveler',
+  `tour` varchar(255) DEFAULT 'Egypt Excursion',
+  `rating` int(2) NOT NULL DEFAULT 5,
+  `comment` text NOT NULL,
+  `review_date` date DEFAULT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

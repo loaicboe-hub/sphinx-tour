@@ -103,6 +103,23 @@ function setupAdminListeners() {
   if (settingsForm) {
     settingsForm.addEventListener('submit', handleSaveSettings);
   }
+
+  // Close Tour Modal on Backdrop click
+  const tourModal = document.getElementById('tourModalOverlay');
+  if (tourModal) {
+    tourModal.addEventListener('click', (e) => {
+      if (e.target === tourModal) {
+        closeTourModal();
+      }
+    });
+  }
+
+  // Close on Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeTourModal();
+    }
+  });
 }
 
 function logout() {
@@ -138,9 +155,16 @@ async function loadAdminData() {
     renderStats();
     renderToursTable();
     renderCitiesTable();
+    renderReviewsTable();
     renderBookingsTable();
     populateSettingsForm();
     populateCityDropdown();
+
+    if (window.location.hash === '#settings') {
+      switchTab('settings');
+    } else if (window.location.hash === '#addTour') {
+      openAddTourModal();
+    }
   } catch (err) {
     console.error('Error fetching admin data:', err);
   }
@@ -152,6 +176,21 @@ function renderStats() {
   document.getElementById('statActiveTours').textContent = adminData.tours.filter(t => t.active !== false).length;
   document.getElementById('statTotalCities').textContent = adminData.cities.length;
   document.getElementById('statTotalBookings').textContent = (adminData.bookings || []).length;
+
+  const reviews = adminData.reviews || [];
+  const pendingCount = reviews.filter(r => !r.approved).length;
+  const pendingEl = document.getElementById('statPendingReviews');
+  if (pendingEl) pendingEl.textContent = pendingCount;
+
+  const badgeEl = document.getElementById('reviewsPendingBadge');
+  if (badgeEl) {
+    if (pendingCount > 0) {
+      badgeEl.textContent = pendingCount;
+      badgeEl.style.display = 'inline-block';
+    } else {
+      badgeEl.style.display = 'none';
+    }
+  }
 }
 
 // Render Tours Table
@@ -275,13 +314,45 @@ async function deleteTour(tourId) {
   }
 }
 
+// Switch Tour Multilingual Tab in Modal
+function switchTourModalLang(lang, btn) {
+  document.querySelectorAll('.tour-lang-btn').forEach(b => b.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const defaultBtn = document.querySelector(`.tour-lang-btn[onclick*="'${lang}'"]`);
+    if (defaultBtn) defaultBtn.classList.add('active');
+  }
+
+  const langBoxes = ['en', 'ru', 'fr', 'pl'];
+  if (lang === 'all') {
+    langBoxes.forEach(l => {
+      const box = document.getElementById(`tourLangBox-${l}`);
+      if (box) box.style.display = 'block';
+    });
+  } else {
+    langBoxes.forEach(l => {
+      const box = document.getElementById(`tourLangBox-${l}`);
+      if (box) {
+        box.style.display = (l === lang) ? 'block' : 'none';
+      }
+    });
+  }
+}
+
 // Open Tour Modal for Add / Edit
 function openAddTourModal() {
   document.getElementById('tourFormModalTitle').textContent = 'Add New Excursion';
   document.getElementById('tourEditForm').reset();
   document.getElementById('tourEditId').value = '';
   document.getElementById('tourImagePreview').style.display = 'none';
+  const statusText = document.getElementById('uploadStatusText');
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+  
+  switchTourModalLang('en');
   document.getElementById('tourModalOverlay').classList.add('active');
+  const modalBody = document.querySelector('#tourModalOverlay .modal-body');
+  if (modalBody) modalBody.scrollTop = 0;
 }
 
 function openEditTourModal(tourId) {
@@ -322,7 +393,10 @@ function openEditTourModal(tourId) {
   document.getElementById('tourIncEn').value = (tour.included?.en || []).join('\n');
   document.getElementById('tourIncRu').value = (tour.included?.ru || []).join('\n');
 
+  switchTourModalLang('en');
   document.getElementById('tourModalOverlay').classList.add('active');
+  const modalBody = document.querySelector('#tourModalOverlay .modal-body');
+  if (modalBody) modalBody.scrollTop = 0;
 }
 
 function closeTourModal() {
@@ -479,6 +553,143 @@ function renderCitiesTable() {
 }
 
 // Render Bookings Table
+/* ==================== REVIEWS MODERATION MODULE ==================== */
+let currentReviewsAdminFilter = 'all';
+
+function filterReviewsAdmin(filter) {
+  currentReviewsAdminFilter = filter;
+  ['all', 'pending', 'approved'].forEach(f => {
+    const btn = document.getElementById(`btnFilter${f.charAt(0).toUpperCase() + f.slice(1)}Reviews`);
+    if (btn) {
+      if (f === filter) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  });
+  renderReviewsTable();
+}
+
+function renderReviewsTable() {
+  const tbody = document.getElementById('reviewsTableBody');
+  if (!tbody) return;
+
+  const allReviews = adminData.reviews || [];
+  const countAll = allReviews.length;
+  const countPending = allReviews.filter(r => !r.approved).length;
+  const countApproved = allReviews.filter(r => r.approved).length;
+
+  const countAllEl = document.getElementById('countReviewsAll');
+  const countPendingEl = document.getElementById('countReviewsPending');
+  const countApprovedEl = document.getElementById('countReviewsApproved');
+  if (countAllEl) countAllEl.textContent = countAll;
+  if (countPendingEl) countPendingEl.textContent = countPending;
+  if (countApprovedEl) countApprovedEl.textContent = countApproved;
+
+  // Filter list
+  let displayList = allReviews;
+  if (currentReviewsAdminFilter === 'pending') {
+    displayList = allReviews.filter(r => !r.approved);
+  } else if (currentReviewsAdminFilter === 'approved') {
+    displayList = allReviews.filter(r => r.approved);
+  }
+
+  tbody.innerHTML = '';
+  if (displayList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px;">No reviews in this view.</td></tr>`;
+    return;
+  }
+
+  displayList.forEach(r => {
+    const tr = document.createElement('tr');
+    const isApproved = r.approved === true;
+    const ratingStars = '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
+
+    const statusBadge = isApproved
+      ? `<span class="badge-status-approved">✓ Published</span>`
+      : `<span class="badge-status-pending">⏳ Pending Approval</span>`;
+
+    const toggleBtn = isApproved
+      ? `<button class="btn-unapprove" onclick="toggleReviewApproval(${r.id}, false)">Unpublish</button>`
+      : `<button class="btn-approve" onclick="toggleReviewApproval(${r.id}, true)">✓ Approve</button>`;
+
+    tr.innerHTML = `
+      <td>
+        <strong style="color: #FFFFFF; font-size: 0.95rem; display: block; margin-bottom: 2px;">${escapeHtmlAdmin(r.name)}</strong>
+        <div style="font-size: 0.8rem; color: #94A3B8;">${escapeHtmlAdmin(r.country || 'Guest')}</div>
+      </td>
+      <td><span style="color: var(--admin-accent); font-weight: 600;">${escapeHtmlAdmin(r.tour || 'General')}</span></td>
+      <td><span style="color: #F59E0B; font-weight: 700; letter-spacing: 1px;">${ratingStars}</span></td>
+      <td style="max-width: 340px; font-size: 0.92rem; line-height: 1.5; color: #F1F5F9;">${escapeHtmlAdmin(r.comment)}</td>
+      <td style="font-size: 0.85rem; color: #CBD5E1; white-space: nowrap;">${r.date || '—'}</td>
+      <td>${statusBadge}</td>
+      <td style="text-align: right;">
+        <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+          ${toggleBtn}
+          <button class="btn-icon" style="color: #EF4444;" onclick="deleteReviewAdmin(${r.id})" title="Delete Review">🗑️</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function toggleReviewApproval(reviewId, approved) {
+  try {
+    const res = await fetch(`/api/admin/reviews/${reviewId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify({ approved })
+    });
+    const result = await res.json();
+    if (result.success) {
+      const rev = (adminData.reviews || []).find(r => String(r.id) === String(reviewId));
+      if (rev) {
+        rev.approved = approved;
+        rev.status = approved ? 'approved' : 'rejected';
+      }
+      renderStats();
+      renderReviewsTable();
+    } else {
+      alert(result.error || 'Failed to update review status');
+    }
+  } catch (err) {
+    console.error('Error updating review:', err);
+  }
+}
+
+async function deleteReviewAdmin(reviewId) {
+  if (!confirm('Are you sure you want to permanently delete this review?')) return;
+
+  try {
+    const res = await fetch(`/api/admin/reviews/${reviewId}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-pin': currentAdminPin }
+    });
+    const result = await res.json();
+    if (result.success) {
+      adminData.reviews = (adminData.reviews || []).filter(r => String(r.id) !== String(reviewId));
+      renderStats();
+      renderReviewsTable();
+    } else {
+      alert(result.error || 'Failed to delete review');
+    }
+  } catch (err) {
+    console.error('Error deleting review:', err);
+  }
+}
+
+function escapeHtmlAdmin(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function renderBookingsTable() {
   const tbody = document.getElementById('bookingsTableBody');
   if (!tbody) return;
@@ -511,6 +722,10 @@ function populateSettingsForm() {
   document.getElementById('settingPhone').value = s.phone || '';
   document.getElementById('settingEmail').value = s.contact_email || '';
   document.getElementById('settingCurrency').value = s.currency || '€';
+  const fb = document.getElementById('settingFacebook');
+  if (fb) fb.value = s.social_facebook || '';
+  const tg = document.getElementById('settingTelegram');
+  if (tg) tg.value = s.social_telegram || '';
 }
 
 async function handleSaveSettings(e) {
@@ -519,6 +734,8 @@ async function handleSaveSettings(e) {
   const phone = document.getElementById('settingPhone').value.trim();
   const contact_email = document.getElementById('settingEmail').value.trim();
   const currency = document.getElementById('settingCurrency').value.trim();
+  const social_facebook = document.getElementById('settingFacebook') ? document.getElementById('settingFacebook').value.trim() : undefined;
+  const social_telegram = document.getElementById('settingTelegram') ? document.getElementById('settingTelegram').value.trim() : undefined;
   const new_admin_pin = document.getElementById('settingNewPin').value.trim();
 
   try {
@@ -533,6 +750,8 @@ async function handleSaveSettings(e) {
         phone,
         contact_email,
         currency,
+        social_facebook,
+        social_telegram,
         new_admin_pin: new_admin_pin || undefined
       })
     });

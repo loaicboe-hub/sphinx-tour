@@ -1,15 +1,15 @@
 {
   "settings": {
-    "site_name": "Red Sea & Egypt Excursions",
-    "whatsapp_number": "201140423458",
-    "contact_email": "info@redseaexcursions.com",
-    "phone": "+201140423458",
-    "currency": "$",
+    "site_name": "SphinxTour",
+    "whatsapp_number": "201012345678",
+    "contact_email": "info@sphinxtour.com",
+    "phone": "+20 101 234 5678",
+    "currency": "€",
     "currency_code": "EUR",
     "admin_pin": "admin123",
-    "social_facebook": "https://facebook.com",
+    "social_facebook": "https://facebook.com/sphinxtour",
     "social_instagram": "https://instagram.com",
-    "social_telegram": "https://t.me"
+    "social_telegram": "https://t.me/sphinxtour"
   },
   "cities": [
     {
@@ -886,5 +886,62 @@
       "active": true
     }
   ],
-  "bookings": []
+  "bookings": [],
+  "reviews": [
+    {
+      "id": 1,
+      "name": "Sarah & James Jenkins",
+      "country": "🇬🇧 United Kingdom",
+      "tour": "Sataya Dolphin Reef Yacht Cruise",
+      "rating": 5,
+      "comment": "Swimming naturally alongside dozens of friendly wild spinner dolphins in Marsa Alam was a lifelong dream come true! SphinxTour was punctual, friendly, and the buffet lunch was delicious.",
+      "date": "2026-10-24",
+      "approved": true,
+      "status": "approved"
+    },
+    {
+      "id": 2,
+      "name": "Marek Wiśniewski",
+      "country": "🇵🇱 Poland",
+      "tour": "Orange Bay Island VIP Cruise",
+      "rating": 5,
+      "comment": "Świetna organizacja i natychmiastowy kontakt przez WhatsApp bez konieczności wpłacania zaliczki. Krystaliczna woda na Orange Bay i niesamowite rafy. Na pewno wrócimy!",
+      "date": "2026-10-18",
+      "approved": true,
+      "status": "approved"
+    },
+    {
+      "id": 3,
+      "name": "Camille & Antoine",
+      "country": "🇫🇷 France",
+      "tour": "Desert Quad Safari & Bedouin Dinner",
+      "rating": 5,
+      "comment": "Une expérience magique dans le désert au coucher du soleil ! Les quads étaient en parfait état, le thé bédouin et le spectacle sous les étoiles étaient inoubliables.",
+      "date": "2026-10-12",
+      "approved": true,
+      "status": "approved"
+    },
+    {
+      "id": 4,
+      "name": "Elena & Mikhail",
+      "country": "🇷🇺 Russia",
+      "tour": "Ras Mohammed & White Island VIP Cruise",
+      "rating": 5,
+      "comment": "Великолепная морская прогулка в Шарм-эль-Шейхе! Белый остров просто волшебный, коралловые сады полны разноцветных рыб. Спасибо гиду и команде SphinxTour!",
+      "date": "2026-09-30",
+      "approved": true,
+      "status": "approved"
+    },
+    {
+      "id": 5,
+      "name": "David Miller",
+      "country": "🇩🇪 Germany",
+      "tour": "Semi-Submarine Sea Scope",
+      "rating": 5,
+      "comment": "Took our 2 kids on the semi-submarine in Hurghada. They loved seeing the underwater reef and fish up close. Very smooth organization and comfortable transfer.",
+      "date": "2026-09-15",
+      "approved": true,
+      "status": "approved"
+    }
+  ]
 }

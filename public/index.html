@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Egypt Voyage | Red Sea & Sinai Excursions</title>
+  <title>SphinxTour | Red Sea & Sinai Excursions</title>
   <meta name="description" content="Book top-rated sea excursions, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein directly via WhatsApp." />
   
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌴</text></svg>">
+  <link rel="icon" type="image/png" href="/uploads/logo.png">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,8 +23,7 @@
   <header class="header">
     <div class="container header-inner">
       <a href="#" class="logo">
-        <div class="logo-badge">🌴</div>
-        <div class="logo-text">Egypt<span>Voyage</span></div>
+        <img src="/uploads/logo.png" alt="SphinxTour" class="logo-img" />
       </a>
 
       <nav>
@@ -33,6 +32,7 @@
           <li><a href="#destinationsSection" class="nav-link" data-i18n="nav_destinations">Destinations</a></li>
           <li><a href="#toursSection" class="nav-link" data-i18n="nav_tours">Excursions</a></li>
           <li><a href="#whyUsSection" class="nav-link" data-i18n="nav_why_us">Why Us</a></li>
+          <li><a href="#reviewsSection" class="nav-link" data-i18n="nav_reviews">Reviews</a></li>
           <li><a href="#contactSection" class="nav-link" data-i18n="nav_contact">Contact</a></li>
         </ul>
       </nav>
@@ -277,18 +277,60 @@
     </div>
   </section>
 
+  <!-- ==================== REVIEWS SECTION ==================== -->
+  <section class="section" id="reviewsSection" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="reviews_badge">Guest Experiences</span>
+        <h2 class="section-title" data-i18n="reviews_title">Client Reviews & Ratings</h2>
+        <p class="section-subtitle" data-i18n="reviews_subtitle">
+          Real stories and ratings from travelers who booked unforgettable adventures with SphinxTour.
+        </p>
+      </div>
+
+      <!-- Reviews Summary Bar -->
+      <div class="reviews-summary-bar">
+        <div class="reviews-score-block">
+          <div class="reviews-big-number">4.9</div>
+          <div class="reviews-score-details">
+            <div class="reviews-stars-visual">★★★★★</div>
+            <div class="reviews-caption" data-i18n="reviews_rating_caption">Average rating based on 480+ guest reviews</div>
+          </div>
+        </div>
+        <button class="btn-write-review" onclick="openReviewModal()">
+          <span>✍️</span> <span data-i18n="reviews_btn_write">Write a Review</span>
+        </button>
+      </div>
+
+      <!-- Dynamic Reviews Grid -->
+      <div class="reviews-grid" id="reviewsGrid">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== FOOTER ==================== -->
   <footer class="footer" id="contactSection">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#" class="logo">
-            <div class="logo-badge">🌴</div>
-            <div class="logo-text">Egypt<span>Voyage</span></div>
+            <img src="/uploads/logo.png" alt="SphinxTour" class="logo-img footer-logo-img" />
           </a>
           <p data-i18n="hero_subtitle">
             Premium tours and boat excursions in Hurghada, Sharm El Sheikh, Marsa Alam, and El Alamein with multi-language support.
           </p>
+          <!-- Official Social Channels (Facebook & Telegram) -->
+          <div class="footer-social-links">
+            <a href="https://facebook.com" target="_blank" class="social-icon-btn social-facebook" id="footerSocialFacebook" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" class="social-svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span>Facebook</span>
+            </a>
+            <a href="https://t.me" target="_blank" class="social-icon-btn social-telegram" id="footerSocialTelegram" aria-label="Telegram">
+              <svg viewBox="0 0 24 24" class="social-svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.828.948z"/></svg>
+              <span>Telegram</span>
+            </a>
+          </div>
         </div>
 
         <div>
@@ -315,7 +357,7 @@
           <h4 class="footer-col-title" data-i18n="footer_contact_info">24/7 Travel Desk</h4>
           <ul class="footer-links">
             <li><span>📞 Phone: </span> <a href="#" id="footerPhone">+20 101 234 5678</a></li>
-            <li><span>✉️ Email: </span> <a href="#" id="footerEmail">info@egyptvoyage.com</a></li>
+            <li><span>✉️ Email: </span> <a href="#" id="footerEmail">info@sphinxtour.com</a></li>
             <li><span>💬 WhatsApp: </span> <a href="https://wa.me/201012345678" target="_blank">Chat with Booking Agent</a></li>
           </ul>
         </div>
@@ -323,7 +365,7 @@
 
       <div class="footer-bottom">
         <div>
-          © 2026 Egypt Voyage Tours. <span data-i18n="footer_rights">All rights reserved.</span>
+          © 2026 SphinxTour. <span data-i18n="footer_rights">All rights reserved.</span>
         </div>
         <div>
           <a href="/admin.html" class="admin-link-discreet">
@@ -409,8 +451,79 @@
             <span class="estimate-price" id="bookingEstimatedPrice">€56</span>
           </div>
 
+          <div class="currency-trust-badge">
+            <span class="currency-badge-icon">💳</span>
+            <span data-i18n="payment_currencies">Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)</span>
+          </div>
+
           <button type="submit" class="btn-whatsapp-large" style="width: 100%; justify-content: center; font-size: 1.05rem;">
             <span>💬</span> <span data-i18n="btn_send_whatsapp">Send Booking via WhatsApp</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== WRITE REVIEW MODAL ==================== -->
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeReviewModal()">✕</button>
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="reviews_modal_title">Write Your Review</h3>
+        <p class="modal-subtitle" data-i18n="reviews_modal_subtitle">
+          Rate your experience from 1 to 5 stars and share your thoughts
+        </p>
+      </div>
+      <div class="modal-body">
+        <form id="addReviewForm" onsubmit="handleReviewSubmit(event)">
+          <!-- Star Rating Selector (1 to 5 Stars) -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="reviews_label_rating">Your Rating (1 to 5 Stars):</label>
+            <div class="star-rating-widget" id="starRatingWidget">
+              <span class="star-btn" data-value="1" title="1 Star">★</span>
+              <span class="star-btn" data-value="2" title="2 Stars">★</span>
+              <span class="star-btn" data-value="3" title="3 Stars">★</span>
+              <span class="star-btn" data-value="4" title="4 Stars">★</span>
+              <span class="star-btn active" data-value="5" title="5 Stars">★</span>
+              <span class="star-rating-text" id="starRatingText">5 / 5 - Outstanding!</span>
+            </div>
+            <input type="hidden" id="reviewRatingInput" value="5" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" data-i18n="reviews_label_name">Full Name</label>
+              <input type="text" class="form-input" id="reviewAuthorName" placeholder="e.g. John Smith" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="reviews_label_country">Country / City (Optional)</label>
+              <input type="text" class="form-input" id="reviewAuthorCountry" placeholder="e.g. 🇬🇧 London, UK" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="reviews_label_tour">Tour or City Visited</label>
+            <input type="text" class="form-input" id="reviewTourName" placeholder="e.g. Sataya Dolphin Reef Cruise" list="toursDataList" />
+            <datalist id="toursDataList">
+              <option value="Sataya Dolphin Reef Cruise">
+              <option value="Orange Bay Island VIP Cruise">
+              <option value="Desert Quad Safari & Bedouin Dinner">
+              <option value="Ras Mohammed & White Island VIP Cruise">
+              <option value="Semi-Submarine Sea Scope">
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="reviews_label_comment">Your Review / Feedback</label>
+            <textarea class="form-textarea" id="reviewCommentText" rows="4" placeholder="Tell us about the trip, guide, service, and highlights..." required></textarea>
+          </div>
+
+          <div id="reviewSuccessAlert" style="display: none; padding: 12px 16px; background: #ECFDF5; border: 1px solid #10B981; color: #065F46; border-radius: 8px; margin-bottom: 16px; font-weight: 600;">
+            ✓ <span data-i18n="reviews_success_toast">Thank you! Your review has been submitted successfully.</span>
+          </div>
+
+          <button type="submit" class="btn-review-submit" id="reviewSubmitBtn" style="width: 100%; justify-content: center;">
+            <span data-i18n="reviews_btn_submit">Submit Review ★</span>
           </button>
         </form>
       </div>

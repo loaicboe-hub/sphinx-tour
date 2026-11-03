@@ -90,7 +90,8 @@ app.get('/api/data', (req, res) => {
   res.json({
     settings: safeSettings,
     cities: db.cities,
-    tours: db.tours.filter(t => t.active !== false)
+    tours: db.tours.filter(t => t.active !== false),
+    reviews: (db.reviews || []).filter(r => r.approved === true)
   });
 });
 
@@ -288,6 +289,91 @@ app.get('/api/bookings', verifyAdmin, (req, res) => {
   res.json(db.bookings || []);
 });
 
+// Reviews API - Public (Only approved reviews)
+app.get('/api/reviews', (req, res) => {
+  const db = getDb();
+  const approved = (db.reviews || []).filter(r => r.approved === true);
+  res.json(approved);
+});
+
+// Client submit review -> Defaults to Pending Approval
+app.post('/api/reviews', (req, res) => {
+  const { name, rating, comment, tour, country } = req.body;
+  if (!name || !name.trim()) {
+    return res.status(400).json({ success: false, error: 'Name is required' });
+  }
+  if (!comment || !comment.trim()) {
+    return res.status(400).json({ success: false, error: 'Review comment is required' });
+  }
+
+  const numRating = Math.max(1, Math.min(5, parseInt(rating) || 5));
+  const db = getDb();
+  if (!db.reviews) db.reviews = [];
+
+  const newReview = {
+    id: Date.now(),
+    name: name.trim(),
+    country: country && country.trim() ? country.trim() : 'Verified Traveler',
+    tour: tour && tour.trim() ? tour.trim() : 'Egypt Excursion',
+    rating: numRating,
+    comment: comment.trim(),
+    date: new Date().toISOString().split('T')[0],
+    approved: false,
+    status: 'pending'
+  };
+
+  db.reviews.unshift(newReview);
+  saveDb(db);
+
+  res.json({
+    success: true,
+    pending: true,
+    message: 'Thank you! Your review has been submitted and is awaiting approval.',
+    review: newReview
+  });
+});
+
+// Admin Review Moderation - Approve / Reject Review
+app.patch('/api/admin/reviews/:id/status', verifyAdmin, (req, res) => {
+  const { id } = req.params;
+  const { status, approved } = req.body;
+  const db = getDb();
+  if (!db.reviews) db.reviews = [];
+
+  const review = db.reviews.find(r => String(r.id) === String(id));
+  if (!review) {
+    return res.status(404).json({ success: false, error: 'Review not found' });
+  }
+
+  if (typeof approved === 'boolean') {
+    review.approved = approved;
+    review.status = approved ? 'approved' : 'rejected';
+  } else if (status) {
+    review.status = status;
+    review.approved = (status === 'approved');
+  }
+
+  saveDb(db);
+  res.json({ success: true, review });
+});
+
+// Admin Delete Review
+app.delete('/api/admin/reviews/:id', verifyAdmin, (req, res) => {
+  const { id } = req.params;
+  const db = getDb();
+  if (!db.reviews) db.reviews = [];
+
+  const initialCount = db.reviews.length;
+  db.reviews = db.reviews.filter(r => String(r.id) !== String(id));
+
+  if (db.reviews.length === initialCount) {
+    return res.status(404).json({ success: false, error: 'Review not found' });
+  }
+
+  saveDb(db);
+  res.json({ success: true, message: 'Review deleted successfully' });
+});
+
 // SPA / direct route fallback (Express 5 compatible)
 app.use((req, res) => {
   if (req.path.startsWith('/admin')) {
@@ -297,7 +383,7 @@ app.use((req, res) => {
   }
 });
 
-// Start Server with fallback port
+// Start Server with support for both 3000 and 3001
 function startServer(port) {
   const server = app.listen(port, () => {
     console.log(`\n======================================================`);
@@ -315,6 +401,16 @@ function startServer(port) {
       console.error('Server error:', err);
     }
   });
+
+  // Also bind to 3001 if primary port is 3000 so both links work
+  if (port === 3000) {
+    const backupServer = app.listen(3001, () => {
+      console.log(`🚀 Also listening on alias: http://localhost:3001`);
+    });
+    backupServer.on('error', () => {
+      // Ignore if 3001 is already taken
+    });
+  }
 }
 
 startServer(PORT);

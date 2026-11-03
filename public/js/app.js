@@ -163,6 +163,7 @@ async function fetchData() {
     renderCities();
     renderCityFilters();
     renderTours();
+    renderReviews();
     applyTranslations();
   } catch (err) {
     console.error('Error loading site data:', err);
@@ -208,6 +209,27 @@ function updateSiteSettings() {
   if (footerEmail && settings.contact_email) {
     footerEmail.textContent = settings.contact_email;
     footerEmail.href = `mailto:${settings.contact_email}`;
+  }
+
+  // Footer Social links (Facebook & Telegram)
+  const fbBtn = document.getElementById('footerSocialFacebook');
+  if (fbBtn) {
+    if (settings.social_facebook) {
+      fbBtn.href = settings.social_facebook;
+      fbBtn.style.display = 'inline-flex';
+    } else {
+      fbBtn.style.display = 'none';
+    }
+  }
+
+  const tgBtn = document.getElementById('footerSocialTelegram');
+  if (tgBtn) {
+    if (settings.social_telegram) {
+      tgBtn.href = settings.social_telegram;
+      tgBtn.style.display = 'inline-flex';
+    } else {
+      tgBtn.style.display = 'none';
+    }
   }
 }
 
@@ -285,6 +307,9 @@ function setupEventListeners() {
       executeWhatsAppBooking();
     });
   }
+
+  // Initialize Star Rating Widget
+  initStarRatingWidget();
 }
 
 // Set default booking date to tomorrow
@@ -312,6 +337,7 @@ function switchLanguage(lang) {
   renderCities();
   renderCityFilters();
   renderTours();
+  renderReviews();
   updateSiteSettings();
 }
 
@@ -529,20 +555,24 @@ function openDetailsModal(tourId) {
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
       <div>
         <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${cityName} • ⏱ ${tour.duration}</span>
-        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px;">${tourName}</h2>
+        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px; color: #000000;">${tourName}</h2>
       </div>
       <div style="text-align: right;">
         <span style="font-size: 0.8rem; color: var(--text-muted);">${t('from_price')}</span>
         <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan);">${curr}${tour.price}</div>
       </div>
     </div>
+    <div class="currency-trust-badge" style="margin-top: 0; margin-bottom: 20px;">
+      <span class="currency-badge-icon">💳</span>
+      <span>${t('payment_currencies')}</span>
+    </div>
     <div style="margin-bottom: 24px;">
-      <h4 style="font-size: 1rem; color: #FFFFFF; margin-bottom: 8px;">${t('modal_details_itinerary')}</h4>
-      <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">${tourDesc}</p>
+      <h4 style="font-size: 1.05rem; color: #000000; margin-bottom: 8px; font-weight: 700;">${t('modal_details_itinerary')}</h4>
+      <p style="color: #000000; font-size: 0.95rem; line-height: 1.6;">${tourDesc}</p>
     </div>
     ${includedList ? `
       <div style="margin-bottom: 24px;">
-        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 8px;">${t('modal_details_included')}</h4>
+        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 8px; font-weight: 700;">${t('modal_details_included')}</h4>
         <ul class="included-list">${includedList}</ul>
       </div>
     ` : ''}
@@ -687,4 +717,202 @@ async function executeWhatsAppBooking() {
 
   closeBookingModal();
   window.open(waUrl, '_blank');
+}
+
+/* ==================== REVIEWS MODULE ==================== */
+let selectedReviewRating = 5;
+
+const RATING_DESCRIPTIONS = {
+  en: { 1: '1/5 - Poor', 2: '2/5 - Fair', 3: '3/5 - Good', 4: '4/5 - Very Good', 5: '5/5 - Outstanding!' },
+  ru: { 1: '1/5 - Плохо', 2: '2/5 - Нормально', 3: '3/5 - Хорошо', 4: '4/5 - Очень хорошо', 5: '5/5 - Великолепно!' },
+  fr: { 1: '1/5 - Décevant', 2: '2/5 - Passable', 3: '3/5 - Bien', 4: '4/5 - Très bien', 5: '5/5 - Exceptionnel !' },
+  pl: { 1: '1/5 - Słabo', 2: '2/5 - Przeciętnie', 3: '3/5 - Dobrze', 4: '4/5 - Bardzo dobrze', 5: '5/5 - Znakomicie!' }
+};
+
+function initStarRatingWidget() {
+  const stars = document.querySelectorAll('.star-btn');
+  const textEl = document.getElementById('starRatingText');
+  const inputEl = document.getElementById('reviewRatingInput');
+
+  function updateStars(val) {
+    stars.forEach(s => {
+      const sVal = parseInt(s.getAttribute('data-value'));
+      if (sVal <= val) {
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+      }
+    });
+    if (textEl) {
+      const descObj = RATING_DESCRIPTIONS[currentLang] || RATING_DESCRIPTIONS.en;
+      textEl.textContent = descObj[val] || `${val} / 5`;
+    }
+    if (inputEl) inputEl.value = val;
+  }
+
+  stars.forEach(s => {
+    const val = parseInt(s.getAttribute('data-value'));
+    s.addEventListener('mouseenter', () => updateStars(val));
+    s.addEventListener('mouseleave', () => updateStars(selectedReviewRating));
+    s.addEventListener('click', () => {
+      selectedReviewRating = val;
+      updateStars(val);
+    });
+  });
+
+  updateStars(selectedReviewRating);
+}
+
+function renderReviews() {
+  const container = document.getElementById('reviewsGrid');
+  if (!container) return;
+
+  const reviews = appData.reviews || [];
+  container.innerHTML = '';
+
+  if (reviews.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">${t('reviews_empty') || 'No reviews yet. Be the first to write a review!'}</div>`;
+    return;
+  }
+
+  // Calculate average rating
+  const avg = (reviews.reduce((sum, r) => sum + (Number(r.rating) || 5), 0) / reviews.length).toFixed(1);
+  const bigNumEl = document.querySelector('.reviews-big-number');
+  if (bigNumEl) bigNumEl.textContent = avg;
+
+  reviews.forEach(review => {
+    const card = document.createElement('div');
+    card.className = 'review-card';
+
+    // User initials for avatar
+    const initials = (review.name || 'G')
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase();
+
+    const starCount = Math.max(1, Math.min(5, parseInt(review.rating) || 5));
+    const starsHtml = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
+
+    card.innerHTML = `
+      <div class="review-card-top">
+        <div class="review-user-info">
+          <div class="review-avatar">${initials}</div>
+          <div>
+            <div class="review-name">${escapeHtml(review.name)}</div>
+            <div class="review-country">${escapeHtml(review.country || 'Verified Traveler')}</div>
+          </div>
+        </div>
+        <div class="review-badge-verified">
+          ✓ <span>${t('reviews_verified') || 'Verified Guest'}</span>
+        </div>
+      </div>
+      <div class="review-stars">${starsHtml}</div>
+      ${review.tour ? `<div class="review-tour-tag">📍 ${escapeHtml(review.tour)}</div>` : ''}
+      <p class="review-text">"${escapeHtml(review.comment)}"</p>
+      <div class="review-date">🗓 ${review.date || 'Recent'}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openReviewModal() {
+  const modal = document.getElementById('reviewModal');
+  if (!modal) return;
+
+  // Populate datalist with tours
+  const dataList = document.getElementById('toursDataList');
+  if (dataList && appData.tours) {
+    dataList.innerHTML = appData.tours
+      .map(tour => {
+        const name = tour.names?.[currentLang] || tour.names?.en || '';
+        return `<option value="${name}">`;
+      })
+      .join('');
+  }
+
+  // Reset star widget
+  selectedReviewRating = 5;
+  const inputEl = document.getElementById('reviewRatingInput');
+  if (inputEl) inputEl.value = '5';
+  const textEl = document.getElementById('starRatingText');
+  if (textEl) {
+    const descObj = RATING_DESCRIPTIONS[currentLang] || RATING_DESCRIPTIONS.en;
+    textEl.textContent = descObj[5];
+  }
+  document.querySelectorAll('.star-btn').forEach(s => s.classList.add('active'));
+
+  const alert = document.getElementById('reviewSuccessAlert');
+  if (alert) alert.style.display = 'none';
+
+  modal.classList.add('active');
+}
+
+function closeReviewModal() {
+  const modal = document.getElementById('reviewModal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function handleReviewSubmit(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('reviewAuthorName').value.trim();
+  const country = document.getElementById('reviewAuthorCountry').value.trim();
+  const tour = document.getElementById('reviewTourName').value.trim();
+  const comment = document.getElementById('reviewCommentText').value.trim();
+  const rating = parseInt(document.getElementById('reviewRatingInput').value) || selectedReviewRating || 5;
+
+  if (!name || !comment) return;
+
+  const btn = document.getElementById('reviewSubmitBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+  }
+
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, country, tour, comment, rating })
+    });
+    const result = await res.json();
+    if (result.success) {
+      if (result.review && result.review.approved) {
+        if (!appData.reviews) appData.reviews = [];
+        appData.reviews.unshift(result.review);
+        renderReviews();
+      }
+
+      const alert = document.getElementById('reviewSuccessAlert');
+      if (alert) alert.style.display = 'block';
+
+      setTimeout(() => {
+        closeReviewModal();
+        document.getElementById('addReviewForm').reset();
+        if (alert) alert.style.display = 'none';
+        if (btn) {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }
+      }, 2500);
+    }
+  } catch (err) {
+    console.error('Error posting review:', err);
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
