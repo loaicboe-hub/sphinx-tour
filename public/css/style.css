@@ -2084,6 +2084,11 @@ button {
     text-align: center;
   }
 
+  .footer-admin-wrap,
+  .admin-link-discreet {
+    display: none !important;
+  }
+
   .social-links {
     gap: 8px;
   }
