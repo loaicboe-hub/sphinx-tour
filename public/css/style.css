@@ -1785,12 +1785,12 @@ button {
 
   /* Header & Navigation */
   .header-inner {
-    height: 72px;
+    height: 80px;
   }
 
   .logo-img {
-    height: 52px;
-    max-width: 175px;
+    height: 62px;
+    max-width: 210px;
   }
 
   .nav-menu {
@@ -1818,7 +1818,7 @@ button {
 
   /* Hero Section */
   .hero-section {
-    padding: 92px 0 36px;
+    padding: 98px 0 36px;
   }
 
   .hero-header-box {
@@ -2118,12 +2118,12 @@ button {
   }
 
   .header-inner {
-    height: 66px;
+    height: 72px;
   }
 
   .logo-img {
-    height: 46px;
-    max-width: 145px;
+    height: 55px;
+    max-width: 175px;
   }
 
   .nav-actions {
@@ -2158,8 +2158,8 @@ button {
 /* Ultra small devices (<= 340px) */
 @media (max-width: 340px) {
   .logo-img {
-    height: 40px;
-    max-width: 120px;
+    height: 48px;
+    max-width: 144px;
   }
 
   .btn-whatsapp-text {
