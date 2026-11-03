@@ -1785,12 +1785,12 @@ button {
 
   /* Header & Navigation */
   .header-inner {
-    height: 80px;
+    height: 88px;
   }
 
   .logo-img {
-    height: 62px;
-    max-width: 210px;
+    height: 71px;
+    max-width: 242px;
   }
 
   .nav-menu {
@@ -1818,7 +1818,7 @@ button {
 
   /* Hero Section */
   .hero-section {
-    padding: 98px 0 36px;
+    padding: 104px 0 36px;
   }
 
   .hero-header-box {
@@ -2118,12 +2118,12 @@ button {
   }
 
   .header-inner {
-    height: 72px;
+    height: 78px;
   }
 
   .logo-img {
-    height: 55px;
-    max-width: 175px;
+    height: 63px;
+    max-width: 200px;
   }
 
   .nav-actions {
@@ -2131,14 +2131,14 @@ button {
   }
 
   .lang-btn {
-    padding: 5px 8px;
-    font-size: 0.78rem;
+    padding: 5px 7px;
+    font-size: 0.76rem;
     gap: 3px;
   }
 
   .btn-whatsapp-pill {
-    padding: 6px 10px;
-    font-size: 0.78rem;
+    padding: 6px 9px;
+    font-size: 0.76rem;
     gap: 4px;
   }
 
@@ -2158,8 +2158,8 @@ button {
 /* Ultra small devices (<= 340px) */
 @media (max-width: 340px) {
   .logo-img {
-    height: 48px;
-    max-width: 144px;
+    height: 55px;
+    max-width: 165px;
   }
 
   .btn-whatsapp-text {
