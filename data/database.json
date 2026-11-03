@@ -115,6 +115,50 @@
   ],
   "tours": [
     {
+      "id": 13,
+      "active": true,
+      "rating": 5,
+      "reviews_count": 1,
+      "city_id": "hurghada",
+      "category": "island",
+      "duration": "5",
+      "price": 150,
+      "price_child": 75,
+      "image": "/uploads/tour_1793721555382_65656.png",
+      "names": {
+        "en": "tes",
+        "ru": "tes",
+        "fr": "tes",
+        "pl": "tes"
+      },
+      "descriptions": {
+        "en": "tes",
+        "ru": "tes",
+        "fr": "tes",
+        "pl": "tes"
+      },
+      "short_descriptions": {
+        "en": "tes.",
+        "ru": "tes.",
+        "fr": "tes.",
+        "pl": "tes."
+      },
+      "included": {
+        "en": [
+          "tes"
+        ],
+        "ru": [
+          "tes"
+        ],
+        "fr": [
+          "tes"
+        ],
+        "pl": [
+          "tes"
+        ]
+      }
+    },
+    {
       "id": 1,
       "city_id": "hurghada",
       "category": "island",
