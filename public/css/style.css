@@ -2248,9 +2248,9 @@ button {
   }
 
   .city-card {
-    height: 170px !important;
-    border-radius: 16px !important;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.14) !important;
+    height: 212px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.16) !important;
   }
 
   .city-card.active {
@@ -2261,8 +2261,8 @@ button {
   .city-card.active::after {
     top: 8px !important;
     left: 8px !important;
-    font-size: 0.62rem !important;
-    padding: 2.5px 7px !important;
+    font-size: 0.65rem !important;
+    padding: 3px 8px !important;
     border-radius: 8px !important;
     content: "✓ Active" !important;
   }
@@ -2270,26 +2270,26 @@ button {
   .city-badge {
     top: 8px !important;
     right: 8px !important;
-    padding: 3px 8px !important;
-    font-size: 0.66rem !important;
-    border-radius: 12px !important;
+    padding: 4px 9px !important;
+    font-size: 0.70rem !important;
+    border-radius: 14px !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
   }
 
   .city-content {
-    padding: 10px 12px !important;
+    padding: 12px 14px !important;
   }
 
   .city-name {
-    font-size: 1.15rem !important;
+    font-size: 1.25rem !important;
     line-height: 1.18 !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 3px !important;
     font-weight: 800 !important;
   }
 
   .city-tagline {
-    font-size: 0.72rem !important;
-    line-height: 1.15 !important;
+    font-size: 0.76rem !important;
+    line-height: 1.2 !important;
     margin-bottom: 0 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -2513,7 +2513,7 @@ button {
   }
 
   .hero-section {
-    padding-top: 94px !important;
+    padding-top: 104px !important;
   }
 
   .hero-title {
@@ -2521,21 +2521,21 @@ button {
   }
 
   .city-card {
-    height: 155px !important;
-    border-radius: 14px !important;
+    height: 195px !important;
+    border-radius: 16px !important;
   }
 
   .city-name {
-    font-size: 1.05rem !important;
+    font-size: 1.12rem !important;
   }
 
   .city-tagline {
-    font-size: 0.68rem !important;
+    font-size: 0.70rem !important;
   }
 
   .city-badge {
-    font-size: 0.62rem !important;
-    padding: 2.5px 7px !important;
+    font-size: 0.65rem !important;
+    padding: 3px 8px !important;
   }
 
   .tour-actions {
