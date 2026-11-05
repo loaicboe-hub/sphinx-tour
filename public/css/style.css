@@ -2113,11 +2113,12 @@ button {
 
   /* Hero Section for Single-Frame 4-Destination + Search Showcase */
   .hero-section {
-    padding: 76px 0 16px;
+    padding: 104px 0 16px;
   }
 
   .hero-header-box {
-    margin-bottom: 6px;
+    margin-top: 6px;
+    margin-bottom: 8px;
     text-align: center;
   }
 
@@ -2128,8 +2129,9 @@ button {
 
   .hero-title {
     font-size: 1.25rem;
-    line-height: 1.15;
-    margin-bottom: 4px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+    padding-top: 4px;
   }
 
   .hero-subtitle {
@@ -2508,6 +2510,10 @@ button {
 
   .hamburger-bar {
     width: 19px;
+  }
+
+  .hero-section {
+    padding-top: 94px !important;
   }
 
   .hero-title {
