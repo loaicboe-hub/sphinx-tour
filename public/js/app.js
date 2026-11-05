@@ -402,7 +402,7 @@ function applyTranslations() {
   document.title = t('site_title');
 }
 
-// Render 4 Cities Showcase
+// Render 4 Cities Showcase (Top of Landing Page)
 function renderCities() {
   const container = document.getElementById('citiesContainer');
   if (!container) return;
@@ -415,10 +415,22 @@ function renderCities() {
 
     // Count tours in this city
     const tourCount = appData.tours.filter(t => t.city_id === city.id).length;
+    const isSelected = selectedCityFilter === city.id;
 
     const card = document.createElement('div');
-    card.className = 'city-card';
+    card.className = `city-card ${isSelected ? 'active' : ''}`;
+    card.setAttribute('data-city-id', city.id);
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${cityName} - ${tourCount} tours`);
     card.onclick = () => filterByCity(city.id);
+    card.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        filterByCity(city.id);
+      }
+    };
+
     card.innerHTML = `
       <div class="city-img-wrapper">
         <img class="city-img" src="${city.image}" alt="${cityName}" loading="lazy" />
@@ -465,12 +477,24 @@ function renderCityFilters() {
 
 function filterByCity(cityId) {
   selectedCityFilter = cityId;
+
+  // Highlight active city card
+  document.querySelectorAll('.city-card').forEach(card => {
+    card.classList.toggle('active', card.getAttribute('data-city-id') === cityId);
+  });
+
   renderCityFilters();
   renderTours();
 
-  const toursSec = document.getElementById('toursSection');
-  if (toursSec) {
-    toursSec.scrollIntoView({ behavior: 'smooth' });
+  // Scroll to tours section if filtering by a specific destination
+  if (cityId !== 'all') {
+    const toursSec = document.getElementById('toursSection');
+    if (toursSec) {
+      const navHeight = document.querySelector('.header')?.offsetHeight || 75;
+      const yOffset = -navHeight - 12;
+      const y = toursSec.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   }
 }
 

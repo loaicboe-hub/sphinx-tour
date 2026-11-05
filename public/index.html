@@ -71,7 +71,7 @@
   </header>
 
   <!-- ==================== HERO & ROTATING BANNER SECTION ==================== -->
-  <section class="hero-section">
+  <section class="hero-section" id="destinationsSection">
     <div class="container">
       
       <!-- Top Title & Subtitle Intro -->
@@ -85,6 +85,19 @@
         <p class="hero-subtitle" data-i18n="hero_subtitle" style="color: var(--text-muted); text-shadow: none; margin-bottom: 24px;">
           Book premium sea cruises, desert safaris, and historic tours across Hurghada, Sharm El Sheikh, Marsa Alam & El Alamein with instant WhatsApp confirmation.
         </p>
+      </div>
+
+      <!-- TOP 4 DESTINATIONS (Single-Frame 2x2 on Mobile, 4 Columns on Desktop) -->
+      <div class="top-destinations-wrapper">
+        <div class="cities-grid" id="citiesContainer">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- VIP HIGHLIGHTS BANNER HEADING -->
+      <div class="hero-banner-heading">
+        <span class="hero-banner-badge">★ VIP EXPERIENCES</span>
+        <span class="hero-banner-title">Featured Red Sea Tours & Islands</span>
       </div>
 
       <!-- ROTATING BANNER (Matching User's Reference Image) -->
@@ -194,23 +207,6 @@
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ==================== 4 CITIES SHOWCASE ==================== -->
-  <section class="section" id="destinationsSection">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-tag" data-i18n="nav_destinations">Destinations</div>
-        <h2 class="section-title" data-i18n="destinations_title">Top 4 Destinations in Egypt</h2>
-        <p class="section-subtitle" data-i18n="destinations_subtitle">
-          Discover the best seaside paradises, coral reefs, and vibrant coastal cities
-        </p>
-      </div>
-
-      <div class="cities-grid" id="citiesContainer">
-        <!-- Rendered dynamically by app.js -->
-      </div>
     </div>
   </section>
 
