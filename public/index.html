@@ -61,10 +61,34 @@
           </div>
         </div>
 
-        <!-- WhatsApp Header Button -->
+        <!-- WhatsApp Header Button (Desktop Only) -->
         <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-pill" id="navWhatsappBtn">
           <span>💬</span>
           <span class="btn-whatsapp-text">WhatsApp</span>
+        </a>
+
+        <!-- Mobile 3-Bars Hamburger Button (Replaces WhatsApp on Mobile) -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <ul class="mobile-nav-links">
+        <li><a href="#" class="mobile-nav-link" data-i18n="nav_home">🏠 Home</a></li>
+        <li><a href="#destinationsSection" class="mobile-nav-link" data-i18n="nav_destinations">📍 Destinations</a></li>
+        <li><a href="#toursSection" class="mobile-nav-link" data-i18n="nav_tours">⛵ Excursions</a></li>
+        <li><a href="#whyUsSection" class="mobile-nav-link" data-i18n="nav_why_us">💎 Why Us</a></li>
+        <li><a href="#reviewsSection" class="mobile-nav-link" data-i18n="nav_reviews">⭐ Reviews</a></li>
+        <li><a href="#contactSection" class="mobile-nav-link" data-i18n="nav_contact">📞 Contact</a></li>
+      </ul>
+      <div class="mobile-nav-cta">
+        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-large" id="mobileDrawerWhatsappBtn">
+          <span>💬</span> <span data-i18n="hero_cta_whatsapp">WhatsApp Support</span>
         </a>
       </div>
     </div>
@@ -165,14 +189,54 @@
 
       </div>
 
-      <!-- Quick Action Buttons Below Banner -->
-      <div class="hero-actions" style="margin-top: 32px; margin-bottom: 24px;">
-        <a href="#toursSection" class="btn-primary" data-i18n="hero_cta_explore">
-          <span>🔍</span> Explore Tours
-        </a>
-        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-large" id="heroWhatsappBtn" data-i18n="hero_cta_whatsapp">
-          <span>💬</span> WhatsApp Support
-        </a>
+      <!-- Quick Tour Search Filter Box (Replaces single "Explore Tours" button) -->
+      <div class="hero-search-filter-box" id="heroSearchFilterBox">
+        <div class="search-filter-header">
+          <span class="search-filter-icon">🔍</span>
+          <span class="search-filter-title" data-i18n="quick_search_title">Quick Excursion Finder</span>
+        </div>
+
+        <div class="search-filter-grid">
+          <!-- 1st Dropdown: 4 Cities -->
+          <div class="search-dropdown-group">
+            <label class="search-dropdown-label" for="heroCitySelect">
+              <span>📍</span> <span data-i18n="filter_destination_label">Select Destination</span>
+            </label>
+            <div class="hero-select-wrap">
+              <select id="heroCitySelect" class="hero-custom-select" aria-label="Select Destination">
+                <option value="all" data-i18n="choose_destination_placeholder">✨ All Destinations</option>
+                <option value="hurghada">📍 Hurghada</option>
+                <option value="sharm">📍 Sharm El Sheikh</option>
+                <option value="marsa-alam">📍 Marsa Alam</option>
+                <option value="alamein">📍 El Alamein</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+
+          <!-- 2nd Dropdown: Tour Name (under 1st dropdown) -->
+          <div class="search-dropdown-group">
+            <label class="search-dropdown-label" for="heroTourSelect">
+              <span>⛵</span> <span data-i18n="filter_tour_label">Select Excursion / Tour</span>
+            </label>
+            <div class="hero-select-wrap">
+              <select id="heroTourSelect" class="hero-custom-select" aria-label="Select Excursion">
+                <option value="" data-i18n="choose_tour_placeholder">🎯 Choose Excursion...</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions: View Tour & WhatsApp Support -->
+        <div class="search-filter-actions">
+          <button id="heroSearchGoBtn" class="btn-primary btn-search-go" type="button">
+            <span>🔍</span> <span data-i18n="btn_view_tour">View Excursion</span>
+          </button>
+          <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-large" id="heroWhatsappBtn" data-i18n="hero_cta_whatsapp">
+            <span>💬</span> WhatsApp Support
+          </a>
+        </div>
       </div>
 
       <!-- Hero Trust Bar -->

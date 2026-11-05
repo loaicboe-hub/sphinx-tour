@@ -95,7 +95,13 @@ const TRANSLATIONS = {
     banner_slide_1: "5★ VIP LUXURY YACHT • RED SEA RIVIERA",
     banner_slide_2: "★ ORANGE BAY ISLAND • CARIBBEAN OF EGYPT",
     banner_slide_3: "★ MEGA DESERT SAFARI • HURGHADA & SINAI",
-    banner_slide_4: "★ SATAYA DOLPHIN REEF • MARSA ALAM"
+    banner_slide_4: "★ SATAYA DOLPHIN REEF • MARSA ALAM",
+    quick_search_title: "Quick Excursion Finder",
+    filter_destination_label: "Select Destination",
+    filter_tour_label: "Select Excursion / Tour",
+    choose_destination_placeholder: "✨ All Destinations",
+    choose_tour_placeholder: "🎯 Choose Excursion...",
+    btn_view_tour: "View Excursion"
   },
   ru: {
     site_title: "SphinxTour | Экскурсии в Хургаде, Шарме и Марса Аламе",
@@ -193,7 +199,13 @@ const TRANSLATIONS = {
     banner_slide_1: "5★ VIP ЯХТЫ И КРУИЗЫ • КРАСНОЕ МОРЕ",
     banner_slide_2: "★ ОСТРОВ ОРАНЖ БЕЙ • ЕГИПЕТСКИЕ КАРИБЫ",
     banner_slide_3: "★ МЕГА САФАРИ • КВАДРОЦИКЛЫ И ПУСТЫНЯ",
-    banner_slide_4: "★ РИФ САТАЯ • ПЛАВАНИЕ С ДЕЛЬФИНАМИ"
+    banner_slide_4: "★ РИФ САТАЯ • ПЛАВАНИЕ С ДЕЛЬФИНАМИ",
+    quick_search_title: "Быстрый поиск экскурсий",
+    filter_destination_label: "Выберите курорт",
+    filter_tour_label: "Выберите экскурсию",
+    choose_destination_placeholder: "✨ Все курорты",
+    choose_tour_placeholder: "🎯 Выберите экскурсию...",
+    btn_view_tour: "Смотреть экскурсию"
   },
   fr: {
     site_title: "SphinxTour | Excursions en Mer Rouge & Sinaï",
@@ -291,7 +303,13 @@ const TRANSLATIONS = {
     banner_slide_1: "5★ YACHT VIP & CROISIÈRES • MER ROUGE",
     banner_slide_2: "★ ÎLE ORANGE BAY • CARAÏBES D'ÉGYPTE",
     banner_slide_3: "★ MEGA SAFARI DÉSERT • DUNES & MONTAGNES",
-    banner_slide_4: "★ RÉCIF DES DAUPHINS • MARSA ALAM"
+    banner_slide_4: "★ RÉCIF DES DAUPHINS • MARSA ALAM",
+    quick_search_title: "Recherche Rapide d'Excursion",
+    filter_destination_label: "Sélectionnez la destination",
+    filter_tour_label: "Sélectionnez l'excursion",
+    choose_destination_placeholder: "✨ Toutes les destinations",
+    choose_tour_placeholder: "🎯 Choisissez une excursion...",
+    btn_view_tour: "Voir l'excursion"
   },
   pl: {
     site_title: "SphinxTour | Wycieczki fakultatywne w Egipcie",
@@ -389,6 +407,12 @@ const TRANSLATIONS = {
     banner_slide_1: "5★ LUKSUSOWY JACHT • MORZE CZERWONE",
     banner_slide_2: "★ WYSPA ORANGE BAY • EGIPSKIE KARAIBY",
     banner_slide_3: "★ MEGA SAFARI PUSTYNNE • ZŁOTE WYDMY",
-    banner_slide_4: "★ RAFA SATAYA • DZIKIE DELFINY"
+    banner_slide_4: "★ RAFA SATAYA • DZIKIE DELFINY",
+    quick_search_title: "Szybkie Wyszukiwanie Wycieczek",
+    filter_destination_label: "Wybierz kierunek",
+    filter_tour_label: "Wybierz wycieczkę",
+    choose_destination_placeholder: "✨ Wszystkie kierunki",
+    choose_tour_placeholder: "🎯 Wybierz wycieczkę...",
+    btn_view_tour: "Zobacz wycieczkę"
   }
 };

@@ -173,6 +173,7 @@ async function fetchData() {
     renderCityFilters();
     renderTours();
     renderReviews();
+    initHeroSearchFilter();
     applyTranslations();
   } catch (err) {
     console.error('Error loading site data:', err);
@@ -182,6 +183,7 @@ async function fetchData() {
       if (localSettings) {
         appData.settings = JSON.parse(localSettings);
         updateSiteSettings();
+        initHeroSearchFilter();
       }
     } catch (e) {}
   }
@@ -208,6 +210,12 @@ function updateSiteSettings() {
   const navWa = document.getElementById('navWhatsappBtn');
   if (navWa && settings.whatsapp_number) {
     navWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  }
+
+  // Mobile Drawer WhatsApp button
+  const drawerWa = document.getElementById('mobileDrawerWhatsappBtn');
+  if (drawerWa && settings.whatsapp_number) {
+    drawerWa.href = `https://wa.me/${settings.whatsapp_number}`;
   }
 
   // Hero WhatsApp button
@@ -277,6 +285,33 @@ function setupEventListeners() {
         const lang = item.getAttribute('data-lang');
         switchLanguage(lang);
         langDropdown.classList.remove('show');
+      });
+    });
+  }
+
+  // Mobile Hamburger Menu toggle & drawer
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+  if (mobileMenuBtn && mobileNavDrawer) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mobileNavDrawer.classList.toggle('open');
+      mobileMenuBtn.classList.toggle('active', isOpen);
+    });
+
+    // Close on clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileNavDrawer.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        mobileNavDrawer.classList.remove('open');
+        mobileMenuBtn.classList.remove('active');
+      }
+    });
+
+    // Close on clicking any link inside drawer
+    mobileNavDrawer.querySelectorAll('.mobile-nav-link, a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNavDrawer.classList.remove('open');
+        mobileMenuBtn.classList.remove('active');
       });
     });
   }
@@ -362,6 +397,8 @@ function switchLanguage(lang) {
   renderTours();
   renderReviews();
   updateSiteSettings();
+  updateHeroCityDropdown();
+  updateHeroTourDropdown(selectedCityFilter);
 }
 
 function updateLangButtonText() {
@@ -486,6 +523,13 @@ function filterByCity(cityId) {
   renderCityFilters();
   renderTours();
 
+  // Sync hero dropdowns if city filter changed from elsewhere
+  const heroCitySelect = document.getElementById('heroCitySelect');
+  if (heroCitySelect && heroCitySelect.value !== cityId) {
+    heroCitySelect.value = cityId;
+    updateHeroTourDropdown(cityId);
+  }
+
   // Scroll to tours section if filtering by a specific destination
   if (cityId !== 'all') {
     const toursSec = document.getElementById('toursSection');
@@ -496,6 +540,126 @@ function filterByCity(cityId) {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
+}
+
+// ==================== QUICK TOUR SEARCH FILTER ====================
+function initHeroSearchFilter() {
+  const citySelect = document.getElementById('heroCitySelect');
+  const tourSelect = document.getElementById('heroTourSelect');
+  const goBtn = document.getElementById('heroSearchGoBtn');
+
+  if (!citySelect || !tourSelect) return;
+
+  updateHeroCityDropdown();
+  updateHeroTourDropdown(citySelect.value);
+
+  // When city changes
+  citySelect.onchange = () => {
+    const cityId = citySelect.value;
+    selectedCityFilter = cityId;
+
+    // Highlight active destination card above
+    document.querySelectorAll('.city-card').forEach(card => {
+      card.classList.toggle('active', card.getAttribute('data-city-id') === cityId);
+    });
+
+    renderCityFilters();
+    renderTours();
+    updateHeroTourDropdown(cityId);
+  };
+
+  // When tour changes
+  tourSelect.onchange = () => {
+    const tourId = tourSelect.value;
+    if (tourId) {
+      selectHeroTour(tourId);
+    }
+  };
+
+  // Go / View Tour button
+  if (goBtn) {
+    goBtn.onclick = () => {
+      const tourId = tourSelect.value;
+      if (tourId) {
+        selectHeroTour(tourId);
+      } else {
+        const toursSec = document.getElementById('toursSection');
+        if (toursSec) {
+          const navHeight = document.querySelector('.header')?.offsetHeight || 80;
+          const y = toursSec.getBoundingClientRect().top + window.pageYOffset - navHeight - 12;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    };
+  }
+}
+
+function updateHeroCityDropdown() {
+  const citySelect = document.getElementById('heroCitySelect');
+  if (!citySelect) return;
+
+  const currentVal = citySelect.value || selectedCityFilter || 'all';
+  citySelect.innerHTML = `<option value="all">${t('choose_destination_placeholder')}</option>`;
+
+  if (appData.cities && appData.cities.length) {
+    appData.cities.forEach(city => {
+      const cityName = city.names?.[currentLang] || city.names?.en || city.id;
+      const opt = document.createElement('option');
+      opt.value = city.id;
+      opt.textContent = `📍 ${cityName}`;
+      citySelect.appendChild(opt);
+    });
+  }
+  citySelect.value = currentVal;
+}
+
+function updateHeroTourDropdown(cityId) {
+  const tourSelect = document.getElementById('heroTourSelect');
+  if (!tourSelect) return;
+
+  const curr = appData.settings?.currency || '€';
+  tourSelect.innerHTML = `<option value="">${t('choose_tour_placeholder')}</option>`;
+
+  let list = appData.tours || [];
+  if (cityId && cityId !== 'all') {
+    list = list.filter(t => t.city_id === cityId);
+  }
+
+  list.forEach(tour => {
+    const tourName = tour.names?.[currentLang] || tour.names?.en || 'Tour';
+    const opt = document.createElement('option');
+    opt.value = tour.id;
+    opt.textContent = `${tourName} — ${curr}${tour.price}`;
+    tourSelect.appendChild(opt);
+  });
+}
+
+function selectHeroTour(tourId) {
+  if (!tourId) return;
+  const tour = appData.tours.find(t => String(t.id) === String(tourId));
+  if (!tour) return;
+
+  if (selectedCityFilter !== 'all' && selectedCityFilter !== tour.city_id) {
+    selectedCityFilter = tour.city_id;
+    const citySelect = document.getElementById('heroCitySelect');
+    if (citySelect) citySelect.value = tour.city_id;
+    renderCityFilters();
+  }
+  renderTours();
+
+  setTimeout(() => {
+    const card = document.querySelector(`.tour-card[data-tour-id="${tourId}"]`);
+    if (card) {
+      const navHeight = document.querySelector('.header')?.offsetHeight || 80;
+      const y = card.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      card.classList.add('highlight-pulse');
+      setTimeout(() => card.classList.remove('highlight-pulse'), 3500);
+    } else {
+      const toursSec = document.getElementById('toursSection');
+      if (toursSec) toursSec.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, 120);
 }
 
 // Render Tours Grid
@@ -539,6 +703,8 @@ function renderTours() {
 
     const card = document.createElement('div');
     card.className = 'tour-card';
+    card.setAttribute('data-tour-id', tour.id);
+    card.id = `tour-${tour.id}`;
     card.innerHTML = `
       <div class="tour-thumb">
         <img src="${tour.image}" alt="${tourName}" loading="lazy" />
