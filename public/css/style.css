@@ -1272,8 +1272,11 @@ button {
 
 .tour-price-box {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
   padding: 14px 0;
   border-top: 1px solid var(--border-light);
   margin-top: auto;
@@ -1289,9 +1292,16 @@ button {
 
 .tour-price-val {
   font-family: var(--font-heading);
-  font-size: 1.7rem;
+  font-size: 2.3rem;
+  line-height: 1.1;
   font-weight: 800;
   color: var(--accent-cyan);
+}
+
+.tour-price-child {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold);
 }
 
 .tour-price-val span {
@@ -2386,12 +2396,12 @@ button {
   }
 
   .tour-price-box {
-    padding: 10px 0;
+    padding: 12px 0;
     margin-bottom: 14px;
   }
 
   .tour-price-val {
-    font-size: 1.55rem;
+    font-size: 2.05rem;
   }
 
   .tour-actions {
