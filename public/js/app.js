@@ -713,9 +713,6 @@ function renderTours() {
       </div>
       <div class="tour-body">
         <div class="tour-meta">
-          <div class="tour-duration">
-            <span>⏱</span> ${tour.duration || 'Full Day'}
-          </div>
           <div class="tour-rating">
             ★ ${tour.rating || '4.9'} <span>(${tour.reviews_count || 120})</span>
           </div>
@@ -767,7 +764,7 @@ function openDetailsModal(tourId) {
     </div>
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
       <div>
-        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${cityName} • ⏱ ${tour.duration}</span>
+        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${cityName} • ⏱ ${tour.duration || 'Full Day'}</span>
         <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px; color: #000000;">${tourName}</h2>
       </div>
       <div style="text-align: right;">
