@@ -733,7 +733,6 @@ function renderTours() {
         <h3 class="tour-title">${tourName}</h3>
         <div class="tour-price-box">
           <div>
-            <div class="tour-price-from">${t('from_price')}</div>
             <div class="tour-price-val">${curr}${tour.price} <span>/ ${t('per_person')}</span></div>
           </div>
           ${tour.price_child ? `<div style="font-size: 0.85rem; color: var(--accent-gold);">${t('child_price')}: ${curr}${tour.price_child}</div>` : ''}
