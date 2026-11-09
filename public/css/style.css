@@ -1253,9 +1253,9 @@ button {
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.35;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   color: var(--text-heading);
-  min-height: 52px;
+  min-height: auto;
 }
 
 .tour-short-desc {
@@ -1276,6 +1276,7 @@ button {
   justify-content: space-between;
   padding: 14px 0;
   border-top: 1px solid var(--border-light);
+  margin-top: auto;
   margin-bottom: 16px;
 }
 
@@ -2320,7 +2321,7 @@ button {
   .tour-title {
     font-size: 1.18rem;
     min-height: auto;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
 
   .tour-short-desc {

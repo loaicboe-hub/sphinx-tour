@@ -695,7 +695,6 @@ function renderTours() {
   container.innerHTML = '';
   filtered.forEach(tour => {
     const tourName = tour.names?.[currentLang] || tour.names?.en || 'Excursion';
-    const tourDesc = tour.short_descriptions?.[currentLang] || tour.short_descriptions?.en || '';
     
     // Find city name
     const cityObj = appData.cities.find(c => c.id === tour.city_id);
@@ -712,13 +711,7 @@ function renderTours() {
         <div class="tour-city-tag">📍 ${cityName}</div>
       </div>
       <div class="tour-body">
-        <div class="tour-meta">
-          <div class="tour-rating">
-            ★ ${tour.rating || '4.9'} <span>(${tour.reviews_count || 120})</span>
-          </div>
-        </div>
         <h3 class="tour-title">${tourName}</h3>
-        <p class="tour-short-desc">${tourDesc}</p>
         <div class="tour-price-box">
           <div>
             <div class="tour-price-from">${t('from_price')}</div>
