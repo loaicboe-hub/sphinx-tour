@@ -194,16 +194,29 @@ function updateSiteSettings() {
   const { settings } = appData;
   if (!settings) return;
 
+  const contactDigits = (settings.whatsapp_number || '201140423458').replace(/[^0-9]/g, '');
+
   // Floating WhatsApp button
   const floatingWa = document.getElementById('floatingWhatsappBtn');
-  if (floatingWa && settings.whatsapp_number) {
+  if (floatingWa && contactDigits) {
     const generalMsg = encodeURIComponent(
       currentLang === 'ru' ? 'Здравствуйте! Подскажите, пожалуйста, по поводу экскурсий.' :
       currentLang === 'fr' ? 'Bonjour! J\'aimerais avoir des informations sur vos excursions.' :
       currentLang === 'pl' ? 'Dzień dobry! Chciałbym zapytać o wycieczki.' :
       'Hello! I would like to inquire about your excursions.'
     );
-    floatingWa.href = `https://wa.me/${settings.whatsapp_number}?text=${generalMsg}`;
+    floatingWa.href = `https://wa.me/${contactDigits}?text=${generalMsg}`;
+  }
+
+  // Floating Telegram & Viber buttons (mobile stack directed to same phone number)
+  const floatingTg = document.getElementById('floatingTelegramBtn');
+  if (floatingTg && contactDigits) {
+    floatingTg.href = `https://t.me/+${contactDigits}`;
+  }
+
+  const floatingViber = document.getElementById('floatingViberBtn');
+  if (floatingViber && contactDigits) {
+    floatingViber.href = `viber://chat?number=%2B${contactDigits}`;
   }
 
   // Nav WhatsApp button

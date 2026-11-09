@@ -1880,35 +1880,91 @@ button {
   box-shadow: 0 8px 25px rgba(13, 148, 136, 0.35);
 }
 
-/* ==================== FLOATING WHATSAPP BUTTON ==================== */
-.floating-whatsapp {
+/* ==================== FLOATING CONTACT STACK ==================== */
+.floating-contact-stack {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 999;
+  bottom: 24px;
+  right: 24px;
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.floating-whatsapp {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  background: linear-gradient(135deg, var(--whatsapp-green), #16a34a);
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  background: linear-gradient(135deg, #33D955, #25D366);
   color: #FFFFFF;
-  border-radius: var(--radius-full);
-  font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: 0 8px 30px var(--whatsapp-glow);
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
   transition: var(--transition);
-  animation: floatPulse 3s infinite ease-in-out;
+}
+
+.floating-whatsapp span {
+  display: none;
 }
 
 .floating-whatsapp:hover {
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 12px 35px rgba(37, 211, 102, 0.6);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 10px 26px rgba(37, 211, 102, 0.55);
 }
 
 .whatsapp-icon-svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   fill: currentColor;
+}
+
+.floating-social-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  color: #FFFFFF;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.floating-telegram {
+  background: linear-gradient(135deg, #32B3F4, #229ED9);
+  box-shadow: 0 6px 20px rgba(34, 158, 217, 0.38);
+}
+
+.floating-telegram:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 10px 26px rgba(34, 158, 217, 0.52);
+}
+
+.floating-viber {
+  background: linear-gradient(135deg, #7B6FF0, #665CAC);
+  box-shadow: 0 6px 20px rgba(102, 92, 172, 0.4);
+}
+
+.floating-viber:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 10px 26px rgba(102, 92, 172, 0.54);
+}
+
+.telegram-icon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.viber-icon-svg {
+  width: 29px;
+  height: 29px;
+  fill: #FFFFFF;
+  display: block;
 }
 
 /* ==================== FOOTER ==================== */
@@ -2465,16 +2521,53 @@ button {
     font-size: 0.82rem;
   }
 
-  /* Floating WhatsApp */
+  /* Floating Contact Stack (WhatsApp + Telegram + Viber) */
+  .floating-contact-stack {
+    bottom: 16px;
+    right: 12px;
+    align-items: center;
+    gap: 9px;
+  }
+
   .floating-whatsapp span {
     display: none;
   }
 
   .floating-whatsapp {
-    padding: 14px;
-    border-radius: var(--radius-full);
-    bottom: 20px;
-    right: 18px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #33D955, #25D366);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.38);
+    animation: none;
+  }
+
+  .floating-whatsapp .whatsapp-icon-svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .floating-social-circle {
+    display: flex;
+    width: 48px;
+    height: 48px;
+  }
+
+  .viber-icon-svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .floating-whatsapp:hover,
+  .floating-social-circle:hover {
+    transform: none;
+  }
+
+  .floating-whatsapp:active,
+  .floating-social-circle:active {
+    transform: scale(0.94);
   }
 }
 
@@ -2541,6 +2634,24 @@ button {
 
   .tour-actions {
     grid-template-columns: 1fr;
+  }
+
+  .floating-contact-stack {
+    bottom: 14px;
+    right: 10px;
+    gap: 8px;
+  }
+
+  .floating-whatsapp,
+  .floating-social-circle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .floating-whatsapp .whatsapp-icon-svg,
+  .viber-icon-svg {
+    width: 24px;
+    height: 24px;
   }
 }
 
