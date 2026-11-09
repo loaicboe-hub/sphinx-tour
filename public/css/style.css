@@ -26,6 +26,9 @@
   --accent-gold: #D97706;          /* Warm Sun Gold */
   --accent-gold-light: #FEF3C7;
   --accent-gold-glow: rgba(217, 119, 6, 0.2);
+
+  --price-orange: #F97316;         /* Vibrant Price Orange */
+  --price-orange-deep: #EA580C;    /* Accessible Small Orange */
   
   --whatsapp-green: #25D366;
   --whatsapp-green-hover: #20BA5A;
@@ -1295,13 +1298,13 @@ button {
   font-size: 2.3rem;
   line-height: 1.1;
   font-weight: 800;
-  color: var(--accent-cyan);
+  color: var(--price-orange);
 }
 
 .tour-price-child {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--accent-gold);
+  color: var(--price-orange-deep);
 }
 
 .tour-price-val span {
@@ -1561,8 +1564,8 @@ button {
 
 /* Price Estimate Box inside modal */
 .modal-estimate-box {
-  background: var(--accent-cyan-light);
-  border: 1px solid rgba(13, 148, 136, 0.25);
+  background: #FFF7ED;
+  border: 1px solid rgba(249, 115, 22, 0.28);
   border-radius: var(--radius-md);
   padding: 16px 20px;
   display: flex;
@@ -1581,7 +1584,7 @@ button {
   font-family: var(--font-heading);
   font-size: 1.7rem;
   font-weight: 800;
-  color: var(--accent-cyan);
+  color: var(--price-orange);
 }
 
 .currency-trust-badge {

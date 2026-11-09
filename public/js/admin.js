@@ -222,7 +222,7 @@ function renderToursTable() {
       </td>
       <td>
         <div style="display: flex; align-items: center; gap: 4px;">
-          <span>${curr}</span>
+          <span style="color: #F97316; font-weight: 700;">${curr}</span>
           <input type="number" class="quick-price-input" value="${tour.price}" onchange="quickUpdatePrice(${tour.id}, this.value)" title="Change price and click outside to save" />
         </div>
       </td>

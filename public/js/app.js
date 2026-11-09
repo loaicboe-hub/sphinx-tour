@@ -795,7 +795,7 @@ function openDetailsModal(tourId) {
       </div>
       <div style="text-align: right;">
         <span style="font-size: 0.8rem; color: var(--text-muted);">${t('from_price')}</span>
-        <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan);">${curr}${tour.price}</div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--price-orange, #F97316);">${curr}${tour.price}</div>
       </div>
     </div>
     <div class="currency-trust-badge" style="margin-top: 0; margin-bottom: 20px;">
