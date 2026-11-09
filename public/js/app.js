@@ -720,7 +720,6 @@ function renderTours() {
     card.innerHTML = `
       <div class="tour-thumb">
         <img src="${tour.image}" alt="${tourName}" loading="lazy" />
-        ${tour.featured ? `<div class="tour-featured-badge">★ ${t('badge_bestseller')}</div>` : ''}
         <div class="tour-city-tag">📍 ${cityName}</div>
       </div>
       <div class="tour-body">
