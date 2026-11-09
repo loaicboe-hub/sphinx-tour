@@ -9,7 +9,7 @@ let appData = {
 };
 
 let currentLang = localStorage.getItem('egypt_voyage_lang') || 'en';
-let selectedCityFilter = 'all';
+let selectedCityFilter = 'hurghada';
 let searchQuery = '';
 let selectedBookingTour = null;
 let bookingAdults = 2;
@@ -418,7 +418,8 @@ function switchLanguage(lang) {
   renderReviews();
   updateSiteSettings();
   updateHeroCityDropdown();
-  updateHeroTourDropdown(selectedCityFilter);
+  const heroCitySelect = document.getElementById('heroCitySelect');
+  updateHeroTourDropdown(heroCitySelect ? heroCitySelect.value : 'all');
 }
 
 function updateLangButtonText() {
@@ -515,11 +516,7 @@ function renderCityFilters() {
   const container = document.getElementById('cityFiltersContainer');
   if (!container) return;
 
-  container.innerHTML = `
-    <button class="filter-pill ${selectedCityFilter === 'all' ? 'active' : ''}" onclick="filterByCity('all')">
-      ✨ ${t('filter_all_cities')}
-    </button>
-  `;
+  container.innerHTML = '';
 
   appData.cities.forEach(city => {
     const cityName = city.names?.[currentLang] || city.names?.en || city.id;
@@ -534,6 +531,9 @@ function renderCityFilters() {
 
 function filterByCity(cityId) {
   selectedCityFilter = cityId;
+  searchQuery = '';
+  const searchInput = document.getElementById('tourSearchInput');
+  if (searchInput) searchInput.value = '';
 
   // Highlight active city card
   document.querySelectorAll('.city-card').forEach(card => {
@@ -550,7 +550,7 @@ function filterByCity(cityId) {
     updateHeroTourDropdown(cityId);
   }
 
-  // Scroll to tours section if filtering by a specific destination
+  // Scroll to tours section when selecting a destination
   if (cityId !== 'all') {
     const toursSec = document.getElementById('toursSection');
     if (toursSec) {
@@ -576,11 +576,14 @@ function initHeroSearchFilter() {
   // When city changes
   citySelect.onchange = () => {
     const cityId = citySelect.value;
-    selectedCityFilter = cityId;
+    selectedCityFilter = (cityId === 'all') ? 'hurghada' : cityId;
+    searchQuery = '';
+    const searchInput = document.getElementById('tourSearchInput');
+    if (searchInput) searchInput.value = '';
 
     // Highlight active destination card above
     document.querySelectorAll('.city-card').forEach(card => {
-      card.classList.toggle('active', card.getAttribute('data-city-id') === cityId);
+      card.classList.toggle('active', card.getAttribute('data-city-id') === selectedCityFilter);
     });
 
     renderCityFilters();
@@ -618,7 +621,7 @@ function updateHeroCityDropdown() {
   const citySelect = document.getElementById('heroCitySelect');
   if (!citySelect) return;
 
-  const currentVal = citySelect.value || selectedCityFilter || 'all';
+  const currentVal = citySelect.value || 'all';
   citySelect.innerHTML = `<option value="all">${t('choose_destination_placeholder')}</option>`;
 
   if (appData.cities && appData.cities.length) {
@@ -659,10 +662,22 @@ function selectHeroTour(tourId) {
   const tour = appData.tours.find(t => String(t.id) === String(tourId));
   if (!tour) return;
 
-  if (selectedCityFilter !== 'all' && selectedCityFilter !== tour.city_id) {
+  searchQuery = '';
+  const searchInput = document.getElementById('tourSearchInput');
+  if (searchInput) searchInput.value = '';
+
+  if (selectedCityFilter !== tour.city_id) {
     selectedCityFilter = tour.city_id;
+    document.querySelectorAll('.city-card').forEach(card => {
+      card.classList.toggle('active', card.getAttribute('data-city-id') === tour.city_id);
+    });
     const citySelect = document.getElementById('heroCitySelect');
-    if (citySelect) citySelect.value = tour.city_id;
+    if (citySelect) {
+      citySelect.value = tour.city_id;
+      updateHeroTourDropdown(tour.city_id);
+      const tourSelect = document.getElementById('heroTourSelect');
+      if (tourSelect) tourSelect.value = String(tour.id);
+    }
     renderCityFilters();
   }
   renderTours();
@@ -690,15 +705,17 @@ function renderTours() {
   const curr = appData.settings?.currency || '$';
 
   let filtered = appData.tours.filter(t => {
-    // City filter
-    if (selectedCityFilter !== 'all' && t.city_id !== selectedCityFilter) {
-      return false;
-    }
-    // Search query
+    // Search query searches across all destinations/excursions
     if (searchQuery) {
       const name = (t.names?.[currentLang] || t.names?.en || '').toLowerCase();
       const desc = (t.descriptions?.[currentLang] || t.descriptions?.en || '').toLowerCase();
-      return name.includes(searchQuery) || desc.includes(searchQuery);
+      const cityObj = appData.cities.find(c => c.id === t.city_id);
+      const cityName = (cityObj?.names?.[currentLang] || cityObj?.names?.en || t.city_id || '').toLowerCase();
+      return name.includes(searchQuery) || desc.includes(searchQuery) || cityName.includes(searchQuery);
+    }
+    // City filter (Hurghada by default)
+    if (selectedCityFilter !== 'all' && t.city_id !== selectedCityFilter) {
+      return false;
     }
     return true;
   });
