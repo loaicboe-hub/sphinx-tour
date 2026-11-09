@@ -14,14 +14,14 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `whatsapp_number` varchar(50) NOT NULL DEFAULT '201012345678',
   `contact_email` varchar(255) DEFAULT 'info@sphinxtour.com',
   `phone` varchar(50) DEFAULT '+20 101 234 5678',
-  `currency` varchar(10) DEFAULT '€',
-  `currency_code` varchar(10) DEFAULT 'EUR',
+  `currency` varchar(10) DEFAULT '$',
+  `currency_code` varchar(10) DEFAULT 'USD',
   `admin_pin` varchar(100) DEFAULT 'admin123',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `settings` (`id`, `site_name`, `whatsapp_number`, `contact_email`, `phone`, `currency`, `currency_code`, `admin_pin`)
-VALUES (1, 'SphinxTour', '201012345678', 'info@sphinxtour.com', '+20 101 234 5678', '€', 'EUR', 'admin123')
+VALUES (1, 'SphinxTour', '201140423458', 'info@sphinxtour.com', '+20 114 042 3458', '$', 'USD', 'admin123')
 ON DUPLICATE KEY UPDATE `site_name` = VALUES(`site_name`);
 
 -- ----------------------------

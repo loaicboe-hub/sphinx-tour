@@ -198,7 +198,10 @@ function renderToursTable() {
   const tbody = document.getElementById('toursTableBody');
   if (!tbody) return;
 
-  const curr = adminData.settings?.currency || '€';
+  const curr = adminData.settings?.currency || '$';
+  document.querySelectorAll('.admin-curr-label').forEach(el => {
+    el.textContent = curr;
+  });
   tbody.innerHTML = '';
 
   adminData.tours.forEach(tour => {
@@ -721,14 +724,25 @@ function populateSettingsForm() {
   try {
     const local = localStorage.getItem('sphinxtour_custom_settings');
     if (local) {
-      s = { ...s, ...JSON.parse(local) };
+      const parsed = JSON.parse(local);
+      if (!localStorage.getItem('sphinxtour_currency_migrated_usd')) {
+        if (parsed.currency === '€' || parsed.currency === 'EUR') {
+          parsed.currency = '$';
+          localStorage.setItem('sphinxtour_custom_settings', JSON.stringify(parsed));
+        }
+        localStorage.setItem('sphinxtour_currency_migrated_usd', '1');
+      }
+      s = { ...s, ...parsed };
     }
   } catch (e) {}
 
   document.getElementById('settingWhatsapp').value = s.whatsapp_number || '';
   document.getElementById('settingPhone').value = s.phone || '';
   document.getElementById('settingEmail').value = s.contact_email || '';
-  document.getElementById('settingCurrency').value = s.currency || '€';
+  document.getElementById('settingCurrency').value = s.currency || '$';
+  document.querySelectorAll('.admin-curr-label').forEach(el => {
+    el.textContent = s.currency || '$';
+  });
   const fb = document.getElementById('settingFacebook');
   if (fb) fb.value = s.social_facebook || '';
   const tg = document.getElementById('settingTelegram');
@@ -740,7 +754,7 @@ async function handleSaveSettings(e) {
   const whatsapp_number = document.getElementById('settingWhatsapp').value.trim();
   const phone = document.getElementById('settingPhone').value.trim();
   const contact_email = document.getElementById('settingEmail').value.trim();
-  const currency = document.getElementById('settingCurrency').value.trim();
+  const currency = document.getElementById('settingCurrency').value.trim() || '$';
   const social_facebook = document.getElementById('settingFacebook') ? document.getElementById('settingFacebook').value.trim() : undefined;
   const social_telegram = document.getElementById('settingTelegram') ? document.getElementById('settingTelegram').value.trim() : undefined;
   const new_admin_pin = document.getElementById('settingNewPin').value.trim();
@@ -750,7 +764,7 @@ async function handleSaveSettings(e) {
     whatsapp_number: whatsapp_number.replace(/[^0-9]/g, ''),
     phone,
     contact_email,
-    currency: currency || '€',
+    currency,
     social_facebook,
     social_telegram
   };

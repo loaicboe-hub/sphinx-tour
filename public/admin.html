@@ -139,7 +139,7 @@
                   <th>Photo</th>
                   <th>Tour Name (EN / RU)</th>
                   <th>City</th>
-                  <th>Price (€)</th>
+                  <th>Price (<span class="admin-curr-label">$</span>)</th>
                   <th>Status</th>
                   <th>Featured</th>
                   <th>Actions</th>
@@ -325,9 +325,9 @@
             <div style="padding: 24px;">
               <div class="form-group" style="max-width: 320px; margin-bottom: 8px;">
                 <label class="form-label">Primary Currency Symbol</label>
-                <input type="text" class="form-input" id="settingCurrency" placeholder="€" style="font-weight: 700; font-size: 1.1rem; text-align: center; max-width: 140px;" />
+                <input type="text" class="form-input" id="settingCurrency" placeholder="$" style="font-weight: 700; font-size: 1.1rem; text-align: center; max-width: 140px;" />
                 <small style="color: var(--text-dim); display: block; margin-top: 8px; line-height: 1.4;">
-                  Default symbol displayed on excursion cards (e.g. € or $, £, PLN, EGP). Website automatically displays the guarantee: <em>"Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)"</em>.
+                  Default symbol displayed on excursion cards (e.g. $ or €, £, PLN, EGP). Website automatically displays the guarantee: <em>"Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)"</em>.
                 </small>
               </div>
             </div>
@@ -436,11 +436,11 @@
           <!-- Row 2: Price & Duration -->
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Adult Price (€) *</label>
+              <label class="form-label">Adult Price (<span class="admin-curr-label">$</span>) *</label>
               <input type="number" class="form-input" id="tourPriceInput" placeholder="28" required />
             </div>
             <div class="form-group">
-              <label class="form-label">Child Price (€)</label>
+              <label class="form-label">Child Price (<span class="admin-curr-label">$</span>)</label>
               <input type="number" class="form-input" id="tourChildPriceInput" placeholder="15" />
             </div>
             <div class="form-group">
@@ -554,6 +554,6 @@
     </div>
   </div>
 
-  <script src="js/admin.js"></script>
+  <script src="js/admin.js?v=20261109f"></script>
 </body>
 </html>

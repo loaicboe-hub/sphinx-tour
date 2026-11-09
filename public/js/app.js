@@ -164,6 +164,13 @@ async function fetchData() {
       const localSettings = localStorage.getItem('sphinxtour_custom_settings');
       if (localSettings) {
         const parsed = JSON.parse(localSettings);
+        if (!localStorage.getItem('sphinxtour_currency_migrated_usd')) {
+          if (parsed.currency === '€' || parsed.currency === 'EUR') {
+            parsed.currency = '$';
+            localStorage.setItem('sphinxtour_custom_settings', JSON.stringify(parsed));
+          }
+          localStorage.setItem('sphinxtour_currency_migrated_usd', '1');
+        }
         appData.settings = { ...(appData.settings || {}), ...parsed };
       }
     } catch (e) {}
@@ -630,7 +637,7 @@ function updateHeroTourDropdown(cityId) {
   const tourSelect = document.getElementById('heroTourSelect');
   if (!tourSelect) return;
 
-  const curr = appData.settings?.currency || '€';
+  const curr = appData.settings?.currency || '$';
   tourSelect.innerHTML = `<option value="">${t('choose_tour_placeholder')}</option>`;
 
   let list = appData.tours || [];
@@ -680,7 +687,7 @@ function renderTours() {
   const container = document.getElementById('toursContainer');
   if (!container) return;
 
-  const curr = appData.settings?.currency || '€';
+  const curr = appData.settings?.currency || '$';
 
   let filtered = appData.tours.filter(t => {
     // City filter
@@ -750,7 +757,7 @@ function openDetailsModal(tourId) {
   const tour = appData.tours.find(t => t.id === tourId);
   if (!tour) return;
 
-  const curr = appData.settings?.currency || '€';
+  const curr = appData.settings?.currency || '$';
   const tourName = tour.names?.[currentLang] || tour.names?.en || '';
   const tourDesc = tour.descriptions?.[currentLang] || tour.descriptions?.en || '';
 
@@ -834,7 +841,7 @@ function updateBookingCounters() {
   document.getElementById('childCount').textContent = bookingChildren;
 
   if (selectedBookingTour) {
-    const curr = appData.settings?.currency || '€';
+    const curr = appData.settings?.currency || '$';
     const adultPrice = selectedBookingTour.price || 0;
     const childPrice = selectedBookingTour.price_child || (adultPrice * 0.6);
     const total = (bookingAdults * adultPrice) + (bookingChildren * childPrice);
@@ -856,7 +863,7 @@ async function executeWhatsAppBooking() {
   const hotel = document.getElementById('bookingHotel').value.trim() || 'To be specified';
   const notes = document.getElementById('bookingNotes').value.trim();
 
-  const curr = appData.settings?.currency || '€';
+  const curr = appData.settings?.currency || '$';
   const adultPrice = tour.price || 0;
   const childPrice = tour.price_child || (adultPrice * 0.6);
   const total = Math.round((bookingAdults * adultPrice) + (bookingChildren * childPrice));
