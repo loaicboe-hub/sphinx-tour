@@ -943,5 +943,191 @@
       "approved": true,
       "status": "approved"
     }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "category": "souvenirs",
+      "price": 15,
+      "image": "/uploads/bazar_papyrus.jpg",
+      "featured": true,
+      "active": true,
+      "names": {
+        "en": "Royal Hand-Painted Nile Papyrus",
+        "ru": "Расписной королевский папирус ручной работы",
+        "fr": "Papyrus Royal Peint à la Main",
+        "pl": "Ręcznie Malowany Królewski Papirus"
+      },
+      "descriptions": {
+        "en": "Authentic certified handmade papyrus painted by Egyptian artisans, rolled safely in a sturdy flight-ready protective tube.",
+        "ru": "Настоящий сертифицированный папирус с ручной росписью египетских мастеров, упакованный в прочный тубус для безопасного перелёта.",
+        "fr": "Véritable papyrus certifié peint à la main par des artisans égyptiens, protégé dans un tube rigide prêt pour le voyage.",
+        "pl": "Oryginalny ręcznie malowany papirus od egipskich artystów, zapakowany w bezpieczną tubę podróżną do bagażu."
+      },
+      "specs": {
+        "en": [
+          "100% genuine Nile papyrus",
+          "Size: 30 × 40 cm",
+          "Gold leaf accents",
+          "Flight-safe protective tube"
+        ],
+        "ru": [
+          "100% натуральный нильский папирус",
+          "Размер: 30 × 40 см",
+          "Позолоченные элементы",
+          "Защитный тубус для багажа"
+        ],
+        "fr": [
+          "100% véritable papyrus du Nil",
+          "Format : 30 × 40 cm",
+          "Finitions dorées",
+          "Tube protecteur rigide inclus"
+        ],
+        "pl": [
+          "100% naturalny papirus znad Nilu",
+          "Rozmiar: 30 × 40 cm",
+          "Złocone detale",
+          "Bezpieczna tuba do samolotu"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "category": "perfumes",
+      "price": 25,
+      "image": "/uploads/bazar_perfume.jpg",
+      "featured": true,
+      "active": true,
+      "names": {
+        "en": "Lotus & Egyptian Musk Essence (50ml)",
+        "ru": "Эссенция Лотоса и Египетского Мускуса (50 мл)",
+        "fr": "Essence de Lotus & Musc Égyptien (50ml)",
+        "pl": "Esencja Lotosu i Egipskiego Piżma (50ml)"
+      },
+      "descriptions": {
+        "en": "Pure alcohol-free Egyptian essential oil blend presented in an ornate hand-blown gold filigree crystal bottle.",
+        "ru": "Чистая безалкогольная композиция натуральных египетских масел в декоративном хрустальном флаконе ручной работы.",
+        "fr": "Huile essentielle égyptienne pure sans alcool dans un flacon en cristal soufflé à la main orné d'or.",
+        "pl": "Czysta bezalkoholowa esencja egipskich olejków w ręcznie dmuchanej złoconej buteleczce kryształowej."
+      },
+      "specs": {
+        "en": [
+          "Volume: 50 ml pure essence",
+          "100% alcohol-free formula",
+          "Hand-blown crystal flacon",
+          "Gift box packaging"
+        ],
+        "ru": [
+          "Объём: 50 мл чистой эссенции",
+          "0% спирта — стойкий аромат",
+          "Хрустальный флакон ручной работы",
+          "Подарочная упаковка"
+        ],
+        "fr": [
+          "Contenance : 50 ml pur",
+          "Formule sans alcool longue tenue",
+          "Flacon en cristal soufflé main",
+          "Coffret cadeau inclus"
+        ],
+        "pl": [
+          "Pojemność: 50 ml czystej esencji",
+          "Formuła 100% bez alkoholu",
+          "Kryształowy flakon ręcznej roboty",
+          "Eleganckie pudełko prezentowe"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "category": "crafts",
+      "price": 20,
+      "image": "/uploads/bazar_alabaster.jpg",
+      "featured": false,
+      "active": true,
+      "names": {
+        "en": "Hand-Carved Luxor Alabaster Pyramid Set",
+        "ru": "Набор из Луксорского алебастра (Пирамида + Скарабей)",
+        "fr": "Pyramide & Scarabée en Albâtre de Louxor",
+        "pl": "Ręcznie Rzeźbiona Piramida z Alabastru z Luksoru"
+      },
+      "descriptions": {
+        "en": "Sculpted from natural translucent Upper Egypt alabaster stone that glows warmly in sunlight or candlelight.",
+        "ru": "Вырезано вручную из натурального полупрозрачного луксорского алебастра с мягким тёплым сиянием.",
+        "fr": "Sculpté à la main dans l'albâtre naturel translucide de Haute-Égypte aux reflets chaleureux.",
+        "pl": "Ręcznie rzeźbione w naturalnym, półprzezroczystym alabastrze z Luksoru o ciepłym blasku."
+      },
+      "specs": {
+        "en": [
+          "Natural Luxor alabaster stone",
+          "Height: 14 cm pyramid + scarab",
+          "Translucent natural grain",
+          "Bubble-wrapped travel box"
+        ],
+        "ru": [
+          "Натуральный алебастр из Луксора",
+          "Высота пирамиды 14 см + скарабей",
+          "Уникальный природный рисунок",
+          "Надёжная упаковка для перелёта"
+        ],
+        "fr": [
+          "Pierre d'albâtre véritable de Louxor",
+          "Hauteur 14 cm + scarabée sculpté",
+          "Pierre translucide naturelle",
+          "Emballage protégé pour avion"
+        ],
+        "pl": [
+          "Naturalny alabaster z Luksoru",
+          "Wysokość 14 cm + skarabeusz",
+          "Unikalny naturalny odcień",
+          "Bezpieczne opakowanie podróżne"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "category": "spices",
+      "price": 12,
+      "image": "/uploads/bazar_spices.jpg",
+      "featured": false,
+      "active": true,
+      "names": {
+        "en": "Aswan Hibiscus (Karkade) & Spice Box",
+        "ru": "Асуанский каркаде и набор восточных специй",
+        "fr": "Hibiscus d'Assouan (Karkadé) & Coffret Épices",
+        "pl": "Asuański Hibiskus (Karkade) i Zestaw Przypraw"
+      },
+      "descriptions": {
+        "en": "Premium sun-dried whole Aswan hibiscus flowers paired with fresh Egyptian cumin, turmeric, and aromatic saffron blends.",
+        "ru": "Отборные цельные лепестки асуанского каркаде в наборе со свежим египетским тмином, куркумой и шафраном.",
+        "fr": "Fleurs entières d'hibiscus d'Assouan séchées au soleil avec un assortiment d'épices égyptiennes fraîches.",
+        "pl": "Wyselekcjonowane całe kwiaty hibiskusa z Asuanu oraz zestaw świeżych egipskich przypraw aromatycznych."
+      },
+      "specs": {
+        "en": [
+          "Total Weight: 300 g sealed",
+          "Whole Aswan red hibiscus petals",
+          "Includes saffron & cumin blend",
+          "Hermetic aroma-lock pack"
+        ],
+        "ru": [
+          "Вес нетто: 300 г",
+          "Цельные лепестки каркаде из Асуана",
+          "Шафран, куркума и кумин",
+          "Герметичная упаковка свежести"
+        ],
+        "fr": [
+          "Poids net : 300 g scellé",
+          "Fleurs d'hibiscus d'Assouan entières",
+          "Mélange safran, curcuma & cumin",
+          "Sachet hermétique anti-humidité"
+        ],
+        "pl": [
+          "Waga netto: 300 g",
+          "Całe płatki hibiskusa z Asuanu",
+          "Szafran, kurkuma i kumin w zestawie",
+          "Szczelne opakowanie podróżne"
+        ]
+      }
+    }
   ]
 }

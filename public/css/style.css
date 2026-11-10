@@ -170,16 +170,17 @@ button {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: clamp(14px, 1.8vw, 26px);
   list-style: none;
 }
 
 .nav-link {
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   font-weight: 600;
   color: var(--text-muted);
   transition: var(--transition);
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -1358,6 +1359,165 @@ button {
   box-shadow: 0 6px 16px var(--whatsapp-glow);
 }
 
+/* ==================== EGYPTIAN BAZAR & GIFT SHOP ==================== */
+.section[id] {
+  scroll-margin-top: 108px;
+}
+
+.bazar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.bazar-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.bazar-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(217, 119, 6, 0.45);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.bazar-thumb {
+  position: relative;
+  height: 230px;
+  overflow: hidden;
+  background: #F8FAFC;
+}
+
+.bazar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bazar-card:hover .bazar-thumb img {
+  transform: scale(1.07);
+}
+
+.bazar-cat-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  color: var(--text-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.bazar-featured-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 4px 11px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+}
+
+.bazar-body {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.bazar-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 12px;
+  color: var(--text-heading);
+}
+
+.bazar-specs-list {
+  list-style: none;
+  margin: 0 0 18px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bazar-specs-list li {
+  font-size: 0.87rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.bazar-spec-dot {
+  color: var(--accent-cyan);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.bazar-price-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border-light);
+  margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.bazar-price-val {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--price-orange);
+}
+
+.bazar-specs-modal-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bazar-specs-modal-item {
+  background: #F8FAFC;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #0F172A;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ==================== WHY CHOOSE US ==================== */
 .why-grid {
   display: grid;
@@ -2132,6 +2292,13 @@ button {
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 @media (max-width: 1180px) {
+  .header-inner { height: 92px; gap: 10px; }
+  .logo-img { height: 74px; max-width: 210px; }
+  .nav-menu { gap: 11px; }
+  .nav-link { font-size: 0.84rem; }
+  .nav-actions { gap: 8px; flex-shrink: 0; }
+  .lang-btn { padding: 6px 10px; font-size: 0.82rem; }
+  .btn-whatsapp-pill { padding: 8px 13px; font-size: 0.82rem; }
   .why-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
   .why-card { flex: 1 1 calc((100% - 40px) / 3); max-width: calc((100% - 40px) / 3); min-width: 260px; }
 }
@@ -2141,12 +2308,25 @@ button {
   .rotating-banner-wrapper { height: 380px; }
   .cities-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .city-card { height: 262px; }
-  .tours-grid { grid-template-columns: repeat(2, 1fr); }
+  .tours-grid,
+  .bazar-grid { grid-template-columns: repeat(2, 1fr); }
   .why-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
   .why-card { flex: 1 1 calc(50% - 18px); max-width: calc(50% - 9px); min-width: 240px; }
   .hero-trust-bar { grid-template-columns: repeat(2, 1fr); }
   .reviews-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 960px) {
+  .nav-menu {
+    display: none;
+  }
+  .btn-whatsapp-pill {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2380,9 +2560,26 @@ button {
     display: none !important;
   }
 
-  .tours-grid {
+  .section[id] {
+    scroll-margin-top: 90px;
+  }
+
+  .tours-grid,
+  .bazar-grid {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .bazar-thumb {
+    height: 210px;
+  }
+
+  .bazar-body {
+    padding: 20px 18px;
+  }
+
+  .bazar-price-val {
+    font-size: 2rem;
   }
 
   .tour-thumb {

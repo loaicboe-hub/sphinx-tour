@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/admin.css?v=20261109j" />
+  <link rel="stylesheet" href="css/admin.css?v=20261110b" />
 </head>
 <body>
 
@@ -44,6 +44,9 @@
       <ul class="sidebar-nav">
         <li class="sidebar-link active" data-tab="tours">
           <span>⛵</span> Tours & Excursions
+        </li>
+        <li class="sidebar-link" data-tab="bazar">
+          <span>🛍️</span> Bazar Products <span id="bazarProductsCountBadge" style="background: rgba(0, 210, 180, 0.16); color: var(--admin-accent); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; margin-left: auto; font-weight: 700;">0</span>
         </li>
         <li class="sidebar-link" data-tab="cities">
           <span>📍</span> Destinations (4 Cities)
@@ -116,6 +119,13 @@
               <div class="stat-label">WhatsApp Inquiries</div>
             </div>
           </div>
+          <div class="stat-card" style="cursor: pointer;" onclick="switchTab('bazar')">
+            <div class="stat-icon">🛍️</div>
+            <div>
+              <div class="stat-val" id="statTotalProducts">0</div>
+              <div class="stat-label">Bazar Products</div>
+            </div>
+          </div>
           <div class="stat-card" style="cursor: pointer;" onclick="switchTab('reviews')">
             <div class="stat-icon">⭐</div>
             <div>
@@ -146,6 +156,49 @@
                 </tr>
               </thead>
               <tbody id="toursTableBody">
+                <!-- Rendered by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: BAZAR PRODUCTS & GIFTS -->
+      <section class="admin-tab-pane" id="tab-bazar">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="topbar-title">Bazar & Tourist Gifts</h1>
+            <p class="topbar-sub">Manage tourist products, photos, specifications (specs), and live prices</p>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-admin-primary" onclick="openAddProductModal()">
+              <span>+</span> Add New Product
+            </button>
+          </div>
+        </div>
+
+        <input type="file" id="quickProductImageFile" accept="image/*" style="display: none;" />
+
+        <div class="data-card">
+          <div class="data-header">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">All Bazar Products</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Tip: Edit prices inline, click 📷 on a photo to swap image, or ✏️ to edit specs!</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Product Name (EN / RU)</th>
+                  <th>Specs</th>
+                  <th>Price (<span class="admin-curr-label">$</span>)</th>
+                  <th>Status</th>
+                  <th>Popular</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
                 <!-- Rendered by admin.js -->
               </tbody>
             </table>
@@ -554,6 +607,157 @@
     </div>
   </div>
 
-  <script src="js/admin.js?v=20261109j"></script>
+  <!-- ==================== BAZAR PRODUCT ADD / EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="productModalOverlay">
+    <div class="modal-content" style="max-width: 800px;">
+      <button class="modal-close-btn" onclick="closeProductModal()" type="button" aria-label="Close modal">✕</button>
+
+      <div class="modal-header">
+        <h3 class="modal-title" id="productFormModalTitle">Add Bazar Product</h3>
+        <p class="modal-subtitle">Set product image, specifications, price, and multilingual names across 4 languages.</p>
+      </div>
+
+      <div class="modal-body">
+        <form id="productEditForm">
+          <input type="hidden" id="productEditId" />
+
+          <!-- Row 1: Category & Price & Featured -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select class="form-select" id="productCategorySelect" required>
+                <option value="souvenirs">🏺 Souvenirs & Gifts</option>
+                <option value="perfumes">🧴 Oils & Perfumes</option>
+                <option value="crafts">🗿 Alabaster & Handicrafts</option>
+                <option value="spices">🌿 Spices & Tea</option>
+                <option value="textiles">🧣 Cotton & Scarves</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (<span class="admin-curr-label">$</span>) *</label>
+              <input type="number" min="0" step="any" class="form-input" id="productPriceInput" placeholder="15" required />
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 10px;">
+              <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.92rem; font-weight: 600; color: #FDE68A;">
+                <input type="checkbox" id="productFeaturedInput" style="width: 18px; height: 18px; accent-color: #F59E0B;" />
+                <span>★ Mark as Popular Gift</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Row 2: Product Image Upload or URL -->
+          <div class="form-group">
+            <label class="form-label">Product Photo (Upload from PC or paste image URL)</label>
+            <div class="upload-dropzone" onclick="document.getElementById('productImageFile').click()">
+              <div class="upload-icon">📷</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Click to upload a product image</div>
+              <small style="color: var(--text-dim);" id="productUploadStatusText">JPG, PNG, WebP up to 10MB</small>
+              <input type="file" id="productImageFile" accept="image/*" style="display: none;" />
+            </div>
+            <div style="margin-top: 10px;">
+              <input type="text" class="form-input" id="productImageUrlInput" placeholder="Or paste image URL (e.g. /uploads/... or https://...)" />
+            </div>
+            <img id="productImagePreview" src="" alt="Product Preview" style="display: none; height: 120px; border-radius: 8px; margin-top: 10px; object-fit: cover; border: 1px solid var(--admin-border);" />
+          </div>
+
+          <!-- Multilingual Section -->
+          <div style="margin-top: 24px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <h4 style="font-size: 1rem; color: var(--admin-accent); font-weight: 700; margin: 0; display: flex; align-items: center; gap: 6px;">
+                <span>🌍</span> Product Name, Specs & Description (4 Languages)
+              </h4>
+              <div class="tour-lang-tabs" style="display: flex; gap: 6px;">
+                <button type="button" class="prod-lang-btn tour-lang-btn active" onclick="switchProductModalLang('en', this)">🇬🇧 English *</button>
+                <button type="button" class="prod-lang-btn tour-lang-btn" onclick="switchProductModalLang('ru', this)">🇷🇺 Русский</button>
+                <button type="button" class="prod-lang-btn tour-lang-btn" onclick="switchProductModalLang('fr', this)">🇫🇷 Français</button>
+                <button type="button" class="prod-lang-btn tour-lang-btn" onclick="switchProductModalLang('pl', this)">🇵🇱 Polski</button>
+                <button type="button" class="prod-lang-btn tour-lang-btn" onclick="switchProductModalLang('all', this)">👁️ All 4</button>
+              </div>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 14px;">Fill English (required). Empty fields in other languages automatically use English.</p>
+          </div>
+
+          <!-- English -->
+          <div class="lang-box" id="prodLangBox-en">
+            <div class="lang-box-title">🇬🇧 English (Primary / Default)</div>
+            <div class="form-group">
+              <label class="form-label">Product Name (English) *</label>
+              <input type="text" class="form-input" id="productNameEn" placeholder="Royal Hand-Painted Nile Papyrus" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Product Specifications / Specs (One spec per line) *</label>
+              <textarea class="form-textarea" id="productSpecsEn" rows="4" placeholder="100% genuine Nile papyrus&#10;Size: 30 × 40 cm&#10;Gold leaf accents&#10;Flight-safe protective tube" required></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Short Description (Optional)</label>
+              <textarea class="form-textarea" id="productDescEn" rows="2" placeholder="Extra product story, origin, or packaging details..."></textarea>
+            </div>
+          </div>
+
+          <!-- Russian -->
+          <div class="lang-box" id="prodLangBox-ru" style="display: none;">
+            <div class="lang-box-title">🇷🇺 Русский (Russian)</div>
+            <div class="form-group">
+              <label class="form-label">Название товара (Русский)</label>
+              <input type="text" class="form-input" id="productNameRu" placeholder="Расписной королевский папирус" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Характеристики / Спецификация (По строкам)</label>
+              <textarea class="form-textarea" id="productSpecsRu" rows="4" placeholder="100% натуральный нильский папирус&#10;Размер: 30 × 40 см&#10;Защитный тубус в комплекте"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Описание (Русский)</label>
+              <textarea class="form-textarea" id="productDescRu" rows="2" placeholder="Краткое описание товара..."></textarea>
+            </div>
+          </div>
+
+          <!-- French -->
+          <div class="lang-box" id="prodLangBox-fr" style="display: none;">
+            <div class="lang-box-title">🇫🇷 Français (French)</div>
+            <div class="form-group">
+              <label class="form-label">Nom du produit (Français)</label>
+              <input type="text" class="form-input" id="productNameFr" placeholder="Papyrus Royal Peint à la Main" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Caractéristiques (Une par ligne)</label>
+              <textarea class="form-textarea" id="productSpecsFr" rows="4" placeholder="100% véritable papyrus du Nil&#10;Format : 30 × 40 cm"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Description (Français)</label>
+              <textarea class="form-textarea" id="productDescFr" rows="2" placeholder="Description du produit..."></textarea>
+            </div>
+          </div>
+
+          <!-- Polish -->
+          <div class="lang-box" id="prodLangBox-pl" style="display: none;">
+            <div class="lang-box-title">🇵🇱 Polski (Polish)</div>
+            <div class="form-group">
+              <label class="form-label">Nazwa produktu (Polski)</label>
+              <input type="text" class="form-input" id="productNamePl" placeholder="Ręcznie Malowany Papirus" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Specyfikacja produktu (Jedna w linii)</label>
+              <textarea class="form-textarea" id="productSpecsPl" rows="4" placeholder="100% naturalny papirus&#10;Rozmiar: 30 × 40 cm"></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Opis (Polski)</label>
+              <textarea class="form-textarea" id="productDescPl" rows="2" placeholder="Opis produktu..."></textarea>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; gap: 14px; position: sticky; bottom: -24px; background: #0D1E36; padding: 16px 0; border-top: 1px solid var(--admin-border); z-index: 10;">
+            <button type="submit" class="btn-admin-primary" style="flex-grow: 1; justify-content: center; padding: 14px; font-size: 1rem; cursor: pointer;">
+              💾 Save Product
+            </button>
+            <button type="button" class="btn-card-details" onclick="closeProductModal()" style="padding: 14px 28px; cursor: pointer;">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js?v=20261110b"></script>
 </body>
 </html>

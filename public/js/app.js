@@ -5,15 +5,20 @@
 let appData = {
   settings: {},
   cities: [],
-  tours: []
+  tours: [],
+  products: []
 };
 
 let currentLang = localStorage.getItem('egypt_voyage_lang') || 'en';
 let selectedCityFilter = 'hurghada';
 let searchQuery = '';
+let selectedBazarCategory = 'all';
+let bazarSearchQuery = '';
 let selectedBookingTour = null;
 let bookingAdults = 2;
 let bookingChildren = 0;
+let selectedOrderProduct = null;
+let bazarOrderQty = 1;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -179,6 +184,8 @@ async function fetchData() {
     renderCities();
     renderCityFilters();
     renderTours();
+    renderBazarFilters();
+    renderBazarProducts();
     renderReviews();
     initHeroSearchFilter();
     applyTranslations();
@@ -386,6 +393,45 @@ function setupEventListeners() {
     });
   }
 
+  // Bazar search input & order controls
+  const bazarSearchInput = document.getElementById('bazarSearchInput');
+  if (bazarSearchInput) {
+    bazarSearchInput.addEventListener('input', (e) => {
+      bazarSearchQuery = e.target.value.toLowerCase().trim();
+      renderBazarProducts();
+    });
+  }
+
+  const bazarQtyMinus = document.getElementById('bazarQtyMinus');
+  const bazarQtyPlus = document.getElementById('bazarQtyPlus');
+  if (bazarQtyMinus && bazarQtyPlus) {
+    bazarQtyMinus.addEventListener('click', () => {
+      if (bazarOrderQty > 1) {
+        bazarOrderQty--;
+        updateBazarOrderCounter();
+      }
+    });
+    bazarQtyPlus.addEventListener('click', () => {
+      bazarOrderQty++;
+      updateBazarOrderCounter();
+    });
+  }
+
+  const bazarOrderForm = document.getElementById('bazarOrderForm');
+  if (bazarOrderForm) {
+    bazarOrderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      executeBazarWhatsAppOrder();
+    });
+  }
+
+  const bazarOrderModal = document.getElementById('bazarOrderModal');
+  if (bazarOrderModal) {
+    bazarOrderModal.addEventListener('click', (e) => {
+      if (e.target === bazarOrderModal) closeBazarOrderModal();
+    });
+  }
+
   // Initialize Star Rating Widget
   initStarRatingWidget();
 }
@@ -415,6 +461,8 @@ function switchLanguage(lang) {
   renderCities();
   renderCityFilters();
   renderTours();
+  renderBazarFilters();
+  renderBazarProducts();
   renderReviews();
   updateSiteSettings();
   updateHeroCityDropdown();
@@ -952,6 +1000,282 @@ async function executeWhatsAppBooking() {
   const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
 
   closeBookingModal();
+  window.open(waUrl, '_blank');
+}
+
+/* ==================== EGYPTIAN BAZAR & PRODUCTS MODULE ==================== */
+function getBazarCategoryLabel(cat) {
+  const map = {
+    all: `✨ ${t('bazar_cat_all')}`,
+    souvenirs: `🏺 ${t('bazar_cat_souvenirs')}`,
+    perfumes: `🧴 ${t('bazar_cat_perfumes')}`,
+    spices: `🌿 ${t('bazar_cat_spices')}`,
+    crafts: `🗿 ${t('bazar_cat_crafts')}`,
+    textiles: `🧣 ${t('bazar_cat_textiles')}`
+  };
+  return map[cat] || map.souvenirs;
+}
+
+function renderBazarFilters() {
+  const container = document.getElementById('bazarFiltersContainer');
+  if (!container) return;
+
+  const products = appData.products || [];
+  const activeCats = ['all'];
+  ['souvenirs', 'perfumes', 'crafts', 'spices', 'textiles'].forEach(cat => {
+    if (products.some(p => p.category === cat)) {
+      activeCats.push(cat);
+    }
+  });
+
+  if (!activeCats.includes(selectedBazarCategory)) {
+    selectedBazarCategory = 'all';
+  }
+
+  container.innerHTML = '';
+  activeCats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = `filter-pill ${selectedBazarCategory === cat ? 'active' : ''}`;
+    btn.onclick = () => {
+      selectedBazarCategory = cat;
+      bazarSearchQuery = '';
+      const inp = document.getElementById('bazarSearchInput');
+      if (inp) inp.value = '';
+      renderBazarFilters();
+      renderBazarProducts();
+    };
+    btn.textContent = getBazarCategoryLabel(cat);
+    container.appendChild(btn);
+  });
+}
+
+function renderBazarProducts() {
+  const container = document.getElementById('bazarContainer');
+  if (!container) return;
+
+  const curr = appData.settings?.currency || '$';
+  const products = appData.products || [];
+
+  const filtered = products.filter(p => {
+    if (bazarSearchQuery) {
+      const name = (p.names?.[currentLang] || p.names?.en || '').toLowerCase();
+      const desc = (p.descriptions?.[currentLang] || p.descriptions?.en || '').toLowerCase();
+      const specsText = (p.specs?.[currentLang] || p.specs?.en || []).join(' ').toLowerCase();
+      const catLabel = getBazarCategoryLabel(p.category).toLowerCase();
+      return name.includes(bazarSearchQuery) || desc.includes(bazarSearchQuery) || specsText.includes(bazarSearchQuery) || catLabel.includes(bazarSearchQuery);
+    }
+    if (selectedBazarCategory !== 'all' && p.category !== selectedBazarCategory) {
+      return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+        <p style="font-size: 1.15rem; color: var(--text-muted);">${t('bazar_empty')}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = '';
+  filtered.forEach(product => {
+    const prodName = escapeHtml(product.names?.[currentLang] || product.names?.en || 'Gift Item');
+    const specsArr = product.specs?.[currentLang] || product.specs?.en || [];
+    const specsHtml = specsArr.slice(0, 4).map(spec => `
+      <li><span class="bazar-spec-dot">•</span><span>${escapeHtml(spec)}</span></li>
+    `).join('');
+
+    const card = document.createElement('div');
+    card.className = 'bazar-card';
+    card.setAttribute('data-product-id', product.id);
+    card.id = `bazar-item-${product.id}`;
+    card.innerHTML = `
+      <div class="bazar-thumb">
+        <img src="${escapeHtml(product.image)}" alt="${prodName}" loading="lazy" />
+        ${product.featured ? `<div class="bazar-featured-badge">★ ${t('badge_popular')}</div>` : ''}
+        <div class="bazar-cat-tag">${getBazarCategoryLabel(product.category)}</div>
+      </div>
+      <div class="bazar-body">
+        <h3 class="bazar-title">${prodName}</h3>
+        ${specsHtml ? `<ul class="bazar-specs-list">${specsHtml}</ul>` : ''}
+        <div class="bazar-price-box">
+          <div class="bazar-price-val">${curr}${product.price}</div>
+        </div>
+        <div class="tour-actions">
+          <button class="btn-card-details" onclick="openProductDetailsModal(${product.id})">
+            ${t('bazar_btn_specs')}
+          </button>
+          <button class="btn-card-whatsapp" onclick="openBazarOrderModal(${product.id})">
+            <span>💬</span> ${t('bazar_btn_order')}
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openProductDetailsModal(productId) {
+  const product = (appData.products || []).find(p => String(p.id) === String(productId));
+  if (!product) return;
+
+  const curr = appData.settings?.currency || '$';
+  const prodName = escapeHtml(product.names?.[currentLang] || product.names?.en || '');
+  const prodDesc = escapeHtml(product.descriptions?.[currentLang] || product.descriptions?.en || '');
+  const specsArr = product.specs?.[currentLang] || product.specs?.en || [];
+
+  const specsModalHtml = specsArr.map(item => `
+    <li class="bazar-specs-modal-item">
+      <span style="color: var(--accent-cyan); font-weight: 800;">✓</span>
+      <span>${escapeHtml(item)}</span>
+    </li>
+  `).join('');
+
+  const modal = document.getElementById('detailsModal');
+  const body = document.getElementById('detailsModalBody');
+
+  body.innerHTML = `
+    <div class="modal-gallery">
+      <img src="${escapeHtml(product.image)}" alt="${prodName}" />
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; gap: 16px;">
+      <div>
+        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">${getBazarCategoryLabel(product.category)}</span>
+        <h2 style="font-family: var(--font-heading); font-size: 1.55rem; margin-top: 4px; color: #000000;">${prodName}</h2>
+      </div>
+      <div style="text-align: right; flex-shrink: 0;">
+        <div style="font-size: 1.9rem; font-weight: 800; color: var(--price-orange, #F97316);">${curr}${product.price}</div>
+      </div>
+    </div>
+    <div class="currency-trust-badge" style="margin-top: 0; margin-bottom: 20px;">
+      <span class="currency-badge-icon">💳</span>
+      <span>${t('payment_currencies')}</span>
+    </div>
+    ${prodDesc ? `
+      <div style="margin-bottom: 22px;">
+        <p style="color: #000000; font-size: 0.95rem; line-height: 1.6;">${prodDesc}</p>
+      </div>
+    ` : ''}
+    ${specsModalHtml ? `
+      <div style="margin-bottom: 24px;">
+        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 700;">📋 ${t('bazar_specs_label')}</h4>
+        <ul class="bazar-specs-modal-list">${specsModalHtml}</ul>
+      </div>
+    ` : ''}
+    <div style="margin-top: 28px;">
+      <button class="btn-whatsapp-large" style="width: 100%; justify-content: center;" onclick="closeDetailsModal(); openBazarOrderModal(${product.id})">
+        <span>💬</span> ${t('bazar_btn_order')}
+      </button>
+    </div>
+  `;
+
+  modal.classList.add('active');
+}
+
+function openBazarOrderModal(productId) {
+  const product = (appData.products || []).find(p => String(p.id) === String(productId));
+  if (!product) return;
+
+  selectedOrderProduct = product;
+  bazarOrderQty = 1;
+
+  const prodName = product.names?.[currentLang] || product.names?.en || '';
+  document.getElementById('bazarOrderProductName').textContent = prodName;
+  document.getElementById('bazarOrderProductCategory').textContent = getBazarCategoryLabel(product.category);
+
+  updateBazarOrderCounter();
+  document.getElementById('bazarOrderModal').classList.add('active');
+}
+
+function closeBazarOrderModal() {
+  const modal = document.getElementById('bazarOrderModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function updateBazarOrderCounter() {
+  const countEl = document.getElementById('bazarQtyCount');
+  if (countEl) countEl.textContent = bazarOrderQty;
+
+  if (selectedOrderProduct) {
+    const curr = appData.settings?.currency || '$';
+    const total = (Number(selectedOrderProduct.price) || 0) * bazarOrderQty;
+    const totalEl = document.getElementById('bazarEstimatedPrice');
+    if (totalEl) totalEl.textContent = `${curr}${Math.round(total)}`;
+  }
+}
+
+async function executeBazarWhatsAppOrder() {
+  if (!selectedOrderProduct) return;
+
+  const product = selectedOrderProduct;
+  const prodName = product.names?.[currentLang] || product.names?.en || '';
+  const hotel = document.getElementById('bazarHotel').value.trim() || 'To be specified';
+  const notes = document.getElementById('bazarNotes').value.trim();
+
+  const curr = appData.settings?.currency || '$';
+  const total = Math.round((Number(product.price) || 0) * bazarOrderQty);
+
+  try {
+    fetch('/api/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tour_id: `BAZAR-${product.id}`,
+        tour_name: `[Bazar] ${prodName}`,
+        city: 'Bazar Gift Shop',
+        date: new Date().toISOString().split('T')[0],
+        adults: bazarOrderQty,
+        children: 0,
+        hotel,
+        notes,
+        lang: currentLang
+      })
+    });
+  } catch (e) {
+    console.error('Failed to log Bazar order lead', e);
+  }
+
+  let msg = '';
+  if (currentLang === 'ru') {
+    msg = `Здравствуйте! Я хочу заказать товар из Базара:\n` +
+          `🛍️ Товар: *${prodName}*\n` +
+          `📦 Количество: ${bazarOrderQty} шт.\n` +
+          `🏨 Отель: ${hotel}\n` +
+          (notes ? `📝 Пожелания: ${notes}\n` : '') +
+          `💰 Примерная сумма: ${curr}${total}\n\n` +
+          `Подскажите, пожалуйста, когда возможна доставка в отель?`;
+  } else if (currentLang === 'fr') {
+    msg = `Bonjour ! Je souhaite commander un article du Bazar :\n` +
+          `🛍️ Produit : *${prodName}*\n` +
+          `📦 Quantité : ${bazarOrderQty}\n` +
+          `🏨 Hôtel : ${hotel}\n` +
+          (notes ? `📝 Remarques : ${notes}\n` : '') +
+          `💰 Total estimé : ${curr}${total}\n\n` +
+          `Pourriez-vous me confirmer la livraison à l'hôtel ?`;
+  } else if (currentLang === 'pl') {
+    msg = `Dzień dobry! Chciałbym zamówić produkt z Bazaru:\n` +
+          `🛍️ Produkt: *${prodName}*\n` +
+          `📦 Ilość: ${bazarOrderQty} szt.\n` +
+          `🏨 Hotel: ${hotel}\n` +
+          (notes ? `📝 Uwagi: ${notes}\n` : '') +
+          `💰 Szacowany koszt: ${curr}${total}\n\n` +
+          `Proszę o informację dotyczącą dostawy do hotelu.`;
+  } else {
+    msg = `Hello! I would like to order from Egyptian Bazar:\n` +
+          `🛍️ Product: *${prodName}*\n` +
+          `📦 Quantity: ${bazarOrderQty}\n` +
+          `🏨 Hotel: ${hotel}\n` +
+          (notes ? `📝 Notes: ${notes}\n` : '') +
+          `💰 Estimated Total: ${curr}${total}\n\n` +
+          `Could you please confirm delivery to my hotel?`;
+  }
+
+  const waNum = appData.settings?.whatsapp_number || '201012345678';
+  const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
+
+  closeBazarOrderModal();
   window.open(waUrl, '_blank');
 }
 

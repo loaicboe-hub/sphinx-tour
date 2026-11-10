@@ -6,8 +6,11 @@ let adminData = {
   settings: {},
   cities: [],
   tours: [],
+  products: [],
   bookings: []
 };
+
+let quickUploadProductId = null;
 
 let currentAdminPin = localStorage.getItem('egypt_voyage_admin_pin') || '';
 
@@ -104,7 +107,39 @@ function setupAdminListeners() {
     settingsForm.addEventListener('submit', handleSaveSettings);
   }
 
-  // Close Tour Modal on Backdrop click
+  // Product Form Submit & Upload
+  const productForm = document.getElementById('productEditForm');
+  if (productForm) {
+    productForm.addEventListener('submit', handleSaveProduct);
+  }
+
+  const productImageFile = document.getElementById('productImageFile');
+  if (productImageFile) {
+    productImageFile.addEventListener('change', uploadProductImage);
+  }
+
+  const quickProductImgInput = document.getElementById('quickProductImageFile');
+  if (quickProductImgInput) {
+    quickProductImgInput.addEventListener('change', handleQuickProductImageUpload);
+  }
+
+  const productUrlInput = document.getElementById('productImageUrlInput');
+  if (productUrlInput) {
+    productUrlInput.addEventListener('input', () => {
+      const prev = document.getElementById('productImagePreview');
+      const val = productUrlInput.value.trim();
+      if (prev) {
+        if (val) {
+          prev.src = val;
+          prev.style.display = 'block';
+        } else {
+          prev.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  // Close Tour / Product Modal on Backdrop click
   const tourModal = document.getElementById('tourModalOverlay');
   if (tourModal) {
     tourModal.addEventListener('click', (e) => {
@@ -114,10 +149,20 @@ function setupAdminListeners() {
     });
   }
 
+  const productModal = document.getElementById('productModalOverlay');
+  if (productModal) {
+    productModal.addEventListener('click', (e) => {
+      if (e.target === productModal) {
+        closeProductModal();
+      }
+    });
+  }
+
   // Close on Escape key
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeTourModal();
+      closeProductModal();
     }
   });
 }
@@ -154,6 +199,7 @@ async function loadAdminData() {
 
     renderStats();
     renderToursTable();
+    renderProductsTable();
     renderCitiesTable();
     renderReviewsTable();
     renderBookingsTable();
@@ -162,8 +208,13 @@ async function loadAdminData() {
 
     if (window.location.hash === '#settings') {
       switchTab('settings');
+    } else if (window.location.hash === '#bazar') {
+      switchTab('bazar');
     } else if (window.location.hash === '#addTour') {
       openAddTourModal();
+    } else if (window.location.hash === '#addProduct') {
+      switchTab('bazar');
+      openAddProductModal();
     }
   } catch (err) {
     console.error('Error fetching admin data:', err);
@@ -176,6 +227,12 @@ function renderStats() {
   document.getElementById('statActiveTours').textContent = adminData.tours.filter(t => t.active !== false).length;
   document.getElementById('statTotalCities').textContent = adminData.cities.length;
   document.getElementById('statTotalBookings').textContent = (adminData.bookings || []).length;
+
+  const productsCount = (adminData.products || []).length;
+  const statProductsEl = document.getElementById('statTotalProducts');
+  if (statProductsEl) statProductsEl.textContent = productsCount;
+  const bazarBadge = document.getElementById('bazarProductsCountBadge');
+  if (bazarBadge) bazarBadge.textContent = productsCount;
 
   const reviews = adminData.reviews || [];
   const pendingCount = reviews.filter(r => !r.approved).length;
@@ -706,12 +763,16 @@ function renderBookingsTable() {
 
   list.forEach(b => {
     const tr = document.createElement('tr');
+    const isBazar = String(b.tour_id || '').startsWith('BAZAR-');
+    const guestsLabel = isBazar
+      ? `Qty: ${b.adults || 1}`
+      : `${b.adults} Adults, ${b.children} Kids`;
     tr.innerHTML = `
       <td><strong>${b.id}</strong></td>
-      <td>${b.tour_name} <br><small style="color: var(--admin-accent);">📍 ${b.city}</small></td>
+      <td>${escapeHtmlAdmin(b.tour_name)} <br><small style="color: var(--admin-accent);">📍 ${escapeHtmlAdmin(b.city)}</small></td>
       <td>${b.date}</td>
-      <td>${b.adults} Adults, ${b.children} Kids</td>
-      <td>${b.hotel}</td>
+      <td>${guestsLabel}</td>
+      <td>${escapeHtmlAdmin(b.hotel)}</td>
       <td><span class="badge-status badge-featured">${(b.lang || 'en').toUpperCase()}</span></td>
     `;
     tbody.appendChild(tr);
@@ -801,5 +862,382 @@ async function handleSaveSettings(e) {
     }
   } catch (err) {
     alert('✅ Settings saved in browser!');
+  }
+}
+
+/* ==================== BAZAR PRODUCTS CRUD ==================== */
+const BAZAR_CATEGORY_LABELS = {
+  souvenirs: '🏺 Souvenirs & Gifts',
+  perfumes: '🧴 Oils & Perfumes',
+  crafts: '🗿 Alabaster & Crafts',
+  spices: '🌿 Spices & Tea',
+  textiles: '🧣 Cotton & Scarves'
+};
+
+function renderProductsTable() {
+  const tbody = document.getElementById('productsTableBody');
+  if (!tbody) return;
+
+  const curr = adminData.settings?.currency || '$';
+  document.querySelectorAll('.admin-curr-label').forEach(el => {
+    el.textContent = curr;
+  });
+
+  const products = adminData.products || [];
+  tbody.innerHTML = '';
+
+  if (products.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px;">No Bazar products yet. Click "+ Add New Product" to create one!</td></tr>`;
+    return;
+  }
+
+  products.forEach(product => {
+    const tr = document.createElement('tr');
+    const catLabel = BAZAR_CATEGORY_LABELS[product.category] || '🏺 Souvenirs';
+    const specsList = product.specs?.en || [];
+    const specsHtml = specsList.slice(0, 3).map(s => `<li>• ${escapeHtmlAdmin(s)}</li>`).join('') +
+      (specsList.length > 3 ? `<li style="color: var(--admin-accent);">+ ${specsList.length - 3} more</li>` : '');
+
+    tr.innerHTML = `
+      <td>
+        <div class="table-thumb-wrap">
+          <img src="${escapeHtmlAdmin(product.image)}" class="table-thumb" alt="Product" style="cursor: pointer;" onclick="triggerQuickProductImage(${product.id})" title="Click to upload replacement photo" />
+          <button type="button" class="btn-thumb-edit" onclick="triggerQuickProductImage(${product.id})" title="Change product image">📷</button>
+        </div>
+      </td>
+      <td>
+        <div style="font-weight: 700; color: #FFF;">${escapeHtmlAdmin(product.names?.en || 'Unnamed Product')}</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">${product.names?.ru ? '🇷🇺 ' + escapeHtmlAdmin(product.names.ru) : ''}</div>
+        <div style="font-size: 0.76rem; color: var(--admin-accent); margin-top: 3px;">${catLabel}</div>
+      </td>
+      <td>
+        ${specsHtml ? `<ul class="admin-specs-list">${specsHtml}</ul>` : '<span style="color: var(--text-dim);">—</span>'}
+      </td>
+      <td>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span style="color: #F97316; font-weight: 700;">${curr}</span>
+          <input type="number" min="0" step="any" class="quick-price-input" value="${product.price}" onchange="quickUpdateProductPrice(${product.id}, this.value)" title="Change price and click outside to save" />
+        </div>
+      </td>
+      <td>
+        <button class="badge-status ${product.active !== false ? 'badge-active' : 'badge-inactive'}" onclick="toggleProductActive(${product.id}, ${product.active !== false})" style="border: none; cursor: pointer;">
+          ${product.active !== false ? 'Active' : 'Hidden'}
+        </button>
+      </td>
+      <td>
+        <button class="badge-status ${product.featured ? 'badge-featured' : 'badge-inactive'}" onclick="toggleProductFeatured(${product.id}, ${Boolean(product.featured)})" style="border: none; cursor: pointer;">
+          ${product.featured ? '★ Popular' : 'Normal'}
+        </button>
+      </td>
+      <td>
+        <div class="table-actions">
+          <button class="btn-icon" onclick="openEditProductModal(${product.id})" title="Edit Image, Specs & Price">✏️</button>
+          <button class="btn-icon delete" onclick="deleteProduct(${product.id})" title="Delete Product">🗑️</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function triggerQuickProductImage(productId) {
+  quickUploadProductId = productId;
+  const input = document.getElementById('quickProductImageFile');
+  if (input) {
+    input.value = '';
+    input.click();
+  }
+}
+
+async function handleQuickProductImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file || !quickUploadProductId) return;
+
+  const targetId = quickUploadProductId;
+  quickUploadProductId = null;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const upRes = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'x-admin-pin': currentAdminPin },
+      body: formData
+    });
+    const upData = await upRes.json();
+    if (!upRes.ok || !upData.success) {
+      alert('❌ Image upload failed');
+      return;
+    }
+
+    const patchRes = await fetch(`/api/products/${targetId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify({ image: upData.url })
+    });
+    if (patchRes.ok) {
+      loadAdminData();
+    } else {
+      alert('❌ Failed to update product image');
+    }
+  } catch (err) {
+    alert('❌ Network error uploading product image');
+  }
+}
+
+async function quickUpdateProductPrice(productId, newPrice) {
+  try {
+    const res = await fetch(`/api/products/${productId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify({ price: Number(newPrice) })
+    });
+    if (res.ok) {
+      loadAdminData();
+    } else {
+      alert('Failed to update product price');
+    }
+  } catch (e) {
+    alert('Failed to update product price');
+  }
+}
+
+async function toggleProductActive(productId, currentActive) {
+  try {
+    await fetch(`/api/products/${productId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify({ active: !currentActive })
+    });
+    loadAdminData();
+  } catch (e) {
+    alert('Error toggling status');
+  }
+}
+
+async function toggleProductFeatured(productId, currentFeatured) {
+  try {
+    await fetch(`/api/products/${productId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify({ featured: !currentFeatured })
+    });
+    loadAdminData();
+  } catch (e) {
+    alert('Error toggling featured');
+  }
+}
+
+async function deleteProduct(productId) {
+  if (!confirm('Are you sure you want to delete this Bazar product?')) return;
+  try {
+    const res = await fetch(`/api/products/${productId}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-pin': currentAdminPin }
+    });
+    if (res.ok) {
+      loadAdminData();
+    }
+  } catch (e) {
+    alert('Error deleting product');
+  }
+}
+
+function switchProductModalLang(lang, btn) {
+  document.querySelectorAll('.prod-lang-btn').forEach(b => b.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const defaultBtn = document.querySelector(`.prod-lang-btn[onclick*="'${lang}'"]`);
+    if (defaultBtn) defaultBtn.classList.add('active');
+  }
+
+  const langBoxes = ['en', 'ru', 'fr', 'pl'];
+  if (lang === 'all') {
+    langBoxes.forEach(l => {
+      const box = document.getElementById(`prodLangBox-${l}`);
+      if (box) box.style.display = 'block';
+    });
+  } else {
+    langBoxes.forEach(l => {
+      const box = document.getElementById(`prodLangBox-${l}`);
+      if (box) box.style.display = (l === lang) ? 'block' : 'none';
+    });
+  }
+}
+
+function openAddProductModal() {
+  document.getElementById('productFormModalTitle').textContent = 'Add New Bazar Product';
+  document.getElementById('productEditForm').reset();
+  document.getElementById('productEditId').value = '';
+  document.getElementById('productImagePreview').style.display = 'none';
+  const statusText = document.getElementById('productUploadStatusText');
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+
+  switchProductModalLang('en');
+  document.getElementById('productModalOverlay').classList.add('active');
+  const modalBody = document.querySelector('#productModalOverlay .modal-body');
+  if (modalBody) modalBody.scrollTop = 0;
+}
+
+function openEditProductModal(productId) {
+  const product = (adminData.products || []).find(p => String(p.id) === String(productId));
+  if (!product) return;
+
+  document.getElementById('productFormModalTitle').textContent = 'Edit Product #' + product.id;
+  document.getElementById('productEditId').value = product.id;
+  document.getElementById('productCategorySelect').value = product.category || 'souvenirs';
+  document.getElementById('productPriceInput').value = product.price || 0;
+  document.getElementById('productFeaturedInput').checked = Boolean(product.featured);
+  document.getElementById('productImageUrlInput').value = product.image || '';
+
+  const prev = document.getElementById('productImagePreview');
+  if (product.image) {
+    prev.src = product.image;
+    prev.style.display = 'block';
+  } else {
+    prev.style.display = 'none';
+  }
+
+  document.getElementById('productNameEn').value = product.names?.en || '';
+  document.getElementById('productNameRu').value = product.names?.ru || '';
+  document.getElementById('productNameFr').value = product.names?.fr || '';
+  document.getElementById('productNamePl').value = product.names?.pl || '';
+
+  document.getElementById('productSpecsEn').value = (product.specs?.en || []).join('\n');
+  document.getElementById('productSpecsRu').value = (product.specs?.ru || []).join('\n');
+  document.getElementById('productSpecsFr').value = (product.specs?.fr || []).join('\n');
+  document.getElementById('productSpecsPl').value = (product.specs?.pl || []).join('\n');
+
+  document.getElementById('productDescEn').value = product.descriptions?.en || '';
+  document.getElementById('productDescRu').value = product.descriptions?.ru || '';
+  document.getElementById('productDescFr').value = product.descriptions?.fr || '';
+  document.getElementById('productDescPl').value = product.descriptions?.pl || '';
+
+  const statusText = document.getElementById('productUploadStatusText');
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+
+  switchProductModalLang('en');
+  document.getElementById('productModalOverlay').classList.add('active');
+  const modalBody = document.querySelector('#productModalOverlay .modal-body');
+  if (modalBody) modalBody.scrollTop = 0;
+}
+
+function closeProductModal() {
+  const modal = document.getElementById('productModalOverlay');
+  if (modal) modal.classList.remove('active');
+}
+
+async function uploadProductImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const statusText = document.getElementById('productUploadStatusText');
+  statusText.textContent = 'Uploading...';
+
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'x-admin-pin': currentAdminPin },
+      body: formData
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      document.getElementById('productImageUrlInput').value = data.url;
+      const prev = document.getElementById('productImagePreview');
+      prev.src = data.url;
+      prev.style.display = 'block';
+      statusText.textContent = '✓ Uploaded successfully!';
+    } else {
+      statusText.textContent = '❌ Upload failed';
+    }
+  } catch (err) {
+    statusText.textContent = '❌ Network error';
+  }
+}
+
+async function handleSaveProduct(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('productEditId').value;
+  const category = document.getElementById('productCategorySelect').value;
+  const price = Number(document.getElementById('productPriceInput').value) || 0;
+  const featured = document.getElementById('productFeaturedInput').checked;
+  const image = document.getElementById('productImageUrlInput').value.trim();
+
+  const nameEn = document.getElementById('productNameEn').value.trim();
+  const names = {
+    en: nameEn,
+    ru: document.getElementById('productNameRu').value.trim() || nameEn,
+    fr: document.getElementById('productNameFr').value.trim() || nameEn,
+    pl: document.getElementById('productNamePl').value.trim() || nameEn
+  };
+
+  const specsEnRaw = document.getElementById('productSpecsEn').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const parseLines = (elId) => document.getElementById(elId).value.split('\n').map(s => s.trim()).filter(Boolean);
+  const specsRuRaw = parseLines('productSpecsRu');
+  const specsFrRaw = parseLines('productSpecsFr');
+  const specsPlRaw = parseLines('productSpecsPl');
+
+  const specs = {
+    en: specsEnRaw,
+    ru: specsRuRaw.length > 0 ? specsRuRaw : specsEnRaw,
+    fr: specsFrRaw.length > 0 ? specsFrRaw : specsEnRaw,
+    pl: specsPlRaw.length > 0 ? specsPlRaw : specsEnRaw
+  };
+
+  const descEn = document.getElementById('productDescEn').value.trim();
+  const descriptions = {
+    en: descEn,
+    ru: document.getElementById('productDescRu').value.trim() || descEn,
+    fr: document.getElementById('productDescFr').value.trim() || descEn,
+    pl: document.getElementById('productDescPl').value.trim() || descEn
+  };
+
+  const payload = {
+    category,
+    price,
+    featured,
+    image: image || '/uploads/bazar_papyrus.jpg',
+    names,
+    specs,
+    descriptions
+  };
+
+  if (id) payload.id = Number(id);
+
+  try {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': currentAdminPin
+      },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      closeProductModal();
+      loadAdminData();
+    } else {
+      alert('Failed to save product');
+    }
+  } catch (err) {
+    alert('Server error saving product');
   }
 }

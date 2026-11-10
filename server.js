@@ -52,19 +52,22 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 // Helper: read and write database
 function getDb() {
   try {
-    if (fs.existsSync(TMP_DB_FILE)) {
-      const raw = fs.readFileSync(TMP_DB_FILE, 'utf8');
-      return JSON.parse(raw);
-    }
-    const raw = fs.readFileSync(DB_FILE, 'utf8');
-    return JSON.parse(raw);
+    const hasTmp = fs.existsSync(TMP_DB_FILE);
+    const hasDb = fs.existsSync(DB_FILE);
+    const useTmp = hasTmp && (!hasDb || fs.statSync(TMP_DB_FILE).mtimeMs > fs.statSync(DB_FILE).mtimeMs);
+    const raw = fs.readFileSync(useTmp ? TMP_DB_FILE : DB_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (!parsed.products) parsed.products = [];
+    return parsed;
   } catch (err) {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf8');
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.products) parsed.products = [];
+      return parsed;
     } catch (e) {
       console.error('Error reading database:', err);
-      return { settings: {}, cities: [], tours: [], bookings: [] };
+      return { settings: {}, cities: [], tours: [], products: [], bookings: [], reviews: [] };
     }
   }
 }
@@ -111,6 +114,7 @@ app.get('/api/data', (req, res) => {
     settings: safeSettings,
     cities: db.cities,
     tours: db.tours.filter(t => t.active !== false),
+    products: (db.products || []).filter(p => p.active !== false),
     reviews: (db.reviews || []).filter(r => r.approved === true)
   });
 });
@@ -265,6 +269,84 @@ app.delete('/api/tours/:id', verifyAdmin, (req, res) => {
   db.tours = db.tours.filter(t => String(t.id) !== String(id));
   saveDb(db);
   res.json({ success: true, message: `Tour ${id} deleted` });
+});
+
+// ==================== BAZAR PRODUCTS CRUD ====================
+app.get('/api/products', (req, res) => {
+  const db = getDb();
+  const { category } = req.query;
+  let products = db.products || [];
+  if (category && category !== 'all') {
+    products = products.filter(p => p.category === category);
+  }
+  res.json(products);
+});
+
+app.get('/api/products/:id', (req, res) => {
+  const db = getDb();
+  const product = (db.products || []).find(p => String(p.id) === String(req.params.id));
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+  res.json(product);
+});
+
+app.post('/api/products', verifyAdmin, (req, res) => {
+  const db = getDb();
+  if (!db.products) db.products = [];
+  const productData = req.body;
+
+  if (productData.id) {
+    const idx = db.products.findIndex(p => String(p.id) === String(productData.id));
+    if (idx >= 0) {
+      db.products[idx] = {
+        ...db.products[idx],
+        ...productData,
+        price: productData.price !== undefined ? Number(productData.price) : db.products[idx].price
+      };
+      saveDb(db);
+      return res.json({ success: true, product: db.products[idx] });
+    }
+  }
+
+  const nextId = db.products.length > 0 ? Math.max(...db.products.map(p => Number(p.id) || 0)) + 1 : 1;
+  const newProduct = {
+    id: nextId,
+    active: true,
+    featured: false,
+    ...productData,
+    price: Number(productData.price) || 0
+  };
+  db.products.unshift(newProduct);
+  saveDb(db);
+  res.json({ success: true, product: newProduct });
+});
+
+app.patch('/api/products/:id', verifyAdmin, (req, res) => {
+  const db = getDb();
+  if (!db.products) db.products = [];
+  const idx = db.products.findIndex(p => String(p.id) === String(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Product not found' });
+
+  const { active, featured, price, image, specs, category, names, descriptions } = req.body;
+  if (active !== undefined) db.products[idx].active = Boolean(active);
+  if (featured !== undefined) db.products[idx].featured = Boolean(featured);
+  if (price !== undefined) db.products[idx].price = Number(price);
+  if (image !== undefined) db.products[idx].image = image;
+  if (specs !== undefined) db.products[idx].specs = specs;
+  if (category !== undefined) db.products[idx].category = category;
+  if (names !== undefined) db.products[idx].names = names;
+  if (descriptions !== undefined) db.products[idx].descriptions = descriptions;
+
+  saveDb(db);
+  res.json({ success: true, product: db.products[idx] });
+});
+
+app.delete('/api/products/:id', verifyAdmin, (req, res) => {
+  const db = getDb();
+  if (!db.products) db.products = [];
+  const id = req.params.id;
+  db.products = db.products.filter(p => String(p.id) !== String(id));
+  saveDb(db);
+  res.json({ success: true, message: `Product ${id} deleted` });
 });
 
 // Handle Image Upload
