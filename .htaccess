@@ -1,22 +1,38 @@
 # ============================================================
-# EGYPT VOYAGE - HOSTINGER APACHE CONFIGURATION
+# SPHINXTOUR - SECURITY & APACHE HARDENING CONFIGURATION
 # ============================================================
 
+# Disable directory browsing & multiviews
+Options -Indexes
+
+# Enable rewrite engine
 RewriteEngine On
 
-# Enable CORS for API
+# Security Headers
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
-    Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, x-admin-pin"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
 </IfModule>
 
-# Protect data/database.json from direct browser download
-<Files "data/database.json">
-    Order Allow,Deny
-    Deny from all
-</Files>
+# Block direct HTTP access to internal backend files, databases, configs, and dotfiles
+RewriteRule ^\. - [F,L]
+RewriteRule ^data(/|$) - [F,NC,L]
+RewriteRule ^node_modules(/|$) - [F,NC,L]
+RewriteRule ^api(/|$) - [F,NC,L]
+RewriteRule ^(server\.js|index\.js|package\.json|package-lock\.json|database\.sql|README\.md)$ - [F,NC,L]
 
-# Route requests to index.html if file doesn't exist
+# Never execute scripts inside uploads directory (Anti-malware / Web-shell defense)
+RewriteRule ^public/uploads/.*\.(php|phtml|php[0-9]|cgi|pl|py|sh|exe|bat|cmd|js|svg|html?)$ - [F,NC,L]
+RewriteRule ^uploads/.*\.(php|phtml|php[0-9]|cgi|pl|py|sh|exe|bat|cmd|js|svg|html?)$ - [F,NC,L]
+
+<FilesMatch "\.(json|sql|md|lock|env|log|bak|sh)$">
+    Require all denied
+</FilesMatch>
+
+# Route requests to public/ if file doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^admin/?$ public/admin.html [L]

@@ -244,26 +244,26 @@ function updateSiteSettings() {
 
   // Nav WhatsApp button
   const navWa = document.getElementById('navWhatsappBtn');
-  if (navWa && settings.whatsapp_number) {
-    navWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  if (navWa && contactDigits) {
+    navWa.href = `https://wa.me/${contactDigits}`;
   }
 
   // Mobile Drawer WhatsApp button
   const drawerWa = document.getElementById('mobileDrawerWhatsappBtn');
-  if (drawerWa && settings.whatsapp_number) {
-    drawerWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  if (drawerWa && contactDigits) {
+    drawerWa.href = `https://wa.me/${contactDigits}`;
   }
 
   // Hero WhatsApp button
   const heroWa = document.getElementById('heroWhatsappBtn');
-  if (heroWa && settings.whatsapp_number) {
-    heroWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  if (heroWa && contactDigits) {
+    heroWa.href = `https://wa.me/${contactDigits}`;
   }
 
   // Footer WhatsApp link
   const footerWa = document.getElementById('footerWhatsappLink');
-  if (footerWa && settings.whatsapp_number) {
-    footerWa.href = `https://wa.me/${settings.whatsapp_number}`;
+  if (footerWa && contactDigits) {
+    footerWa.href = `https://wa.me/${contactDigits}`;
   }
 
   // Footer phone and email
@@ -281,7 +281,7 @@ function updateSiteSettings() {
   // Footer Social links (Facebook & Telegram)
   const fbBtn = document.getElementById('footerSocialFacebook');
   if (fbBtn) {
-    if (settings.social_facebook) {
+    if (settings.social_facebook && /^https?:\/\//i.test(settings.social_facebook)) {
       fbBtn.href = settings.social_facebook;
       fbBtn.style.display = 'inline-flex';
     } else {
@@ -291,7 +291,7 @@ function updateSiteSettings() {
 
   const tgBtn = document.getElementById('footerSocialTelegram');
   if (tgBtn) {
-    if (settings.social_telegram) {
+    if (settings.social_telegram && /^https?:\/\//i.test(settings.social_telegram)) {
       tgBtn.href = settings.social_telegram;
       tgBtn.style.display = 'inline-flex';
     } else {
@@ -555,20 +555,21 @@ function renderCities() {
       }
     };
 
+    const cityImg = safeUrlClient(city.image, '/uploads/banner_1.jpg');
     card.innerHTML = `
       <div class="city-img-wrapper">
-        <img class="city-img" src="${city.image}" alt="${cityName}" loading="lazy" />
+        <img class="city-img" src="${escapeHtml(cityImg)}" alt="${escapeHtml(cityName)}" loading="lazy" />
       </div>
       <div class="city-gradient-overlay"></div>
       <div class="city-badge">
-        <span>📍</span> ${tourCount} ${t('nav_tours')}
+        <span>📍</span> ${Number(tourCount) || 0} ${escapeHtml(t('nav_tours'))}
       </div>
       <div class="city-content">
-        <h3 class="city-name">${cityName}</h3>
-        <p class="city-tagline">${cityTagline}</p>
-        <p class="city-desc">${cityDesc}</p>
+        <h3 class="city-name">${escapeHtml(cityName)}</h3>
+        <p class="city-tagline">${escapeHtml(cityTagline)}</p>
+        <p class="city-desc">${escapeHtml(cityDesc)}</p>
         <div class="city-btn">
-          <span>${t('hero_cta_explore')}</span>
+          <span>${escapeHtml(t('hero_cta_explore'))}</span>
           <span>→</span>
         </div>
       </div>
@@ -590,7 +591,7 @@ function renderCityFilters() {
     const btn = document.createElement('button');
     btn.className = `filter-pill ${isActive}`;
     btn.onclick = () => filterByCity(city.id);
-    btn.innerHTML = `📍 ${cityName}`;
+    btn.textContent = `📍 ${cityName}`;
     container.appendChild(btn);
   });
 }
@@ -811,34 +812,39 @@ function renderTours() {
     card.className = 'tour-card';
     card.setAttribute('data-tour-id', tour.id);
     card.id = `tour-${tour.id}`;
+    const safeImg = escapeHtml(safeUrlClient(tour.image, '/uploads/banner_1.jpg'));
+    const safePrice = Number(tour.price) || 0;
+    const safeChildPrice = Number(tour.price_child) || 0;
     card.innerHTML = `
       <div class="tour-thumb">
-        <img src="${tour.image}" alt="${tourName}" loading="lazy" />
-        <div class="tour-city-tag">📍 ${cityName}</div>
+        <img src="${safeImg}" alt="${escapeHtml(tourName)}" loading="lazy" />
+        <div class="tour-city-tag">📍 ${escapeHtml(cityName)}</div>
       </div>
       <div class="tour-body">
-        <h3 class="tour-title">${tourName}</h3>
+        <h3 class="tour-title">${escapeHtml(tourName)}</h3>
         <div class="tour-price-box">
-          <div class="tour-price-val">${curr}${tour.price}</div>
-          ${tour.price_child ? `<div class="tour-price-child">${t('child_price')}: ${curr}${tour.price_child}</div>` : ''}
+          <div class="tour-price-val">${escapeHtml(curr)}${safePrice}</div>
+          ${safeChildPrice ? `<div class="tour-price-child">${escapeHtml(t('child_price'))}: ${escapeHtml(curr)}${safeChildPrice}</div>` : ''}
         </div>
         <div class="tour-actions">
-          <button class="btn-card-details" onclick="openDetailsModal(${tour.id})">
-            ${t('btn_details')}
+          <button class="btn-card-details" type="button">
+            ${escapeHtml(t('btn_details'))}
           </button>
-          <button class="btn-card-whatsapp" onclick="openBookingModal(${tour.id})">
-            <span>💬</span> ${t('btn_book_whatsapp')}
+          <button class="btn-card-whatsapp" type="button">
+            <span>💬</span> ${escapeHtml(t('btn_book_whatsapp'))}
           </button>
         </div>
       </div>
     `;
+    card.querySelector('.btn-card-details').addEventListener('click', () => openDetailsModal(tour.id));
+    card.querySelector('.btn-card-whatsapp').addEventListener('click', () => openBookingModal(tour.id));
     container.appendChild(card);
   });
 }
 
 // Open Tour Details Modal
 function openDetailsModal(tourId) {
-  const tour = appData.tours.find(t => t.id === tourId);
+  const tour = appData.tours.find(t => String(t.id) === String(tourId));
   if (!tour) return;
 
   const curr = appData.settings?.currency || '$';
@@ -852,42 +858,51 @@ function openDetailsModal(tourId) {
   const body = document.getElementById('detailsModalBody');
 
   const includedList = (tour.included?.[currentLang] || tour.included?.en || [])
-    .map(item => `<li class="included-item">${item}</li>`).join('');
+    .map(item => `<li class="included-item">${escapeHtml(item)}</li>`).join('');
 
+  const safeImg = escapeHtml(safeUrlClient(tour.image, '/uploads/banner_1.jpg'));
   body.innerHTML = `
     <div class="modal-gallery">
-      <img src="${tour.image}" alt="${tourName}" />
+      <img src="${safeImg}" alt="${escapeHtml(tourName)}" />
     </div>
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
       <div>
-        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${cityName} • ⏱ ${tour.duration || 'Full Day'}</span>
-        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px; color: #000000;">${tourName}</h2>
+        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">📍 ${escapeHtml(cityName)} • ⏱ ${escapeHtml(tour.duration || 'Full Day')}</span>
+        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin-top: 4px; color: #000000;">${escapeHtml(tourName)}</h2>
       </div>
       <div style="text-align: right;">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">${t('from_price')}</span>
-        <div style="font-size: 1.8rem; font-weight: 800; color: var(--price-orange, #F97316);">${curr}${tour.price}</div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(t('from_price'))}</span>
+        <div style="font-size: 1.8rem; font-weight: 800; color: var(--price-orange, #F97316);">${escapeHtml(curr)}${Number(tour.price) || 0}</div>
       </div>
     </div>
     <div class="currency-trust-badge" style="margin-top: 0; margin-bottom: 20px;">
       <span class="currency-badge-icon">💳</span>
-      <span>${t('payment_currencies')}</span>
+      <span>${escapeHtml(t('payment_currencies'))}</span>
     </div>
     <div style="margin-bottom: 24px;">
-      <h4 style="font-size: 1.05rem; color: #000000; margin-bottom: 8px; font-weight: 700;">${t('modal_details_itinerary')}</h4>
-      <p style="color: #000000; font-size: 0.95rem; line-height: 1.6;">${tourDesc}</p>
+      <h4 style="font-size: 1.05rem; color: #000000; margin-bottom: 8px; font-weight: 700;">${escapeHtml(t('modal_details_itinerary'))}</h4>
+      <p style="color: #000000; font-size: 0.95rem; line-height: 1.6;">${escapeHtml(tourDesc)}</p>
     </div>
     ${includedList ? `
       <div style="margin-bottom: 24px;">
-        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 8px; font-weight: 700;">${t('modal_details_included')}</h4>
+        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 8px; font-weight: 700;">${escapeHtml(t('modal_details_included'))}</h4>
         <ul class="included-list">${includedList}</ul>
       </div>
     ` : ''}
     <div style="margin-top: 30px; display: flex; gap: 14px;">
-      <button class="btn-whatsapp-large" style="width: 100%; justify-content: center;" onclick="closeDetailsModal(); openBookingModal(${tour.id})">
-        <span>💬</span> ${t('btn_book_whatsapp')}
+      <button class="btn-whatsapp-large" type="button" style="width: 100%; justify-content: center;">
+        <span>💬</span> ${escapeHtml(t('btn_book_whatsapp'))}
       </button>
     </div>
   `;
+
+  const bookBtn = body.querySelector('.btn-whatsapp-large');
+  if (bookBtn) {
+    bookBtn.addEventListener('click', () => {
+      closeDetailsModal();
+      openBookingModal(tour.id);
+    });
+  }
 
   modal.classList.add('active');
 }
@@ -1115,26 +1130,28 @@ function renderBazarProducts() {
     card.id = `bazar-item-${product.id}`;
     card.innerHTML = `
       <div class="bazar-thumb">
-        <img src="${escapeHtml(product.image)}" alt="${prodName}" loading="lazy" />
-        ${product.featured ? `<div class="bazar-featured-badge">★ ${t('badge_popular')}</div>` : ''}
-        <div class="bazar-cat-tag">${getBazarCategoryLabel(product.category)}</div>
+        <img src="${escapeHtml(safeUrlClient(product.image, '/uploads/bazar_papyrus.jpg'))}" alt="${prodName}" loading="lazy" />
+        ${product.featured ? `<div class="bazar-featured-badge">★ ${escapeHtml(t('badge_popular'))}</div>` : ''}
+        <div class="bazar-cat-tag">${escapeHtml(getBazarCategoryLabel(product.category))}</div>
       </div>
       <div class="bazar-body">
         <h3 class="bazar-title">${prodName}</h3>
         ${specsHtml ? `<ul class="bazar-specs-list">${specsHtml}</ul>` : ''}
         <div class="bazar-price-box">
-          <div class="bazar-price-val">${curr}${product.price}</div>
+          <div class="bazar-price-val">${escapeHtml(curr)}${Number(product.price) || 0}</div>
         </div>
         <div class="tour-actions">
-          <button class="btn-card-details" onclick="openProductDetailsModal(${product.id})">
-            ${t('bazar_btn_specs')}
+          <button class="btn-card-details" type="button">
+            ${escapeHtml(t('bazar_btn_specs'))}
           </button>
-          <button class="btn-card-whatsapp" onclick="openBazarOrderModal(${product.id})">
-            <span>💬</span> ${t('bazar_btn_order')}
+          <button class="btn-card-whatsapp" type="button">
+            <span>💬</span> ${escapeHtml(t('bazar_btn_order'))}
           </button>
         </div>
       </div>
     `;
+    card.querySelector('.btn-card-details').addEventListener('click', () => openProductDetailsModal(product.id));
+    card.querySelector('.btn-card-whatsapp').addEventListener('click', () => openBazarOrderModal(product.id));
     container.appendChild(card);
   });
 }
@@ -1160,20 +1177,20 @@ function openProductDetailsModal(productId) {
 
   body.innerHTML = `
     <div class="modal-gallery">
-      <img src="${escapeHtml(product.image)}" alt="${prodName}" />
+      <img src="${escapeHtml(safeUrlClient(product.image, '/uploads/bazar_papyrus.jpg'))}" alt="${prodName}" />
     </div>
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; gap: 16px;">
       <div>
-        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">${getBazarCategoryLabel(product.category)}</span>
+        <span style="color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem;">${escapeHtml(getBazarCategoryLabel(product.category))}</span>
         <h2 style="font-family: var(--font-heading); font-size: 1.55rem; margin-top: 4px; color: #000000;">${prodName}</h2>
       </div>
       <div style="text-align: right; flex-shrink: 0;">
-        <div style="font-size: 1.9rem; font-weight: 800; color: var(--price-orange, #F97316);">${curr}${product.price}</div>
+        <div style="font-size: 1.9rem; font-weight: 800; color: var(--price-orange, #F97316);">${escapeHtml(curr)}${Number(product.price) || 0}</div>
       </div>
     </div>
     <div class="currency-trust-badge" style="margin-top: 0; margin-bottom: 20px;">
       <span class="currency-badge-icon">💳</span>
-      <span>${t('payment_currencies')}</span>
+      <span>${escapeHtml(t('payment_currencies'))}</span>
     </div>
     ${prodDesc ? `
       <div style="margin-bottom: 22px;">
@@ -1182,16 +1199,24 @@ function openProductDetailsModal(productId) {
     ` : ''}
     ${specsModalHtml ? `
       <div style="margin-bottom: 24px;">
-        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 700;">📋 ${t('bazar_specs_label')}</h4>
+        <h4 style="font-size: 1rem; color: var(--accent-cyan); margin-bottom: 10px; font-weight: 700;">📋 ${escapeHtml(t('bazar_specs_label'))}</h4>
         <ul class="bazar-specs-modal-list">${specsModalHtml}</ul>
       </div>
     ` : ''}
     <div style="margin-top: 28px;">
-      <button class="btn-whatsapp-large" style="width: 100%; justify-content: center;" onclick="closeDetailsModal(); openBazarOrderModal(${product.id})">
-        <span>💬</span> ${t('bazar_btn_order')}
+      <button class="btn-whatsapp-large" type="button" style="width: 100%; justify-content: center;">
+        <span>💬</span> ${escapeHtml(t('bazar_btn_order'))}
       </button>
     </div>
   `;
+
+  const orderBtn = body.querySelector('.btn-whatsapp-large');
+  if (orderBtn) {
+    orderBtn.addEventListener('click', () => {
+      closeDetailsModal();
+      openBazarOrderModal(product.id);
+    });
+  }
 
   modal.classList.add('active');
 }
@@ -1380,20 +1405,20 @@ function renderReviews() {
     card.innerHTML = `
       <div class="review-card-top">
         <div class="review-user-info">
-          <div class="review-avatar">${initials}</div>
+          <div class="review-avatar">${escapeHtml(initials)}</div>
           <div>
             <div class="review-name">${escapeHtml(review.name)}</div>
             <div class="review-country">${escapeHtml(review.country || 'Verified Traveler')}</div>
           </div>
         </div>
         <div class="review-badge-verified">
-          ✓ <span>${t('reviews_verified') || 'Verified Guest'}</span>
+          ✓ <span>${escapeHtml(t('reviews_verified') || 'Verified Guest')}</span>
         </div>
       </div>
       <div class="review-stars">${starsHtml}</div>
       ${review.tour ? `<div class="review-tour-tag">📍 ${escapeHtml(review.tour)}</div>` : ''}
       <p class="review-text">"${escapeHtml(review.comment)}"</p>
-      <div class="review-date">🗓 ${review.date || 'Recent'}</div>
+      <div class="review-date">🗓 ${escapeHtml(review.date || 'Recent')}</div>
     `;
     container.appendChild(card);
   });
@@ -1409,7 +1434,7 @@ function openReviewModal() {
     dataList.innerHTML = appData.tours
       .map(tour => {
         const name = tour.names?.[currentLang] || tour.names?.en || '';
-        return `<option value="${name}">`;
+        return `<option value="${escapeHtml(name)}">`;
       })
       .join('');
   }
@@ -1487,6 +1512,14 @@ async function handleReviewSubmit(e) {
       btn.style.opacity = '1';
     }
   }
+}
+
+function safeUrlClient(url, fallback = '/uploads/banner_1.jpg') {
+  if (typeof url !== 'string') return fallback;
+  const trimmed = url.trim();
+  if (trimmed.startsWith('/uploads/') && !trimmed.includes('..') && !trimmed.includes('\\')) return trimmed;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return fallback;
 }
 
 function escapeHtml(str) {

@@ -268,35 +268,35 @@ function renderToursTable() {
 
     tr.innerHTML = `
       <td>
-        <img src="${tour.image}" class="table-thumb" alt="Thumbnail" />
+        <img src="${escapeHtmlAdmin(tour.image || '/uploads/banner_1.jpg')}" class="table-thumb" alt="Thumbnail" />
       </td>
       <td>
-        <div style="font-weight: 700; color: #FFF;">${tour.names?.en || 'Unnamed'}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">${tour.names?.ru ? '🇷🇺 ' + tour.names.ru : ''}</div>
+        <div style="font-weight: 700; color: #FFF;">${escapeHtmlAdmin(tour.names?.en || 'Unnamed')}</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">${tour.names?.ru ? '🇷🇺 ' + escapeHtmlAdmin(tour.names.ru) : ''}</div>
       </td>
       <td>
-        <span style="color: var(--admin-accent); font-weight: 600;">📍 ${cityName}</span>
+        <span style="color: var(--admin-accent); font-weight: 600;">📍 ${escapeHtmlAdmin(cityName)}</span>
       </td>
       <td>
         <div style="display: flex; align-items: center; gap: 4px;">
-          <span style="color: #F97316; font-weight: 700;">${curr}</span>
-          <input type="number" class="quick-price-input" value="${tour.price}" onchange="quickUpdatePrice(${tour.id}, this.value)" title="Change price and click outside to save" />
+          <span style="color: #F97316; font-weight: 700;">${escapeHtmlAdmin(curr)}</span>
+          <input type="number" class="quick-price-input" value="${Number(tour.price) || 0}" onchange="quickUpdatePrice(${Number(tour.id) || 0}, this.value)" title="Change price and click outside to save" />
         </div>
       </td>
       <td>
-        <button class="badge-status ${tour.active !== false ? 'badge-active' : 'badge-inactive'}" onclick="toggleTourActive(${tour.id}, ${tour.active !== false})" style="border: none; cursor: pointer;">
+        <button class="badge-status ${tour.active !== false ? 'badge-active' : 'badge-inactive'}" onclick="toggleTourActive(${Number(tour.id) || 0}, ${tour.active !== false})" style="border: none; cursor: pointer;">
           ${tour.active !== false ? 'Active' : 'Hidden'}
         </button>
       </td>
       <td>
-        <button class="badge-status ${tour.featured ? 'badge-featured' : 'badge-inactive'}" onclick="toggleTourFeatured(${tour.id}, ${Boolean(tour.featured)})" style="border: none; cursor: pointer;">
+        <button class="badge-status ${tour.featured ? 'badge-featured' : 'badge-inactive'}" onclick="toggleTourFeatured(${Number(tour.id) || 0}, ${Boolean(tour.featured)})" style="border: none; cursor: pointer;">
           ${tour.featured ? '★ Featured' : 'Normal'}
         </button>
       </td>
       <td>
         <div class="table-actions">
-          <button class="btn-icon" onclick="openEditTourModal(${tour.id})" title="Edit All Details">✏️</button>
-          <button class="btn-icon delete" onclick="deleteTour(${tour.id})" title="Delete Tour">🗑️</button>
+          <button class="btn-icon" onclick="openEditTourModal(${Number(tour.id) || 0})" title="Edit All Details">✏️</button>
+          <button class="btn-icon delete" onclick="deleteTour(${Number(tour.id) || 0})" title="Delete Tour">🗑️</button>
         </div>
       </td>
     `;
@@ -407,7 +407,7 @@ function openAddTourModal() {
   document.getElementById('tourEditId').value = '';
   document.getElementById('tourImagePreview').style.display = 'none';
   const statusText = document.getElementById('uploadStatusText');
-  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP, GIF up to 5MB';
   
   switchTourModalLang('en');
   document.getElementById('tourModalOverlay').classList.add('active');
@@ -488,7 +488,7 @@ async function uploadTourImage(e) {
       prev.style.display = 'block';
       statusText.textContent = '✓ Uploaded successfully!';
     } else {
-      statusText.textContent = '❌ Upload failed';
+      statusText.textContent = '❌ ' + (data.error || 'Upload failed');
     }
   } catch (err) {
     statusText.textContent = '❌ Network error';
@@ -601,11 +601,11 @@ function renderCitiesTable() {
     const count = adminData.tours.filter(t => t.city_id === city.id).length;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><img src="${city.image}" class="table-thumb" alt="${city.id}" /></td>
-      <td><strong>${city.names?.en || city.id}</strong></td>
-      <td>${city.names?.ru || '—'}</td>
-      <td>${city.names?.fr || '—'}</td>
-      <td>${city.names?.pl || '—'}</td>
+      <td><img src="${escapeHtmlAdmin(city.image)}" class="table-thumb" alt="${escapeHtmlAdmin(city.id)}" /></td>
+      <td><strong>${escapeHtmlAdmin(city.names?.en || city.id)}</strong></td>
+      <td>${escapeHtmlAdmin(city.names?.ru || '—')}</td>
+      <td>${escapeHtmlAdmin(city.names?.fr || '—')}</td>
+      <td>${escapeHtmlAdmin(city.names?.pl || '—')}</td>
       <td><span class="badge-status badge-active">${count} Excursions</span></td>
     `;
     tbody.appendChild(tr);
@@ -768,12 +768,12 @@ function renderBookingsTable() {
       ? `Qty: ${b.adults || 1}`
       : `${b.adults} Adults, ${b.children} Kids`;
     tr.innerHTML = `
-      <td><strong>${b.id}</strong></td>
+      <td><strong>${escapeHtmlAdmin(b.id)}</strong></td>
       <td>${escapeHtmlAdmin(b.tour_name)} <br><small style="color: var(--admin-accent);">📍 ${escapeHtmlAdmin(b.city)}</small></td>
-      <td>${b.date}</td>
-      <td>${guestsLabel}</td>
+      <td>${escapeHtmlAdmin(b.date)}</td>
+      <td>${escapeHtmlAdmin(guestsLabel)}</td>
       <td>${escapeHtmlAdmin(b.hotel)}</td>
-      <td><span class="badge-status badge-featured">${(b.lang || 'en').toUpperCase()}</span></td>
+      <td><span class="badge-status badge-featured">${escapeHtmlAdmin((b.lang || 'en').toUpperCase())}</span></td>
     `;
     tbody.appendChild(tr);
   });
@@ -901,38 +901,38 @@ function renderProductsTable() {
     tr.innerHTML = `
       <td>
         <div class="table-thumb-wrap">
-          <img src="${escapeHtmlAdmin(product.image)}" class="table-thumb" alt="Product" style="cursor: pointer;" onclick="triggerQuickProductImage(${product.id})" title="Click to upload replacement photo" />
-          <button type="button" class="btn-thumb-edit" onclick="triggerQuickProductImage(${product.id})" title="Change product image">📷</button>
+          <img src="${escapeHtmlAdmin(product.image)}" class="table-thumb" alt="Product" style="cursor: pointer;" onclick="triggerQuickProductImage(${Number(product.id) || 0})" title="Click to upload replacement photo" />
+          <button type="button" class="btn-thumb-edit" onclick="triggerQuickProductImage(${Number(product.id) || 0})" title="Change product image">📷</button>
         </div>
       </td>
       <td>
         <div style="font-weight: 700; color: #FFF;">${escapeHtmlAdmin(product.names?.en || 'Unnamed Product')}</div>
         <div style="font-size: 0.8rem; color: var(--text-muted);">${product.names?.ru ? '🇷🇺 ' + escapeHtmlAdmin(product.names.ru) : ''}</div>
-        <div style="font-size: 0.76rem; color: var(--admin-accent); margin-top: 3px;">${catLabel}</div>
+        <div style="font-size: 0.76rem; color: var(--admin-accent); margin-top: 3px;">${escapeHtmlAdmin(catLabel)}</div>
       </td>
       <td>
         ${specsHtml ? `<ul class="admin-specs-list">${specsHtml}</ul>` : '<span style="color: var(--text-dim);">—</span>'}
       </td>
       <td>
         <div style="display: flex; align-items: center; gap: 4px;">
-          <span style="color: #F97316; font-weight: 700;">${curr}</span>
-          <input type="number" min="0" step="any" class="quick-price-input" value="${product.price}" onchange="quickUpdateProductPrice(${product.id}, this.value)" title="Change price and click outside to save" />
+          <span style="color: #F97316; font-weight: 700;">${escapeHtmlAdmin(curr)}</span>
+          <input type="number" min="0" step="any" class="quick-price-input" value="${Number(product.price) || 0}" onchange="quickUpdateProductPrice(${Number(product.id) || 0}, this.value)" title="Change price and click outside to save" />
         </div>
       </td>
       <td>
-        <button class="badge-status ${product.active !== false ? 'badge-active' : 'badge-inactive'}" onclick="toggleProductActive(${product.id}, ${product.active !== false})" style="border: none; cursor: pointer;">
+        <button class="badge-status ${product.active !== false ? 'badge-active' : 'badge-inactive'}" onclick="toggleProductActive(${Number(product.id) || 0}, ${product.active !== false})" style="border: none; cursor: pointer;">
           ${product.active !== false ? 'Active' : 'Hidden'}
         </button>
       </td>
       <td>
-        <button class="badge-status ${product.featured ? 'badge-featured' : 'badge-inactive'}" onclick="toggleProductFeatured(${product.id}, ${Boolean(product.featured)})" style="border: none; cursor: pointer;">
+        <button class="badge-status ${product.featured ? 'badge-featured' : 'badge-inactive'}" onclick="toggleProductFeatured(${Number(product.id) || 0}, ${Boolean(product.featured)})" style="border: none; cursor: pointer;">
           ${product.featured ? '★ Popular' : 'Normal'}
         </button>
       </td>
       <td>
         <div class="table-actions">
-          <button class="btn-icon" onclick="openEditProductModal(${product.id})" title="Edit Image, Specs & Price">✏️</button>
-          <button class="btn-icon delete" onclick="deleteProduct(${product.id})" title="Delete Product">🗑️</button>
+          <button class="btn-icon" onclick="openEditProductModal(${Number(product.id) || 0})" title="Edit Image, Specs & Price">✏️</button>
+          <button class="btn-icon delete" onclick="deleteProduct(${Number(product.id) || 0})" title="Delete Product">🗑️</button>
         </div>
       </td>
     `;
@@ -967,7 +967,7 @@ async function handleQuickProductImageUpload(e) {
     });
     const upData = await upRes.json();
     if (!upRes.ok || !upData.success) {
-      alert('❌ Image upload failed');
+      alert('❌ ' + (upData.error || 'Image upload failed'));
       return;
     }
 
@@ -1085,7 +1085,7 @@ function openAddProductModal() {
   document.getElementById('productEditId').value = '';
   document.getElementById('productImagePreview').style.display = 'none';
   const statusText = document.getElementById('productUploadStatusText');
-  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP, GIF up to 5MB';
 
   switchProductModalLang('en');
   document.getElementById('productModalOverlay').classList.add('active');
@@ -1128,7 +1128,7 @@ function openEditProductModal(productId) {
   document.getElementById('productDescPl').value = product.descriptions?.pl || '';
 
   const statusText = document.getElementById('productUploadStatusText');
-  if (statusText) statusText.textContent = 'JPG, PNG, WebP up to 10MB';
+  if (statusText) statusText.textContent = 'JPG, PNG, WebP, GIF up to 5MB';
 
   switchProductModalLang('en');
   document.getElementById('productModalOverlay').classList.add('active');
@@ -1165,7 +1165,7 @@ async function uploadProductImage(e) {
       prev.style.display = 'block';
       statusText.textContent = '✓ Uploaded successfully!';
     } else {
-      statusText.textContent = '❌ Upload failed';
+      statusText.textContent = '❌ ' + (data.error || 'Upload failed');
     }
   } catch (err) {
     statusText.textContent = '❌ Network error';
