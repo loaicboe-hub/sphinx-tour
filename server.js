@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const multer = require('multer');
+const mysql = require('mysql2/promise');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -326,8 +327,53 @@ app.use('/uploads', express.static(UPLOADS_DIR, {
   }
 }));
 
-// Helper: read and write database
-function getDb() {
+// Helper: read and write database (Hostinger MySQL via env vars, with local JSON fallback)
+function getMysqlConfig() {
+  const urlStr = process.env.MYSQL_URL || process.env.DATABASE_URL || '';
+  if (urlStr) {
+    try {
+      const u = new URL(urlStr);
+      const dbName = (u.pathname || '').replace(/^\//, '');
+      if (u.hostname && u.username && dbName) {
+        return {
+          host: u.hostname,
+          port: Number(u.port || 3306),
+          user: decodeURIComponent(u.username || ''),
+          password: decodeURIComponent(u.password || ''),
+          database: dbName,
+          ssl: process.env.MYSQL_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+        };
+      }
+    } catch (e) {
+      console.error('Invalid MYSQL_URL / DATABASE_URL format');
+    }
+  }
+
+  const user = process.env.MYSQL_USER || process.env.DB_USER || '';
+  const database = process.env.MYSQL_DATABASE || process.env.MYSQL_DB || process.env.DB_NAME || '';
+  if (!user || !database) return null;
+
+  const password = process.env.MYSQL_PASSWORD !== undefined
+    ? process.env.MYSQL_PASSWORD
+    : (process.env.DB_PASSWORD !== undefined
+      ? process.env.DB_PASSWORD
+      : (process.env.DB_PASS || ''));
+
+  return {
+    host: process.env.MYSQL_HOST || process.env.DB_HOST || '127.0.0.1',
+    port: Number(process.env.MYSQL_PORT || process.env.DB_PORT || 3306),
+    user,
+    password,
+    database,
+    ssl: process.env.MYSQL_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+  };
+}
+
+function isMysqlEnabled() {
+  return Boolean(getMysqlConfig());
+}
+
+function readJsonDbSync() {
   try {
     const hasTmp = fs.existsSync(TMP_DB_FILE);
     const hasDb = fs.existsSync(DB_FILE);
@@ -335,12 +381,22 @@ function getDb() {
     const raw = fs.readFileSync(useTmp ? TMP_DB_FILE : DB_FILE, 'utf8');
     const parsed = JSON.parse(raw);
     if (!parsed.products) parsed.products = [];
+    if (!parsed.bookings) parsed.bookings = [];
+    if (!parsed.reviews) parsed.reviews = [];
+    if (!parsed.cities) parsed.cities = [];
+    if (!parsed.tours) parsed.tours = [];
+    if (!parsed.settings) parsed.settings = {};
     return parsed;
   } catch (err) {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf8');
       const parsed = JSON.parse(raw);
       if (!parsed.products) parsed.products = [];
+      if (!parsed.bookings) parsed.bookings = [];
+      if (!parsed.reviews) parsed.reviews = [];
+      if (!parsed.cities) parsed.cities = [];
+      if (!parsed.tours) parsed.tours = [];
+      if (!parsed.settings) parsed.settings = {};
       return parsed;
     } catch (e) {
       console.error('Error reading database:', err);
@@ -349,13 +405,13 @@ function getDb() {
   }
 }
 
-function saveDb(data) {
+function saveJsonDbSync(data) {
   let saved = false;
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
     saved = true;
   } catch (err) {
-    // Read-only filesystem (e.g. Vercel serverless / AWS Lambda)
+    // Read-only filesystem (e.g. serverless)
   }
 
   try {
@@ -366,6 +422,576 @@ function saveDb(data) {
   }
 
   return saved;
+}
+
+function safeJsonParse(str, fallback) {
+  if (typeof str !== 'string') return str || fallback;
+  try {
+    return JSON.parse(str);
+  } catch {
+    return fallback;
+  }
+}
+
+let mysqlPool = null;
+let mysqlInitPromise = null;
+let mysqlWriteChain = Promise.resolve();
+
+async function createMysqlPoolWithFallback() {
+  const cfg = getMysqlConfig();
+  if (!cfg) return null;
+
+  const baseOpts = {
+    port: cfg.port,
+    user: cfg.user,
+    password: cfg.password,
+    database: cfg.database,
+    ssl: cfg.ssl,
+    charset: 'utf8mb4',
+    waitForConnections: true,
+    connectionLimit: 5,
+    maxIdle: 5,
+    idleTimeout: 60000,
+    enableKeepAlive: true,
+    connectTimeout: 8000
+  };
+
+  let pool = mysql.createPool({ ...baseOpts, host: cfg.host });
+  try {
+    await pool.query('SELECT 1');
+    return pool;
+  } catch (err) {
+    // Hostinger local containers sometimes bind TCP on 127.0.0.1 vs localhost socket
+    if (cfg.host === 'localhost' || cfg.host === '127.0.0.1') {
+      const altHost = cfg.host === 'localhost' ? '127.0.0.1' : 'localhost';
+      await pool.end().catch(() => {});
+      pool = mysql.createPool({ ...baseOpts, host: altHost });
+      try {
+        await pool.query('SELECT 1');
+        return pool;
+      } catch (altErr) {
+        await pool.end().catch(() => {});
+        throw altErr;
+      }
+    }
+    await pool.end().catch(() => {});
+    throw err;
+  }
+}
+
+async function ensureMysqlReady() {
+  if (!isMysqlEnabled()) return null;
+  if (mysqlInitPromise) return mysqlInitPromise;
+
+  mysqlInitPromise = (async () => {
+    const pool = await createMysqlPoolWithFallback();
+    mysqlPool = pool;
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS app_meta (
+        meta_key VARCHAR(64) PRIMARY KEY,
+        meta_value VARCHAR(255) NOT NULL
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS settings (
+        id INT PRIMARY KEY,
+        site_name VARCHAR(255) NOT NULL DEFAULT 'SphinxTour',
+        whatsapp_number VARCHAR(64) NOT NULL DEFAULT '201140423458',
+        contact_email VARCHAR(255) DEFAULT 'info@sphinxtour.com',
+        phone VARCHAR(64) DEFAULT '+20 114 042 3458',
+        currency VARCHAR(16) DEFAULT '$',
+        currency_code VARCHAR(16) DEFAULT 'USD',
+        admin_pin VARCHAR(255) DEFAULT 'admin123',
+        social_facebook VARCHAR(512) DEFAULT '',
+        social_instagram VARCHAR(512) DEFAULT '',
+        social_telegram VARCHAR(512) DEFAULT ''
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS cities (
+        id VARCHAR(64) PRIMARY KEY,
+        slug VARCHAR(128) NOT NULL,
+        sort_order INT DEFAULT 1,
+        featured TINYINT(1) DEFAULT 1,
+        image VARCHAR(1000) DEFAULT '',
+        names_json LONGTEXT,
+        taglines_json LONGTEXT,
+        descriptions_json LONGTEXT
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tours (
+        id BIGINT PRIMARY KEY,
+        city_id VARCHAR(64) NOT NULL,
+        category VARCHAR(64) DEFAULT 'island',
+        price DECIMAL(10,2) DEFAULT 0,
+        price_child DECIMAL(10,2) DEFAULT 0,
+        duration VARCHAR(120) DEFAULT '',
+        rating DECIMAL(3,1) DEFAULT 5.0,
+        reviews_count INT DEFAULT 1,
+        image VARCHAR(1000) DEFAULT '',
+        names_json LONGTEXT,
+        short_descriptions_json LONGTEXT,
+        descriptions_json LONGTEXT,
+        gallery_json LONGTEXT,
+        included_json LONGTEXT,
+        featured TINYINT(1) DEFAULT 0,
+        active TINYINT(1) DEFAULT 1,
+        sort_idx INT DEFAULT 0
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id BIGINT PRIMARY KEY,
+        category VARCHAR(64) DEFAULT 'souvenirs',
+        price DECIMAL(10,2) DEFAULT 0,
+        image VARCHAR(1000) DEFAULT '',
+        names_json LONGTEXT,
+        specs_json LONGTEXT,
+        descriptions_json LONGTEXT,
+        featured TINYINT(1) DEFAULT 0,
+        active TINYINT(1) DEFAULT 1,
+        sort_idx INT DEFAULT 0
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bookings (
+        id VARCHAR(64) PRIMARY KEY,
+        tour_id VARCHAR(64) DEFAULT '',
+        tour_name VARCHAR(255) DEFAULT '',
+        city VARCHAR(120) DEFAULT '',
+        booking_date VARCHAR(32) DEFAULT '',
+        adults INT DEFAULT 1,
+        children INT DEFAULT 0,
+        client_name VARCHAR(150) DEFAULT 'Guest',
+        hotel VARCHAR(255) DEFAULT '',
+        notes TEXT,
+        lang VARCHAR(16) DEFAULT 'en',
+        created_at VARCHAR(40) DEFAULT '',
+        sort_idx INT DEFAULT 0
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS reviews (
+        id BIGINT PRIMARY KEY,
+        name VARCHAR(150) NOT NULL,
+        country VARCHAR(100) DEFAULT 'Verified Traveler',
+        tour VARCHAR(255) DEFAULT 'Egypt Excursion',
+        rating TINYINT DEFAULT 5,
+        comment TEXT NOT NULL,
+        review_date VARCHAR(32) DEFAULT '',
+        approved TINYINT(1) DEFAULT 0,
+        status VARCHAR(32) DEFAULT 'pending',
+        sort_idx INT DEFAULT 0
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    // Seed initial data once from data/database.json if this MySQL database has not been seeded yet
+    const [metaRows] = await pool.query("SELECT meta_value FROM app_meta WHERE meta_key = 'initial_seed_v1'");
+    if (metaRows.length === 0) {
+      const [settingsCnt] = await pool.query('SELECT COUNT(*) AS c FROM settings');
+      const [cityCnt] = await pool.query('SELECT COUNT(*) AS c FROM cities');
+      const [tourCnt] = await pool.query('SELECT COUNT(*) AS c FROM tours');
+      const seedData = readJsonDbSync();
+      if (process.env.ADMIN_PIN && process.env.ADMIN_PIN.trim().length >= 4) {
+        seedData.settings = { ...(seedData.settings || {}), admin_pin: process.env.ADMIN_PIN.trim() };
+      }
+
+      if (cityCnt[0].c === 0 && tourCnt[0].c === 0) {
+        await writeMysqlTables(pool, seedData, ['settings', 'cities', 'tours', 'products', 'bookings', 'reviews']);
+      } else if (settingsCnt[0].c === 0) {
+        await writeMysqlTables(pool, seedData, ['settings']);
+      }
+      await pool.query("INSERT IGNORE INTO app_meta (meta_key, meta_value) VALUES ('initial_seed_v1', '1')");
+    }
+
+    return pool;
+  })().catch((err) => {
+    mysqlInitPromise = null;
+    mysqlPool = null;
+    throw err;
+  });
+
+  return mysqlInitPromise;
+}
+
+async function writeMysqlTables(pool, data, scopes) {
+  const scopeSet = new Set(scopes && scopes.length ? scopes : ['settings', 'cities', 'tours', 'products', 'bookings', 'reviews']);
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    if (scopeSet.has('settings')) {
+      const s = data.settings || {};
+      await conn.query(
+        `INSERT INTO settings (id, site_name, whatsapp_number, contact_email, phone, currency, currency_code, admin_pin, social_facebook, social_instagram, social_telegram)
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           site_name = VALUES(site_name),
+           whatsapp_number = VALUES(whatsapp_number),
+           contact_email = VALUES(contact_email),
+           phone = VALUES(phone),
+           currency = VALUES(currency),
+           currency_code = VALUES(currency_code),
+           admin_pin = VALUES(admin_pin),
+           social_facebook = VALUES(social_facebook),
+           social_instagram = VALUES(social_instagram),
+           social_telegram = VALUES(social_telegram)`,
+        [
+          s.site_name || 'SphinxTour',
+          s.whatsapp_number || '201140423458',
+          s.contact_email || 'info@sphinxtour.com',
+          s.phone || '+20 114 042 3458',
+          s.currency || '$',
+          s.currency_code || 'USD',
+          s.admin_pin || 'admin123',
+          s.social_facebook || '',
+          s.social_instagram || '',
+          s.social_telegram || ''
+        ]
+      );
+    }
+
+    if (scopeSet.has('cities')) {
+      const cities = Array.isArray(data.cities) ? data.cities : [];
+      if (cities.length === 0) {
+        await conn.query('DELETE FROM cities');
+      } else {
+        const ids = cities.map(c => String(c.id));
+        await conn.query(`DELETE FROM cities WHERE id NOT IN (${ids.map(() => '?').join(',')})`, ids);
+        for (let i = 0; i < cities.length; i++) {
+          const c = cities[i];
+          await conn.query(
+            `INSERT INTO cities (id, slug, sort_order, featured, image, names_json, taglines_json, descriptions_json)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+               slug = VALUES(slug),
+               sort_order = VALUES(sort_order),
+               featured = VALUES(featured),
+               image = VALUES(image),
+               names_json = VALUES(names_json),
+               taglines_json = VALUES(taglines_json),
+               descriptions_json = VALUES(descriptions_json)`,
+            [
+              String(c.id),
+              c.slug || String(c.id),
+              Number(c.order) || (i + 1),
+              c.featured !== false ? 1 : 0,
+              c.image || '',
+              JSON.stringify(c.names || {}),
+              JSON.stringify(c.taglines || {}),
+              JSON.stringify(c.descriptions || {})
+            ]
+          );
+        }
+      }
+    }
+
+    if (scopeSet.has('tours')) {
+      const tours = Array.isArray(data.tours) ? data.tours : [];
+      if (tours.length === 0) {
+        await conn.query('DELETE FROM tours');
+      } else {
+        const ids = tours.map(t => Number(t.id) || 0);
+        await conn.query(`DELETE FROM tours WHERE id NOT IN (${ids.map(() => '?').join(',')})`, ids);
+        for (let i = 0; i < tours.length; i++) {
+          const t = tours[i];
+          await conn.query(
+            `INSERT INTO tours (id, city_id, category, price, price_child, duration, rating, reviews_count, image, names_json, short_descriptions_json, descriptions_json, gallery_json, included_json, featured, active, sort_idx)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+               city_id = VALUES(city_id),
+               category = VALUES(category),
+               price = VALUES(price),
+               price_child = VALUES(price_child),
+               duration = VALUES(duration),
+               rating = VALUES(rating),
+               reviews_count = VALUES(reviews_count),
+               image = VALUES(image),
+               names_json = VALUES(names_json),
+               short_descriptions_json = VALUES(short_descriptions_json),
+               descriptions_json = VALUES(descriptions_json),
+               gallery_json = VALUES(gallery_json),
+               included_json = VALUES(included_json),
+               featured = VALUES(featured),
+               active = VALUES(active),
+               sort_idx = VALUES(sort_idx)`,
+            [
+              Number(t.id) || 0,
+              t.city_id || 'hurghada',
+              t.category || 'island',
+              Number(t.price) || 0,
+              Number(t.price_child) || 0,
+              t.duration || '',
+              Number(t.rating) || 5.0,
+              Number(t.reviews_count) || 1,
+              t.image || '/uploads/banner_1.jpg',
+              JSON.stringify(t.names || {}),
+              JSON.stringify(t.short_descriptions || {}),
+              JSON.stringify(t.descriptions || {}),
+              JSON.stringify(t.gallery || []),
+              JSON.stringify(t.included || {}),
+              t.featured ? 1 : 0,
+              t.active !== false ? 1 : 0,
+              i
+            ]
+          );
+        }
+      }
+    }
+
+    if (scopeSet.has('products')) {
+      const products = Array.isArray(data.products) ? data.products : [];
+      if (products.length === 0) {
+        await conn.query('DELETE FROM products');
+      } else {
+        const ids = products.map(p => Number(p.id) || 0);
+        await conn.query(`DELETE FROM products WHERE id NOT IN (${ids.map(() => '?').join(',')})`, ids);
+        for (let i = 0; i < products.length; i++) {
+          const p = products[i];
+          await conn.query(
+            `INSERT INTO products (id, category, price, image, names_json, specs_json, descriptions_json, featured, active, sort_idx)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+               category = VALUES(category),
+               price = VALUES(price),
+               image = VALUES(image),
+               names_json = VALUES(names_json),
+               specs_json = VALUES(specs_json),
+               descriptions_json = VALUES(descriptions_json),
+               featured = VALUES(featured),
+               active = VALUES(active),
+               sort_idx = VALUES(sort_idx)`,
+            [
+              Number(p.id) || 0,
+              p.category || 'souvenirs',
+              Number(p.price) || 0,
+              p.image || '/uploads/bazar_papyrus.jpg',
+              JSON.stringify(p.names || {}),
+              JSON.stringify(p.specs || {}),
+              JSON.stringify(p.descriptions || {}),
+              p.featured ? 1 : 0,
+              p.active !== false ? 1 : 0,
+              i
+            ]
+          );
+        }
+      }
+    }
+
+    if (scopeSet.has('bookings')) {
+      const bookings = Array.isArray(data.bookings) ? data.bookings : [];
+      if (bookings.length === 0) {
+        await conn.query('DELETE FROM bookings');
+      } else {
+        const ids = bookings.map(b => String(b.id));
+        await conn.query(`DELETE FROM bookings WHERE id NOT IN (${ids.map(() => '?').join(',')})`, ids);
+        for (let i = 0; i < bookings.length; i++) {
+          const b = bookings[i];
+          await conn.query(
+            `INSERT INTO bookings (id, tour_id, tour_name, city, booking_date, adults, children, client_name, hotel, notes, lang, created_at, sort_idx)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+               tour_id = VALUES(tour_id),
+               tour_name = VALUES(tour_name),
+               city = VALUES(city),
+               booking_date = VALUES(booking_date),
+               adults = VALUES(adults),
+               children = VALUES(children),
+               client_name = VALUES(client_name),
+               hotel = VALUES(hotel),
+               notes = VALUES(notes),
+               lang = VALUES(lang),
+               created_at = VALUES(created_at),
+               sort_idx = VALUES(sort_idx)`,
+            [
+              String(b.id),
+              b.tour_id !== undefined && b.tour_id !== null ? String(b.tour_id) : '',
+              b.tour_name || 'Excursion',
+              b.city || '',
+              b.date || '',
+              Number(b.adults) || 1,
+              Number(b.children) || 0,
+              b.client_name || 'Guest',
+              b.hotel || '',
+              b.notes || '',
+              b.lang || 'en',
+              b.created_at || new Date().toISOString(),
+              i
+            ]
+          );
+        }
+      }
+    }
+
+    if (scopeSet.has('reviews')) {
+      const reviews = Array.isArray(data.reviews) ? data.reviews : [];
+      if (reviews.length === 0) {
+        await conn.query('DELETE FROM reviews');
+      } else {
+        const ids = reviews.map(r => Number(r.id) || 0);
+        await conn.query(`DELETE FROM reviews WHERE id NOT IN (${ids.map(() => '?').join(',')})`, ids);
+        for (let i = 0; i < reviews.length; i++) {
+          const r = reviews[i];
+          await conn.query(
+            `INSERT INTO reviews (id, name, country, tour, rating, comment, review_date, approved, status, sort_idx)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE
+               name = VALUES(name),
+               country = VALUES(country),
+               tour = VALUES(tour),
+               rating = VALUES(rating),
+               comment = VALUES(comment),
+               review_date = VALUES(review_date),
+               approved = VALUES(approved),
+               status = VALUES(status),
+               sort_idx = VALUES(sort_idx)`,
+            [
+              Number(r.id) || 0,
+              r.name || 'Guest',
+              r.country || 'Verified Traveler',
+              r.tour || 'Egypt Excursion',
+              Number(r.rating) || 5,
+              r.comment || '',
+              r.date || '',
+              r.approved ? 1 : 0,
+              r.status || (r.approved ? 'approved' : 'pending'),
+              i
+            ]
+          );
+        }
+      }
+    }
+
+    await conn.commit();
+  } catch (err) {
+    await conn.rollback().catch(() => {});
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
+
+async function getDb() {
+  if (!isMysqlEnabled()) {
+    return readJsonDbSync();
+  }
+
+  const pool = await ensureMysqlReady();
+  const [settingsRows] = await pool.query('SELECT * FROM settings WHERE id = 1');
+  const [cityRows] = await pool.query('SELECT * FROM cities ORDER BY sort_order ASC, id ASC');
+  const [tourRows] = await pool.query('SELECT * FROM tours ORDER BY sort_idx ASC, id DESC');
+  const [productRows] = await pool.query('SELECT * FROM products ORDER BY sort_idx ASC, id DESC');
+  const [bookingRows] = await pool.query('SELECT * FROM bookings ORDER BY sort_idx ASC, created_at DESC');
+  const [reviewRows] = await pool.query('SELECT * FROM reviews ORDER BY sort_idx ASC, id DESC');
+
+  const sRow = settingsRows[0] || {};
+  const settings = {
+    site_name: sRow.site_name || 'SphinxTour',
+    whatsapp_number: sRow.whatsapp_number || '201140423458',
+    contact_email: sRow.contact_email || 'info@sphinxtour.com',
+    phone: sRow.phone || '+20 114 042 3458',
+    currency: sRow.currency || '$',
+    currency_code: sRow.currency_code || 'USD',
+    admin_pin: sRow.admin_pin || 'admin123',
+    social_facebook: sRow.social_facebook || '',
+    social_instagram: sRow.social_instagram || '',
+    social_telegram: sRow.social_telegram || ''
+  };
+
+  const cities = cityRows.map(r => ({
+    id: r.id,
+    slug: r.slug,
+    names: safeJsonParse(r.names_json, {}),
+    taglines: safeJsonParse(r.taglines_json, {}),
+    descriptions: safeJsonParse(r.descriptions_json, {}),
+    image: r.image || '',
+    order: Number(r.sort_order) || 1,
+    featured: Boolean(r.featured)
+  }));
+
+  const tours = tourRows.map(r => ({
+    id: Number(r.id),
+    city_id: r.city_id,
+    category: r.category || 'island',
+    names: safeJsonParse(r.names_json, {}),
+    short_descriptions: safeJsonParse(r.short_descriptions_json, {}),
+    descriptions: safeJsonParse(r.descriptions_json, {}),
+    price: Number(r.price) || 0,
+    price_child: Number(r.price_child) || 0,
+    duration: r.duration || '',
+    rating: Number(r.rating) || 5.0,
+    reviews_count: Number(r.reviews_count) || 1,
+    image: r.image || '/uploads/banner_1.jpg',
+    gallery: safeJsonParse(r.gallery_json, []),
+    included: safeJsonParse(r.included_json, {}),
+    featured: Boolean(r.featured),
+    active: r.active !== 0
+  }));
+
+  const products = productRows.map(r => ({
+    id: Number(r.id),
+    category: r.category || 'souvenirs',
+    price: Number(r.price) || 0,
+    image: r.image || '/uploads/bazar_papyrus.jpg',
+    names: safeJsonParse(r.names_json, {}),
+    specs: safeJsonParse(r.specs_json, {}),
+    descriptions: safeJsonParse(r.descriptions_json, {}),
+    featured: Boolean(r.featured),
+    active: r.active !== 0
+  }));
+
+  const bookings = bookingRows.map(r => ({
+    id: r.id,
+    tour_id: r.tour_id,
+    tour_name: r.tour_name,
+    city: r.city,
+    date: r.booking_date,
+    adults: Number(r.adults) || 1,
+    children: Number(r.children) || 0,
+    client_name: r.client_name,
+    hotel: r.hotel,
+    notes: r.notes,
+    lang: r.lang,
+    created_at: r.created_at
+  }));
+
+  const reviews = reviewRows.map(r => ({
+    id: Number(r.id),
+    name: r.name,
+    country: r.country,
+    tour: r.tour,
+    rating: Number(r.rating) || 5,
+    comment: r.comment,
+    date: r.review_date,
+    approved: Boolean(r.approved),
+    status: r.status || (r.approved ? 'approved' : 'pending')
+  }));
+
+  return { settings, cities, tours, products, bookings, reviews };
+}
+
+async function saveDb(data, scopes) {
+  if (!isMysqlEnabled()) {
+    return saveJsonDbSync(data);
+  }
+
+  const runWrite = async () => {
+    const pool = await ensureMysqlReady();
+    await writeMysqlTables(pool, data, scopes);
+    return true;
+  };
+
+  const next = mysqlWriteChain.then(runWrite, runWrite);
+  mysqlWriteChain = next.catch(() => {});
+  return next;
 }
 
 // Constant-time PIN comparison & per-IP failed auth lockout
@@ -412,7 +1038,7 @@ function recordAdminFailure(ip) {
 }
 
 // Authentication middleware for admin mutations
-function verifyAdmin(req, res, next) {
+async function verifyAdmin(req, res, next) {
   const ip = getClientIp(req);
   if (checkAdminLocked(ip)) {
     return res.status(429).json({ success: false, error: 'Too many invalid authentication attempts. Try again later.' });
@@ -422,7 +1048,7 @@ function verifyAdmin(req, res, next) {
   const rawBody = typeof req.body?.admin_pin === 'string' ? req.body.admin_pin : '';
   const pin = (typeof rawHeader === 'string' ? rawHeader : '') || rawQuery || rawBody;
 
-  const db = getDb();
+  const db = await getDb();
   const currentPin = db.settings.admin_pin || 'admin123';
   if (safeComparePin(pin, currentPin)) {
     failedAdminAttempts.delete(ip);
@@ -434,9 +1060,24 @@ function verifyAdmin(req, res, next) {
 
 /* ==================== API ROUTES ==================== */
 
+// Storage / MySQL health check (exposes no credentials or internal hostnames)
+app.get('/api/health', async (req, res) => {
+  if (!isMysqlEnabled()) {
+    return res.json({ ok: true, storage: 'json', connected: true });
+  }
+  try {
+    const pool = await ensureMysqlReady();
+    await pool.query('SELECT 1');
+    return res.json({ ok: true, storage: 'mysql', connected: true });
+  } catch (err) {
+    console.error('MySQL health check failed:', err.code || err.message);
+    return res.status(503).json({ ok: false, storage: 'mysql', connected: false });
+  }
+});
+
 // Get complete public site data
-app.get('/api/data', (req, res) => {
-  const db = getDb();
+app.get('/api/data', async (req, res) => {
+  const db = await getDb();
   // Don't expose admin_pin to public
   const safeSettings = { ...db.settings };
   delete safeSettings.admin_pin;
@@ -450,13 +1091,13 @@ app.get('/api/data', (req, res) => {
 });
 
 // Admin check / login (strictly rate-limited against PIN brute-force)
-app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
+app.post('/api/admin/login', adminLoginLimiter, async (req, res) => {
   const ip = getClientIp(req);
   if (checkAdminLocked(ip)) {
     return res.status(429).json({ success: false, error: 'Too many failed Admin PIN attempts. Locked for 15 minutes.' });
   }
   const pin = typeof req.body?.pin === 'string' ? req.body.pin : '';
-  const db = getDb();
+  const db = await getDb();
   const currentPin = db.settings.admin_pin || 'admin123';
   if (safeComparePin(pin, currentPin)) {
     failedAdminAttempts.delete(ip);
@@ -468,23 +1109,23 @@ app.post('/api/admin/login', adminLoginLimiter, (req, res) => {
 });
 
 // Admin get all data (including inactive tours and bookings, never leaking admin_pin)
-app.get('/api/admin/all', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.get('/api/admin/all', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const safeSettings = { ...(db.settings || {}) };
   delete safeSettings.admin_pin;
   res.json({ ...db, settings: safeSettings });
 });
 
 // Get/Update Settings
-app.get('/api/settings', (req, res) => {
-  const db = getDb();
+app.get('/api/settings', async (req, res) => {
+  const db = await getDb();
   const safeSettings = { ...db.settings };
   delete safeSettings.admin_pin;
   res.json(safeSettings);
 });
 
-app.post('/api/settings', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.post('/api/settings', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const { whatsapp_number, site_name, contact_email, phone, currency, currency_code, new_admin_pin, social_facebook, social_instagram, social_telegram } = req.body;
 
   if (whatsapp_number) db.settings.whatsapp_number = cleanText(whatsapp_number, 30, true).replace(/[^0-9]/g, '');
@@ -500,28 +1141,34 @@ app.post('/api/settings', verifyAdmin, (req, res) => {
     db.settings.admin_pin = new_admin_pin.trim();
   }
 
-  saveDb(db);
+  await saveDb(db, ['settings']);
   const safeSettings = { ...db.settings };
   delete safeSettings.admin_pin;
   res.json({ success: true, settings: safeSettings });
 });
 
 // Cities CRUD
-app.get('/api/cities', (req, res) => {
-  const db = getDb();
+app.get('/api/cities', async (req, res) => {
+  const db = await getDb();
   res.json(db.cities);
 });
 
-app.post('/api/cities', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.post('/api/cities', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const cityData = sanitizeNestedStrings({ ...req.body }, 1500);
   if (cityData.image) cityData.image = sanitizeImageUrl(cityData.image);
   if (!cityData.id) {
     cityData.id = (cityData.names?.en || 'city')
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-');
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 60) || ('city-' + Date.now());
+  } else {
+    cityData.id = String(cityData.id).slice(0, 64);
   }
+  cityData.order = Number(cityData.order) || (db.cities.length + 1);
+  cityData.featured = cityData.featured !== false;
 
   const existingIndex = db.cities.findIndex(c => c.id === cityData.id);
   if (existingIndex >= 0) {
@@ -529,21 +1176,21 @@ app.post('/api/cities', verifyAdmin, (req, res) => {
   } else {
     db.cities.push(cityData);
   }
-  saveDb(db);
+  await saveDb(db, ['cities']);
   res.json({ success: true, city: cityData });
 });
 
-app.delete('/api/cities/:id', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.delete('/api/cities/:id', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const id = req.params.id;
   db.cities = db.cities.filter(c => c.id !== id);
-  saveDb(db);
+  await saveDb(db, ['cities']);
   res.json({ success: true, message: `City ${id} deleted` });
 });
 
 // Tours CRUD
-app.get('/api/tours', (req, res) => {
-  const db = getDb();
+app.get('/api/tours', async (req, res) => {
+  const db = await getDb();
   const city = typeof req.query.city === 'string' ? req.query.city : '';
   let tours = db.tours;
   if (city) {
@@ -552,15 +1199,15 @@ app.get('/api/tours', (req, res) => {
   res.json(tours);
 });
 
-app.get('/api/tours/:id', (req, res) => {
-  const db = getDb();
+app.get('/api/tours/:id', async (req, res) => {
+  const db = await getDb();
   const tour = db.tours.find(t => String(t.id) === String(req.params.id));
   if (!tour) return res.status(404).json({ error: 'Tour not found' });
   res.json(tour);
 });
 
-app.post('/api/tours', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.post('/api/tours', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const tourData = sanitizeNestedStrings({ ...req.body }, 3000);
   if (tourData.image) tourData.image = sanitizeImageUrl(tourData.image);
   if (Array.isArray(tourData.gallery)) {
@@ -574,7 +1221,7 @@ app.post('/api/tours', verifyAdmin, (req, res) => {
     const idx = db.tours.findIndex(t => String(t.id) === String(tourData.id));
     if (idx >= 0) {
       db.tours[idx] = { ...db.tours[idx], ...tourData };
-      saveDb(db);
+      await saveDb(db, ['tours']);
       return res.json({ success: true, tour: db.tours[idx] });
     }
   }
@@ -589,13 +1236,13 @@ app.post('/api/tours', verifyAdmin, (req, res) => {
     ...tourData
   };
   db.tours.unshift(newTour);
-  saveDb(db);
+  await saveDb(db, ['tours']);
   res.json({ success: true, tour: newTour });
 });
 
 // Quick toggle active / featured status or update price
-app.patch('/api/tours/:id', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.patch('/api/tours/:id', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const id = req.params.id;
   const idx = db.tours.findIndex(t => String(t.id) === String(id));
   if (idx === -1) return res.status(404).json({ error: 'Tour not found' });
@@ -606,21 +1253,21 @@ app.patch('/api/tours/:id', verifyAdmin, (req, res) => {
   if (price !== undefined) db.tours[idx].price = Math.max(0, Number(price) || 0);
   if (price_child !== undefined) db.tours[idx].price_child = Math.max(0, Number(price_child) || 0);
 
-  saveDb(db);
+  await saveDb(db, ['tours']);
   res.json({ success: true, tour: db.tours[idx] });
 });
 
-app.delete('/api/tours/:id', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.delete('/api/tours/:id', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   const id = req.params.id;
   db.tours = db.tours.filter(t => String(t.id) !== String(id));
-  saveDb(db);
+  await saveDb(db, ['tours']);
   res.json({ success: true, message: `Tour ${id} deleted` });
 });
 
 // ==================== BAZAR PRODUCTS CRUD ====================
-app.get('/api/products', (req, res) => {
-  const db = getDb();
+app.get('/api/products', async (req, res) => {
+  const db = await getDb();
   const category = typeof req.query.category === 'string' ? req.query.category : '';
   let products = db.products || [];
   if (category && category !== 'all') {
@@ -629,15 +1276,15 @@ app.get('/api/products', (req, res) => {
   res.json(products);
 });
 
-app.get('/api/products/:id', (req, res) => {
-  const db = getDb();
+app.get('/api/products/:id', async (req, res) => {
+  const db = await getDb();
   const product = (db.products || []).find(p => String(p.id) === String(req.params.id));
   if (!product) return res.status(404).json({ error: 'Product not found' });
   res.json(product);
 });
 
-app.post('/api/products', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.post('/api/products', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   if (!db.products) db.products = [];
   const productData = sanitizeNestedStrings({ ...req.body }, 2000);
   if (productData.image) productData.image = sanitizeImageUrl(productData.image, '/uploads/bazar_papyrus.jpg');
@@ -650,7 +1297,7 @@ app.post('/api/products', verifyAdmin, (req, res) => {
         ...productData,
         price: productData.price !== undefined ? Math.max(0, Number(productData.price) || 0) : db.products[idx].price
       };
-      saveDb(db);
+      await saveDb(db, ['products']);
       return res.json({ success: true, product: db.products[idx] });
     }
   }
@@ -664,12 +1311,12 @@ app.post('/api/products', verifyAdmin, (req, res) => {
     price: Math.max(0, Number(productData.price) || 0)
   };
   db.products.unshift(newProduct);
-  saveDb(db);
+  await saveDb(db, ['products']);
   res.json({ success: true, product: newProduct });
 });
 
-app.patch('/api/products/:id', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.patch('/api/products/:id', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   if (!db.products) db.products = [];
   const idx = db.products.findIndex(p => String(p.id) === String(req.params.id));
   if (idx === -1) return res.status(404).json({ error: 'Product not found' });
@@ -684,16 +1331,16 @@ app.patch('/api/products/:id', verifyAdmin, (req, res) => {
   if (names !== undefined) db.products[idx].names = sanitizeNestedStrings(names, 200);
   if (descriptions !== undefined) db.products[idx].descriptions = sanitizeNestedStrings(descriptions, 2000);
 
-  saveDb(db);
+  await saveDb(db, ['products']);
   res.json({ success: true, product: db.products[idx] });
 });
 
-app.delete('/api/products/:id', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.delete('/api/products/:id', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   if (!db.products) db.products = [];
   const id = req.params.id;
   db.products = db.products.filter(p => String(p.id) !== String(id));
-  saveDb(db);
+  await saveDb(db, ['products']);
   res.json({ success: true, message: `Product ${id} deleted` });
 });
 
@@ -722,9 +1369,9 @@ app.post('/api/upload', uploadLimiter, verifyAdmin, upload.single('image'), (req
 });
 
 // Handle Booking log from client (rate-limited + HTML-stripped against spam/DoS)
-app.post('/api/book', publicWriteLimiter, (req, res) => {
+app.post('/api/book', publicWriteLimiter, async (req, res) => {
   const { tour_id, tour_name, city, date, adults, children, client_name, hotel, notes, lang } = req.body;
-  const db = getDb();
+  const db = await getDb();
 
   const booking = {
     id: 'BK-' + Date.now().toString(36).toUpperCase(),
@@ -744,26 +1391,26 @@ app.post('/api/book', publicWriteLimiter, (req, res) => {
   if (!db.bookings) db.bookings = [];
   db.bookings.unshift(booking);
   if (db.bookings.length > 2000) db.bookings.length = 2000;
-  saveDb(db);
+  await saveDb(db, ['bookings']);
 
   res.json({ success: true, booking });
 });
 
 // Admin get bookings
-app.get('/api/bookings', verifyAdmin, (req, res) => {
-  const db = getDb();
+app.get('/api/bookings', verifyAdmin, async (req, res) => {
+  const db = await getDb();
   res.json(db.bookings || []);
 });
 
 // Reviews API - Public (Only approved reviews)
-app.get('/api/reviews', (req, res) => {
-  const db = getDb();
+app.get('/api/reviews', async (req, res) => {
+  const db = await getDb();
   const approved = (db.reviews || []).filter(r => r.approved === true);
   res.json(approved);
 });
 
 // Client submit review -> Defaults to Pending Approval (rate-limited + sanitized)
-app.post('/api/reviews', publicWriteLimiter, (req, res) => {
+app.post('/api/reviews', publicWriteLimiter, async (req, res) => {
   const { name, rating, comment, tour, country } = req.body;
   const cleanName = cleanText(name, 80, true);
   const cleanComment = cleanText(comment, 1000, true);
@@ -775,7 +1422,7 @@ app.post('/api/reviews', publicWriteLimiter, (req, res) => {
   }
 
   const numRating = Math.max(1, Math.min(5, parseInt(rating, 10) || 5));
-  const db = getDb();
+  const db = await getDb();
   if (!db.reviews) db.reviews = [];
 
   const newReview = {
@@ -792,7 +1439,7 @@ app.post('/api/reviews', publicWriteLimiter, (req, res) => {
 
   db.reviews.unshift(newReview);
   if (db.reviews.length > 1000) db.reviews.length = 1000;
-  saveDb(db);
+  await saveDb(db, ['reviews']);
 
   res.json({
     success: true,
@@ -803,10 +1450,10 @@ app.post('/api/reviews', publicWriteLimiter, (req, res) => {
 });
 
 // Admin Review Moderation - Approve / Reject Review
-app.patch('/api/admin/reviews/:id/status', verifyAdmin, (req, res) => {
+app.patch('/api/admin/reviews/:id/status', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { status, approved } = req.body;
-  const db = getDb();
+  const db = await getDb();
   if (!db.reviews) db.reviews = [];
 
   const review = db.reviews.find(r => String(r.id) === String(id));
@@ -822,14 +1469,14 @@ app.patch('/api/admin/reviews/:id/status', verifyAdmin, (req, res) => {
     review.approved = (status === 'approved');
   }
 
-  saveDb(db);
+  await saveDb(db, ['reviews']);
   res.json({ success: true, review });
 });
 
 // Admin Delete Review
-app.delete('/api/admin/reviews/:id', verifyAdmin, (req, res) => {
+app.delete('/api/admin/reviews/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
-  const db = getDb();
+  const db = await getDb();
   if (!db.reviews) db.reviews = [];
 
   const initialCount = db.reviews.length;
@@ -839,7 +1486,7 @@ app.delete('/api/admin/reviews/:id', verifyAdmin, (req, res) => {
     return res.status(404).json({ success: false, error: 'Review not found' });
   }
 
-  saveDb(db);
+  await saveDb(db, ['reviews']);
   res.json({ success: true, message: 'Review deleted successfully' });
 });
 
@@ -859,7 +1506,13 @@ app.use((req, res) => {
   }
 });
 
-// Safe global error handler (never leak internal stack traces or server paths)
+// Safe global error handler (never leak internal stack traces, DB credentials, or server paths)
+const DB_ERROR_CODES = new Set([
+  'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN', 'ENOTFOUND', 'ECONNRESET',
+  'PROTOCOL_CONNECTION_LOST', 'ER_ACCESS_DENIED_ERROR', 'ER_BAD_DB_ERROR',
+  'ER_DBACCESS_DENIED_ERROR', 'ER_NO_SUCH_TABLE'
+]);
+
 app.use((err, req, res, next) => {
   if (err && err.type === 'entity.too.large') {
     return res.status(413).json({ success: false, error: 'Request payload too large.' });
@@ -873,8 +1526,17 @@ app.use((err, req, res, next) => {
       : 'Invalid file upload request.';
     return res.status(400).json({ success: false, error: msg });
   }
+  if (err && (err.sqlState || err.fatal || DB_ERROR_CODES.has(err.code))) {
+    console.error('Database error:', err.code || err.message);
+    return res.status(503).json({ success: false, error: 'Database service unavailable.' });
+  }
   if (err) {
-    return res.status(400).json({ success: false, error: err.message || 'Bad request.' });
+    const status = err.status || err.statusCode || (err.message && err.message.startsWith('Only safe raster images') ? 400 : 500);
+    if (status >= 500) {
+      console.error('Server request error:', err.message);
+      return res.status(500).json({ success: false, error: 'Internal server error.' });
+    }
+    return res.status(status).json({ success: false, error: err.message || 'Bad request.' });
   }
   next();
 });
@@ -893,6 +1555,7 @@ function startServer(port) {
     console.log(`\n======================================================`);
     console.log(`🚀 Tour Booking Platform is LIVE on http://localhost:${port}`);
     console.log(`🔑 Admin Panel available at: http://localhost:${port}/admin.html`);
+    console.log(`💾 Storage: ${isMysqlEnabled() ? 'Hostinger MySQL (auto-initialized on first request)' : 'Local JSON (data/database.json)'}`);
     console.log(`🛡️  Security Hardened: Helmet CSP, Rate Limiting, Upload Malware Scan`);
     console.log(`======================================================\n`);
   });
