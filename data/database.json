@@ -33,7 +33,7 @@
         "fr": "Célèbre pour ses baies turquoises, récifs coralliens spectaculaires, plongée sous-marine et safaris en quad.",
         "pl": "Słynie z turkusowych zatok, raf koralowych, nurkowania światowej klasy i safari na quadach po pustyni."
       },
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=1200&q=80",
+      "image": "/uploads/city_hurghada.jpg",
       "order": 1,
       "featured": true
     },
@@ -58,7 +58,7 @@
         "fr": "Entouré par le parc national de Ras Mohammed, les détroits de Tiran et les levers de soleil sur le mont Sinaï.",
         "pl": "Otoczony parkiem narodowym Ras Mohammed, cieśniną Tiran i wschodami słońca na górze Synaj."
       },
-      "image": "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=1200&q=80",
+      "image": "/uploads/city_sharm.jpg",
       "order": 2,
       "featured": true
     },
@@ -83,7 +83,7 @@
         "fr": "Un joyau préservé du sud avec récifs intacts, dauphins de Sataya et dugongs de la baie d'Abu Dabbab.",
         "pl": "Spokojna oaza z dziewiczymi rafami, delfinami w Sataya i diugoniami w zatoce Abu Dabbab."
       },
-      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+      "image": "/uploads/city_marsa_alam.jpg",
       "order": 3,
       "featured": true
     },
@@ -108,7 +108,7 @@
         "fr": "La nouvelle Riviera égyptienne avec sables blancs, eaux cristallines, histoire et yachting VIP.",
         "pl": "Nowoczesna riwiera z białym piaskiem, turkusowym morzem, historią II Wojny Światowej i luksusowymi jachtami."
       },
-      "image": "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=1200&q=80",
+      "image": "/uploads/city_alamein.jpg",
       "order": 4,
       "featured": true
     }
@@ -141,11 +141,11 @@
       "duration": "8 Hours (08:30 - 16:30)",
       "rating": 4.9,
       "reviews_count": 340,
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/banner_2.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+        "/uploads/banner_2.jpg",
+        "/uploads/banner_1.jpg",
+        "/uploads/tour_diving.jpg"
       ],
       "included": {
         "en": [
@@ -207,10 +207,9 @@
       "duration": "5 Hours (13:30 - 19:00)",
       "rating": 4.8,
       "reviews_count": 289,
-      "image": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/banner_3.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=900&q=80",
-        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
+        "/uploads/banner_3.jpg"
       ],
       "included": {
         "en": [
@@ -272,9 +271,10 @@
       "duration": "7 Hours (08:30 - 15:30)",
       "rating": 5,
       "reviews_count": 198,
-      "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_diving.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_diving.jpg",
+        "/uploads/tour_semisub.jpg"
       ],
       "included": {
         "en": [
@@ -336,9 +336,10 @@
       "duration": "8 Hours (08:00 - 16:30)",
       "rating": 4.9,
       "reviews_count": 412,
-      "image": "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_white_island.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_white_island.jpg",
+        "/uploads/tour_diving.jpg"
       ],
       "included": {
         "en": [
@@ -400,9 +401,9 @@
       "duration": "10 Hours (07:30 - 17:30)",
       "rating": 4.9,
       "reviews_count": 275,
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_dahab.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_dahab.jpg"
       ],
       "included": {
         "en": [
@@ -464,9 +465,9 @@
       "duration": "14 Hours (20:30 - 11:30 Next Day)",
       "rating": 4.8,
       "reviews_count": 164,
-      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_sinai_sunrise.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_sinai_sunrise.jpg"
       ],
       "included": {
         "en": [
@@ -528,9 +529,10 @@
       "duration": "9 Hours (06:30 - 16:00)",
       "rating": 5,
       "reviews_count": 310,
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/banner_4.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+        "/uploads/banner_4.jpg",
+        "/uploads/banner_1.jpg"
       ],
       "included": {
         "en": [
@@ -592,9 +594,10 @@
       "duration": "6 Hours (08:30 - 14:30)",
       "rating": 4.9,
       "reviews_count": 220,
-      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_turtle_bay.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_turtle_bay.jpg",
+        "/uploads/city_marsa_alam.jpg"
       ],
       "included": {
         "en": [
@@ -656,9 +659,9 @@
       "duration": "9 Hours (06:30 - 16:30)",
       "rating": 5,
       "reviews_count": 140,
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_hamata.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_hamata.jpg"
       ],
       "included": {
         "en": [
@@ -720,9 +723,10 @@
       "duration": "7 Hours (10:00 - 17:00)",
       "rating": 4.9,
       "reviews_count": 89,
-      "image": "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/banner_1.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=900&q=80"
+        "/uploads/banner_1.jpg",
+        "/uploads/city_alamein.jpg"
       ],
       "included": {
         "en": [
@@ -784,9 +788,10 @@
       "duration": "5 Hours (09:00 - 14:00)",
       "rating": 4.8,
       "reviews_count": 92,
-      "image": "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_alamein_wwii.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_alamein_wwii.jpg",
+        "/uploads/tour_alamein_museum.jpg"
       ],
       "included": {
         "en": [
@@ -848,9 +853,10 @@
       "duration": "2.5 Hours",
       "rating": 4.7,
       "reviews_count": 310,
-      "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+      "image": "/uploads/tour_semisub.jpg",
       "gallery": [
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+        "/uploads/tour_semisub.jpg",
+        "/uploads/tour_diving.jpg"
       ],
       "included": {
         "en": [

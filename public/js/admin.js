@@ -549,7 +549,7 @@ async function handleSaveTour(e) {
     duration,
     price,
     price_child,
-    image: image || 'https://images.unsplash.com/photo-1544885935-98dd03b09034?auto=format&fit=crop&w=900&q=80',
+    image: image || '/uploads/banner_1.jpg',
     names,
     descriptions,
     short_descriptions,
