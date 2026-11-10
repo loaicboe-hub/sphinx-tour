@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=20261110b" />
+  <link rel="stylesheet" href="css/style.css?v=20261110c" />
 </head>
 <body>
 
@@ -31,7 +31,7 @@
           <li><a href="#" class="nav-link active" data-i18n="nav_home">Home</a></li>
           <li><a href="#destinationsSection" class="nav-link" data-i18n="nav_destinations">Destinations</a></li>
           <li><a href="#toursSection" class="nav-link" data-i18n="nav_tours">Excursions</a></li>
-          <li><a href="#bazarSection" class="nav-link" data-i18n="nav_bazar">Bazar</a></li>
+          <li><a href="/bazar.html" class="nav-link nav-link-bazar"><span>🛍️</span> <span data-i18n="nav_bazar">Bazar</span></a></li>
           <li><a href="#whyUsSection" class="nav-link" data-i18n="nav_why_us">Why Us</a></li>
           <li><a href="#reviewsSection" class="nav-link" data-i18n="nav_reviews">Reviews</a></li>
           <li><a href="#contactSection" class="nav-link" data-i18n="nav_contact">Contact</a></li>
@@ -83,7 +83,7 @@
         <li><a href="#" class="mobile-nav-link" data-i18n="nav_home">🏠 Home</a></li>
         <li><a href="#destinationsSection" class="mobile-nav-link" data-i18n="nav_destinations">📍 Destinations</a></li>
         <li><a href="#toursSection" class="mobile-nav-link" data-i18n="nav_tours">⛵ Excursions</a></li>
-        <li><a href="#bazarSection" class="mobile-nav-link"><span>🛍️</span> <span data-i18n="nav_bazar">Bazar</span></a></li>
+        <li><a href="/bazar.html" class="mobile-nav-link"><span>🛍️</span> <span data-i18n="nav_bazar">Bazar</span></a></li>
         <li><a href="#whyUsSection" class="mobile-nav-link" data-i18n="nav_why_us">💎 Why Us</a></li>
         <li><a href="#reviewsSection" class="mobile-nav-link" data-i18n="nav_reviews">⭐ Reviews</a></li>
         <li><a href="#contactSection" class="mobile-nav-link" data-i18n="nav_contact">📞 Contact</a></li>
@@ -274,38 +274,8 @@
     </div>
   </section>
 
-  <!-- ==================== EGYPTIAN BAZAR & GIFT SHOP ==================== -->
-  <section class="section bazar-section" id="bazarSection" style="background: var(--bg-secondary);">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-tag" data-i18n="bazar_tag">Souvenirs & Gifts</div>
-        <h2 class="section-title" data-i18n="bazar_title">Egyptian Bazar & Gift Shop</h2>
-        <p class="section-subtitle" data-i18n="bazar_subtitle">
-          Authentic Egyptian souvenirs, natural essential oils, hand-painted papyrus & local gifts with direct hotel delivery
-        </p>
-      </div>
-
-      <!-- Bazar Category Filters & Search -->
-      <div class="filters-bar">
-        <div class="city-pills" id="bazarFiltersContainer">
-          <!-- Rendered dynamically by app.js -->
-        </div>
-
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" id="bazarSearchInput" placeholder="Search gifts & souvenirs..." data-i18n="bazar_search_placeholder" />
-        </div>
-      </div>
-
-      <!-- Bazar Products Grid -->
-      <div class="bazar-grid" id="bazarContainer">
-        <!-- Rendered dynamically by app.js -->
-      </div>
-    </div>
-  </section>
-
   <!-- ==================== WHY CHOOSE US ==================== -->
-  <section class="section" id="whyUsSection" style="background: #FFFFFF;">
+  <section class="section" id="whyUsSection" style="background: var(--bg-secondary);">
     <div class="container">
       <div class="section-header">
         <div class="section-tag" data-i18n="nav_why_us">Why Us</div>
@@ -343,7 +313,7 @@
   </section>
 
   <!-- ==================== REVIEWS SECTION ==================== -->
-  <section class="section" id="reviewsSection" style="background: var(--bg-secondary);">
+  <section class="section" id="reviewsSection" style="background: #FFFFFF;">
     <div class="container">
       <div class="section-header">
         <span class="section-badge" data-i18n="reviews_badge">Guest Experiences</span>
@@ -545,59 +515,6 @@
     </div>
   </div>
 
-  <!-- ==================== BAZAR WHATSAPP ORDER MODAL ==================== -->
-  <div class="modal-overlay" id="bazarOrderModal">
-    <div class="modal-content">
-      <button class="modal-close-btn" onclick="closeBazarOrderModal()">✕</button>
-      <div class="modal-header">
-        <h3 class="modal-title" data-i18n="bazar_modal_order_title">Quick Bazar Order</h3>
-        <p class="modal-subtitle" data-i18n="bazar_modal_order_subtitle">
-          Select quantity and enter your hotel for direct delivery without prepayment
-        </p>
-        <div style="margin-top: 10px;">
-          <strong id="bazarOrderProductName" style="color: var(--accent-cyan); font-size: 1.1rem;"></strong>
-          <span id="bazarOrderProductCategory" style="color: var(--text-muted); font-size: 0.9rem; margin-left: 8px;"></span>
-        </div>
-      </div>
-      <div class="modal-body">
-        <form id="bazarOrderForm">
-          <div class="form-group">
-            <label class="form-label" data-i18n="bazar_label_qty">Quantity</label>
-            <div class="counter-input-wrap" style="max-width: 220px;">
-              <button type="button" class="counter-btn" id="bazarQtyMinus">−</button>
-              <div class="counter-val" id="bazarQtyCount">1</div>
-              <button type="button" class="counter-btn" id="bazarQtyPlus">+</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" data-i18n="label_hotel">Hotel Name & Room (optional)</label>
-            <input type="text" class="form-input" id="bazarHotel" placeholder="e.g. Albatros Palace, Hurghada" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" data-i18n="label_notes">Special Requests / Pick-up notes</label>
-            <textarea class="form-textarea" id="bazarNotes" rows="2" placeholder="Any gift wrapping, fragrance choice, or delivery notes..."></textarea>
-          </div>
-
-          <div class="modal-estimate-box">
-            <span class="estimate-label" data-i18n="total_estimate">Estimated Total:</span>
-            <span class="estimate-price" id="bazarEstimatedPrice">$15</span>
-          </div>
-
-          <div class="currency-trust-badge">
-            <span class="currency-badge-icon">💳</span>
-            <span data-i18n="payment_currencies">Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)</span>
-          </div>
-
-          <button type="submit" class="btn-whatsapp-large" style="width: 100%; justify-content: center; font-size: 1.05rem;">
-            <span>💬</span> <span data-i18n="bazar_btn_send_order">Send Order via WhatsApp</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- ==================== WRITE REVIEW MODAL ==================== -->
   <div class="modal-overlay" id="reviewModal">
     <div class="modal-content">
@@ -665,7 +582,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/translations.js?v=20261110b"></script>
-  <script src="js/app.js?v=20261110b"></script>
+  <script src="js/translations.js?v=20261110c"></script>
+  <script src="js/app.js?v=20261110c"></script>
 </body>
 </html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Egyptian Bazar &amp; Gift Shop | SphinxTour</title>
+  <meta name="description" content="Authentic Egyptian souvenirs, natural essential oils, hand-painted papyrus, Luxor alabaster &amp; Aswan spices with direct hotel delivery." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/uploads/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=20261110c" />
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <img src="/uploads/logo.png" alt="SphinxTour" class="logo-img" />
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="/" class="nav-link" data-i18n="nav_home">Home</a></li>
+          <li><a href="/#destinationsSection" class="nav-link" data-i18n="nav_destinations">Destinations</a></li>
+          <li><a href="/#toursSection" class="nav-link" data-i18n="nav_tours">Excursions</a></li>
+          <li><a href="/bazar.html" class="nav-link nav-link-bazar active"><span>🛍️</span> <span data-i18n="nav_bazar">Bazar</span></a></li>
+          <li><a href="/#whyUsSection" class="nav-link" data-i18n="nav_why_us">Why Us</a></li>
+          <li><a href="/#reviewsSection" class="nav-link" data-i18n="nav_reviews">Reviews</a></li>
+          <li><a href="#contactSection" class="nav-link" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Multi-Language Selector -->
+        <div class="lang-selector">
+          <button class="lang-btn" id="langSelectorBtn" aria-label="Select Language">
+            <span id="currentLangFlag">🇬🇧</span>
+            <span id="currentLangLabel">English</span>
+            <span style="font-size: 0.7rem;">▼</span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-item active" data-lang="en">
+              <span class="lang-flag">🇬🇧</span> English
+            </button>
+            <button class="lang-item" data-lang="ru">
+              <span class="lang-flag">🇷🇺</span> Русский
+            </button>
+            <button class="lang-item" data-lang="fr">
+              <span class="lang-flag">🇫🇷</span> Français
+            </button>
+            <button class="lang-item" data-lang="pl">
+              <span class="lang-flag">🇵🇱</span> Polski
+            </button>
+          </div>
+        </div>
+
+        <!-- WhatsApp Header Button (Desktop Only) -->
+        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-pill" id="navWhatsappBtn">
+          <span>💬</span>
+          <span class="btn-whatsapp-text">WhatsApp</span>
+        </a>
+
+        <!-- Mobile 3-Bars Hamburger Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <ul class="mobile-nav-links">
+        <li><a href="/" class="mobile-nav-link" data-i18n="nav_home">🏠 Home</a></li>
+        <li><a href="/#destinationsSection" class="mobile-nav-link" data-i18n="nav_destinations">📍 Destinations</a></li>
+        <li><a href="/#toursSection" class="mobile-nav-link" data-i18n="nav_tours">⛵ Excursions</a></li>
+        <li><a href="/bazar.html" class="mobile-nav-link active"><span>🛍️</span> <span data-i18n="nav_bazar">Bazar</span></a></li>
+        <li><a href="/#whyUsSection" class="mobile-nav-link" data-i18n="nav_why_us">💎 Why Us</a></li>
+        <li><a href="/#reviewsSection" class="mobile-nav-link" data-i18n="nav_reviews">⭐ Reviews</a></li>
+        <li><a href="#contactSection" class="mobile-nav-link" data-i18n="nav_contact">📞 Contact</a></li>
+      </ul>
+      <div class="mobile-nav-cta">
+        <a href="https://wa.me/201012345678" target="_blank" class="btn-whatsapp-large" id="mobileDrawerWhatsappBtn">
+          <span>💬</span> <span data-i18n="hero_cta_whatsapp">WhatsApp Support</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== DEDICATED EGYPTIAN BAZAR & GIFT SHOP ==================== -->
+  <main class="section bazar-section bazar-page-main" id="bazarSection" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="bazar-back-row">
+        <a href="/" class="bazar-back-btn" data-i18n="bazar_back_home">← Back to Home &amp; Tours</a>
+      </div>
+
+      <div class="section-header">
+        <div class="section-tag" data-i18n="bazar_tag">Souvenirs &amp; Gifts</div>
+        <h1 class="section-title" data-i18n="bazar_title">Egyptian Bazar &amp; Gift Shop</h1>
+        <p class="section-subtitle" data-i18n="bazar_subtitle">
+          Authentic Egyptian souvenirs, natural essential oils, hand-painted papyrus &amp; local gifts with direct hotel delivery
+        </p>
+      </div>
+
+      <!-- Bazar Category Filters & Search -->
+      <div class="filters-bar">
+        <div class="city-pills" id="bazarFiltersContainer">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="bazarSearchInput" placeholder="Search gifts &amp; souvenirs..." data-i18n="bazar_search_placeholder" />
+        </div>
+      </div>
+
+      <!-- Bazar Products Grid -->
+      <div class="bazar-grid" id="bazarContainer">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer bazar-page-footer" id="contactSection">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <img src="/uploads/logo.png" alt="SphinxTour" class="logo-img footer-logo-img" />
+          </a>
+          <p data-i18n="hero_subtitle">
+            Premium tours and boat excursions in Hurghada, Sharm El Sheikh, Marsa Alam, and El Alamein with multi-language support.
+          </p>
+          <!-- Official Social Channels (Facebook & Telegram) -->
+          <div class="footer-social-links">
+            <a href="https://facebook.com" target="_blank" class="social-icon-btn social-facebook" id="footerSocialFacebook" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" class="social-svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span>Facebook</span>
+            </a>
+            <a href="https://t.me" target="_blank" class="social-icon-btn social-telegram" id="footerSocialTelegram" aria-label="Telegram">
+              <svg viewBox="0 0 24 24" class="social-svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.828.948z"/></svg>
+              <span>Telegram</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_quick_links">Destinations</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="filterByCity('hurghada')">Hurghada (Хургада)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('sharm')">Sharm El Sheikh (Шарм)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('marsa-alam')">Marsa Alam (Марса Алам)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterByCity('alamein')">El Alamein (العلمين)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_languages">Languages</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="switchLanguage('en')">🇬🇧 English</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('ru')">🇷🇺 Русский</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('fr')">🇫🇷 Français</a></li>
+            <li><a href="javascript:void(0)" onclick="switchLanguage('pl')">🇵🇱 Polski</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title" data-i18n="footer_contact_info">24/7 Travel Desk</h4>
+          <ul class="footer-links">
+            <li><span>📞 Phone: </span> <a href="#" id="footerPhone">+20 101 234 5678</a></li>
+            <li><span>✉️ Email: </span> <a href="#" id="footerEmail">info@sphinxtour.com</a></li>
+            <li><span>💬 WhatsApp: </span> <a href="https://wa.me/201012345678" target="_blank" id="footerWhatsappLink">Chat with Booking Agent</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 SphinxTour. <span data-i18n="footer_rights">All rights reserved.</span>
+        </div>
+        <div class="footer-admin-wrap">
+          <a href="/admin.html" class="admin-link-discreet">
+            <span>🔒</span> <span data-i18n="nav_admin">Admin Panel</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING CONTACT STACK (WhatsApp, Telegram & Viber) ==================== -->
+  <div class="floating-contact-stack" id="floatingContactStack">
+    <a href="https://wa.me/201140423458" target="_blank" rel="noopener noreferrer" class="floating-whatsapp" id="floatingWhatsappBtn" aria-label="WhatsApp" title="WhatsApp">
+      <svg class="whatsapp-icon-svg" viewBox="0 0 24 24">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.077-1.112-.057-.272-.088-.636-.213-1.141-.433-2.133-.932-3.526-3.1-3.633-3.242-.106-.142-.865-1.149-.865-2.193 0-1.043.548-1.558.742-1.77.195-.213.424-.266.566-.266.143 0 .285.002.409.008.131.006.307-.049.48.366.179.429.61 1.488.663 1.595.053.107.089.231.018.373-.071.142-.106.23-.213.355-.106.124-.224.278-.32.373-.106.107-.217.223-.093.436.124.213.551.908 1.18 1.468.81.722 1.492.946 1.705 1.053.213.107.338.089.462-.053.125-.142.533-.62.675-.833.142-.213.284-.177.48-.107.195.071 1.237.583 1.45.69.213.106.355.16.408.248.053.089.053.515-.091.92z"/>
+        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.309C8.423 21.524 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.25c-1.637 0-3.167-.47-4.47-1.285l-.32-.199-2.964.777.791-2.89-.219-.348C3.942 14.949 3.5 13.518 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.5-8.5 8.5z"/>
+      </svg>
+      <span data-i18n="floating_whatsapp">Chat on WhatsApp</span>
+    </a>
+
+    <a href="https://t.me/+201140423458" target="_blank" rel="noopener noreferrer" class="floating-social-circle floating-telegram" id="floatingTelegramBtn" aria-label="Telegram" title="Telegram">
+      <svg class="telegram-icon-svg" viewBox="20 22 195 195" aria-hidden="true">
+        <path fill="#C8DAEA" d="M98 175c-3.888 0-3.227-1.468-4.568-5.17L82 132.207 170 80"/>
+        <path fill="#A9C9DD" d="M98 175c3 0 4.325-1.372 6-3l16-15.558-19.958-12.035"/>
+        <path fill="#FFFFFF" d="M100.04 144.41l48.36 35.729c5.519 3.045 9.501 1.468 10.876-5.123l19.685-92.763c2.015-8.08-3.08-11.746-8.36-9.351l-115.59 44.571c-7.89 3.165-7.843 7.567-1.438 9.528l29.663 9.259 68.673-43.325c3.242-1.966 6.218-.91 3.776 1.258"/>
+      </svg>
+    </a>
+
+    <a href="viber://chat?number=%2B201140423458" class="floating-social-circle floating-viber" id="floatingViberBtn" aria-label="Viber" title="Viber">
+      <svg class="viber-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M11.398.002C9.473.028 5.331.344 3.014 2.467 1.294 4.177.693 6.698.623 9.82c-.06 3.11-.13 8.95 5.5 10.541v2.42s-.038.97.602 1.17c.79.25 1.24-.499 1.99-1.299l1.4-1.58c3.85.32 6.8-.419 7.14-.529.78-.25 5.181-.811 5.901-6.652.74-6.031-.36-9.831-2.34-11.551l-.01-.002c-.6-.55-3-2.3-8.37-2.32 0 0-.396-.025-1.038-.016zm.067 1.697c.545-.003.88.02.88.02 4.54.01 6.711 1.38 7.221 1.84 1.67 1.429 2.528 4.856 1.9 9.892-.6 4.88-4.17 5.19-4.83 5.4-.28.09-2.88.73-6.152.52 0 0-2.439 2.941-3.199 3.701-.12.13-.26.17-.35.15-.13-.03-.17-.19-.16-.41l.02-4.019c-4.771-1.32-4.491-6.302-4.441-8.902.06-2.6.55-4.732 2-6.172 1.957-1.77 5.475-2.01 7.11-2.02zm.36 2.6a.299.299 0 0 0-.3.299.3.3 0 0 0 .3.3 5.631 5.631 0 0 1 4.03 1.59c1.09 1.06 1.621 2.48 1.641 4.34a.3.3 0 0 0 .3.3v-.009a.3.3 0 0 0 .3-.3 6.451 6.451 0 0 0-1.81-4.76c-1.19-1.16-2.692-1.76-4.462-1.76zm-3.954.69a.955.955 0 0 0-.615.12h-.012c-.41.24-.788.54-1.148.94-.27.32-.421.639-.461.949a1.24 1.24 0 0 0 .05.541l.02.01a13.722 13.722 0 0 0 1.2 2.6 15.383 15.383 0 0 0 2.32 3.171l.03.04.04.03.03.03.03.03a15.603 15.603 0 0 0 3.18 2.33c1.32.72 2.122 1.06 2.602 1.2v.01c.14.04.268.06.398.06a1.84 1.84 0 0 0 1.102-.472c.39-.35.7-.738.93-1.148v-.01c.23-.43.15-.841-.18-1.121a13.632 13.632 0 0 0-2.15-1.54c-.51-.28-1.03-.11-1.24.17l-.45.569c-.23.28-.65.24-.65.24l-.012.01c-3.12-.8-3.95-3.959-3.95-3.959s-.04-.43.25-.65l.56-.45c.27-.22.46-.74.17-1.25a13.522 13.522 0 0 0-1.54-2.15.843.843 0 0 0-.504-.3zm4.473.89a.3.3 0 0 0 .002.6 3.78 3.78 0 0 1 2.65 1.15 3.5 3.5 0 0 1 .9 2.57.3.3 0 0 0 .3.299l.01.012a.3.3 0 0 0 .3-.301c.03-1.19-.34-2.19-1.07-2.99-.73-.8-1.75-1.25-3.05-1.34a.3.3 0 0 0-.042 0zm.49 1.619a.305.305 0 0 0-.018.611c.99.05 1.47.55 1.53 1.58a.3.3 0 0 0 .3.29h.01a.3.3 0 0 0 .29-.32c-.07-1.34-.8-2.091-2.1-2.161a.305.305 0 0 0-.012 0z"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- ==================== PRODUCT SPECS MODAL ==================== -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeDetailsModal()">✕</button>
+      <div class="modal-body" id="detailsModalBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== BAZAR WHATSAPP ORDER MODAL ==================== -->
+  <div class="modal-overlay" id="bazarOrderModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeBazarOrderModal()">✕</button>
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="bazar_modal_order_title">Quick Bazar Order</h3>
+        <p class="modal-subtitle" data-i18n="bazar_modal_order_subtitle">
+          Select quantity and enter your hotel for direct delivery without prepayment
+        </p>
+        <div style="margin-top: 10px;">
+          <strong id="bazarOrderProductName" style="color: var(--accent-cyan); font-size: 1.1rem;"></strong>
+          <span id="bazarOrderProductCategory" style="color: var(--text-muted); font-size: 0.9rem; margin-left: 8px;"></span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form id="bazarOrderForm">
+          <div class="form-group">
+            <label class="form-label" data-i18n="bazar_label_qty">Quantity</label>
+            <div class="counter-input-wrap" style="max-width: 220px;">
+              <button type="button" class="counter-btn" id="bazarQtyMinus">−</button>
+              <div class="counter-val" id="bazarQtyCount">1</div>
+              <button type="button" class="counter-btn" id="bazarQtyPlus">+</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_hotel">Hotel Name &amp; Room (optional)</label>
+            <input type="text" class="form-input" id="bazarHotel" placeholder="e.g. Albatros Palace, Hurghada" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="label_notes">Special Requests / Pick-up notes</label>
+            <textarea class="form-textarea" id="bazarNotes" rows="2" placeholder="Any gift wrapping, fragrance choice, or delivery notes..."></textarea>
+          </div>
+
+          <div class="modal-estimate-box">
+            <span class="estimate-label" data-i18n="total_estimate">Estimated Total:</span>
+            <span class="estimate-price" id="bazarEstimatedPrice">$15</span>
+          </div>
+
+          <div class="currency-trust-badge">
+            <span class="currency-badge-icon">💳</span>
+            <span data-i18n="payment_currencies">Payment is available in all currencies (USD, EUR, GBP, PLN, EGP)</span>
+          </div>
+
+          <button type="submit" class="btn-whatsapp-large" style="width: 100%; justify-content: center; font-size: 1.05rem;">
+            <span>💬</span> <span data-i18n="bazar_btn_send_order">Send Order via WhatsApp</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/translations.js?v=20261110c"></script>
+  <script src="js/app.js?v=20261110c"></script>
+</body>
+</html>
+

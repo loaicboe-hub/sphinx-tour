@@ -22,6 +22,15 @@ let bazarOrderQty = 1;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash === '#bazarSection' && !document.getElementById('bazarContainer')) {
+    window.location.replace('/bazar.html');
+    return;
+  }
+  const urlParams = new URLSearchParams(window.location.search);
+  const cityParam = urlParams.get('city');
+  if (cityParam) {
+    selectedCityFilter = cityParam;
+  }
   initLanguage();
   initRotatingBanner();
   fetchData();
@@ -432,6 +441,13 @@ function setupEventListeners() {
     });
   }
 
+  const detailsModal = document.getElementById('detailsModal');
+  if (detailsModal) {
+    detailsModal.addEventListener('click', (e) => {
+      if (e.target === detailsModal) closeDetailsModal();
+    });
+  }
+
   // Initialize Star Rating Widget
   initStarRatingWidget();
 }
@@ -505,7 +521,9 @@ function applyTranslations() {
       }
     }
   });
-  document.title = t('site_title');
+  document.title = document.getElementById('bazarContainer')
+    ? t('bazar_page_title')
+    : t('site_title');
 }
 
 // Render 4 Cities Showcase (Top of Landing Page)
@@ -578,6 +596,10 @@ function renderCityFilters() {
 }
 
 function filterByCity(cityId) {
+  if (!document.getElementById('toursContainer')) {
+    window.location.href = `/?city=${encodeURIComponent(cityId)}#toursSection`;
+    return;
+  }
   selectedCityFilter = cityId;
   searchQuery = '';
   const searchInput = document.getElementById('tourSearchInput');

@@ -122,7 +122,9 @@ const TRANSLATIONS = {
     bazar_modal_order_title: "Quick Bazar Order",
     bazar_modal_order_subtitle: "Select quantity and enter your hotel for direct delivery without prepayment",
     bazar_label_qty: "Quantity",
-    bazar_btn_send_order: "Send Order via WhatsApp"
+    bazar_btn_send_order: "Send Order via WhatsApp",
+    bazar_back_home: "← Back to Home & Tours",
+    bazar_page_title: "Egyptian Bazar & Gift Shop | SphinxTour"
   },
   ru: {
     site_title: "SphinxTour | Экскурсии в Хургаде, Шарме и Марса Аламе",
@@ -247,7 +249,9 @@ const TRANSLATIONS = {
     bazar_modal_order_title: "Быстрый заказ из Базара",
     bazar_modal_order_subtitle: "Выберите количество и укажите отель — оплата при получении без предоплаты",
     bazar_label_qty: "Количество",
-    bazar_btn_send_order: "Отправить заказ в WhatsApp"
+    bazar_btn_send_order: "Отправить заказ в WhatsApp",
+    bazar_back_home: "← Назад к экскурсиям",
+    bazar_page_title: "Египетский Базар и Подарки | SphinxTour"
   },
   fr: {
     site_title: "SphinxTour | Excursions en Mer Rouge & Sinaï",
@@ -372,7 +376,9 @@ const TRANSLATIONS = {
     bazar_modal_order_title: "Commande Rapide Bazar",
     bazar_modal_order_subtitle: "Choisissez la quantité et votre hôtel pour une livraison directe sans prépaiement",
     bazar_label_qty: "Quantité",
-    bazar_btn_send_order: "Envoyer la commande sur WhatsApp"
+    bazar_btn_send_order: "Envoyer la commande sur WhatsApp",
+    bazar_back_home: "← Retour aux excursions",
+    bazar_page_title: "Bazar Égyptien & Souvenirs | SphinxTour"
   },
   pl: {
     site_title: "SphinxTour | Wycieczki fakultatywne w Egipcie",
@@ -497,6 +503,8 @@ const TRANSLATIONS = {
     bazar_modal_order_title: "Szybkie Zamówienie z Bazaru",
     bazar_modal_order_subtitle: "Wybierz ilość i podaj nazwę hotelu — płatność przy odbiorze bez zaliczki",
     bazar_label_qty: "Ilość",
-    bazar_btn_send_order: "Wyślij zamówienie na WhatsApp"
+    bazar_btn_send_order: "Wyślij zamówienie na WhatsApp",
+    bazar_back_home: "← Powrót do wycieczek",
+    bazar_page_title: "Egipski Bazar i Pamiątki | SphinxTour"
   }
 };

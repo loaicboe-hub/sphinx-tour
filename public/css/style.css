@@ -397,7 +397,8 @@ button {
 }
 
 .mobile-nav-link:hover,
-.mobile-nav-link:active {
+.mobile-nav-link:active,
+.mobile-nav-link.active {
   background: var(--accent-cyan-light);
   color: var(--accent-cyan);
   transform: translateX(4px);
@@ -1360,6 +1361,45 @@ button {
 }
 
 /* ==================== EGYPTIAN BAZAR & GIFT SHOP ==================== */
+.nav-link-bazar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bazar-page-main {
+  padding-top: 146px;
+  min-height: 70vh;
+}
+
+.bazar-back-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 18px;
+}
+
+.bazar-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  color: var(--text-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.bazar-back-btn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-light);
+  transform: translateX(-2px);
+}
+
 .section[id] {
   scroll-margin-top: 108px;
 }
@@ -2149,6 +2189,10 @@ button {
   margin-top: 60px;
 }
 
+.footer.bazar-page-footer {
+  margin-top: 0;
+}
+
 .footer .logo-text {
   color: #FFFFFF;
 }
@@ -2370,6 +2414,14 @@ button {
   /* Hero Section for Single-Frame 4-Destination + Search Showcase */
   .hero-section {
     padding: 104px 0 16px;
+  }
+
+  .bazar-page-main {
+    padding-top: 112px;
+  }
+
+  .bazar-back-row {
+    margin-bottom: 14px;
   }
 
   .hero-header-box {
@@ -2828,6 +2880,10 @@ button {
 
   .hero-section {
     padding-top: 104px !important;
+  }
+
+  .bazar-page-main {
+    padding-top: 98px !important;
   }
 
   .hero-title {

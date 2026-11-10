@@ -480,6 +480,8 @@ app.delete('/api/admin/reviews/:id', verifyAdmin, (req, res) => {
 app.use((req, res) => {
   if (req.path.startsWith('/admin')) {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+  } else if (req.path === '/bazar' || req.path.startsWith('/bazar/')) {
+    res.sendFile(path.join(__dirname, 'public', 'bazar.html'));
   } else {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
