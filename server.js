@@ -506,8 +506,8 @@ function startServer(port) {
     }
   });
 
-  // Also bind to 3001 if primary port is 3000 so both links work
-  if (port === 3000) {
+  // Also bind to 3001 locally if primary port is default 3000 so both links work
+  if (port === 3000 && !process.env.PORT) {
     const backupServer = app.listen(3001, () => {
       console.log(`🚀 Also listening on alias: http://localhost:3001`);
     });
@@ -518,3 +518,5 @@ function startServer(port) {
 }
 
 startServer(PORT);
+
+module.exports = app;
