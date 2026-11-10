@@ -2348,6 +2348,13 @@ button {
 }
 
 @media (max-width: 1024px) {
+  .header-inner { height: 84px; gap: 8px; }
+  .logo-img { height: 62px; max-width: 162px; }
+  .nav-menu { gap: 9px; }
+  .nav-link { font-size: 0.79rem; }
+  .nav-link-bazar { gap: 3px; }
+  .lang-btn { padding: 5px 9px; font-size: 0.78rem; }
+  .btn-whatsapp-pill { padding: 7px 10px; font-size: 0.78rem; }
   .hero-title { font-size: 2.4rem; }
   .rotating-banner-wrapper { height: 380px; }
   .cities-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }

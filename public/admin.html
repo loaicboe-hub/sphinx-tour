@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/admin.css?v=20261110b" />
+  <link rel="stylesheet" href="css/admin.css?v=20261110d" />
 </head>
 <body>
 
@@ -46,7 +46,7 @@
           <span>⛵</span> Tours & Excursions
         </li>
         <li class="sidebar-link" data-tab="bazar">
-          <span>🛍️</span> Bazar Products <span id="bazarProductsCountBadge" style="background: rgba(0, 210, 180, 0.16); color: var(--admin-accent); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; margin-left: auto; font-weight: 700;">0</span>
+          <span>🛍️</span> Online Shop <span id="bazarProductsCountBadge" style="background: rgba(0, 210, 180, 0.16); color: var(--admin-accent); font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; margin-left: auto; font-weight: 700;">0</span>
         </li>
         <li class="sidebar-link" data-tab="cities">
           <span>📍</span> Destinations (4 Cities)
@@ -123,7 +123,7 @@
             <div class="stat-icon">🛍️</div>
             <div>
               <div class="stat-val" id="statTotalProducts">0</div>
-              <div class="stat-label">Bazar Products</div>
+              <div class="stat-label">Online Shop Products</div>
             </div>
           </div>
           <div class="stat-card" style="cursor: pointer;" onclick="switchTab('reviews')">
@@ -167,7 +167,7 @@
       <section class="admin-tab-pane" id="tab-bazar">
         <div class="admin-topbar">
           <div>
-            <h1 class="topbar-title">Bazar & Tourist Gifts</h1>
+            <h1 class="topbar-title">Online Shop &amp; Tourist Gifts</h1>
             <p class="topbar-sub">Manage tourist products, photos, specifications (specs), and live prices</p>
           </div>
           <div class="admin-actions">
@@ -181,7 +181,7 @@
 
         <div class="data-card">
           <div class="data-header">
-            <h3 style="font-size: 1.15rem; font-weight: 700;">All Bazar Products</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">All Online Shop Products</h3>
             <span style="font-size: 0.85rem; color: var(--text-muted);">Tip: Edit prices inline, click 📷 on a photo to swap image, or ✏️ to edit specs!</span>
           </div>
 
@@ -613,7 +613,7 @@
       <button class="modal-close-btn" onclick="closeProductModal()" type="button" aria-label="Close modal">✕</button>
 
       <div class="modal-header">
-        <h3 class="modal-title" id="productFormModalTitle">Add Bazar Product</h3>
+        <h3 class="modal-title" id="productFormModalTitle">Add Online Shop Product</h3>
         <p class="modal-subtitle">Set product image, specifications, price, and multilingual names across 4 languages.</p>
       </div>
 
@@ -758,6 +758,6 @@
     </div>
   </div>
 
-  <script src="js/admin.js?v=20261110b"></script>
+  <script src="js/admin.js?v=20261110d"></script>
 </body>
 </html>

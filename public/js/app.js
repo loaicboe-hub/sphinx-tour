@@ -1245,8 +1245,8 @@ async function executeBazarWhatsAppOrder() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         tour_id: `BAZAR-${product.id}`,
-        tour_name: `[Bazar] ${prodName}`,
-        city: 'Bazar Gift Shop',
+        tour_name: `[Online Shop] ${prodName}`,
+        city: 'Online Shop',
         date: new Date().toISOString().split('T')[0],
         adults: bazarOrderQty,
         children: 0,
@@ -1256,12 +1256,12 @@ async function executeBazarWhatsAppOrder() {
       })
     });
   } catch (e) {
-    console.error('Failed to log Bazar order lead', e);
+    console.error('Failed to log Online Shop order lead', e);
   }
 
   let msg = '';
   if (currentLang === 'ru') {
-    msg = `Здравствуйте! Я хочу заказать товар из Базара:\n` +
+    msg = `Здравствуйте! Я хочу оформить заказ в онлайн магазине:\n` +
           `🛍️ Товар: *${prodName}*\n` +
           `📦 Количество: ${bazarOrderQty} шт.\n` +
           `🏨 Отель: ${hotel}\n` +
@@ -1269,7 +1269,7 @@ async function executeBazarWhatsAppOrder() {
           `💰 Примерная сумма: ${curr}${total}\n\n` +
           `Подскажите, пожалуйста, когда возможна доставка в отель?`;
   } else if (currentLang === 'fr') {
-    msg = `Bonjour ! Je souhaite commander un article du Bazar :\n` +
+    msg = `Bonjour ! Je souhaite commander dans la boutique en ligne :\n` +
           `🛍️ Produit : *${prodName}*\n` +
           `📦 Quantité : ${bazarOrderQty}\n` +
           `🏨 Hôtel : ${hotel}\n` +
@@ -1277,7 +1277,7 @@ async function executeBazarWhatsAppOrder() {
           `💰 Total estimé : ${curr}${total}\n\n` +
           `Pourriez-vous me confirmer la livraison à l'hôtel ?`;
   } else if (currentLang === 'pl') {
-    msg = `Dzień dobry! Chciałbym zamówić produkt z Bazaru:\n` +
+    msg = `Dzień dobry! Chciałbym zamówić produkt ze sklepu online:\n` +
           `🛍️ Produkt: *${prodName}*\n` +
           `📦 Ilość: ${bazarOrderQty} szt.\n` +
           `🏨 Hotel: ${hotel}\n` +
@@ -1285,7 +1285,7 @@ async function executeBazarWhatsAppOrder() {
           `💰 Szacowany koszt: ${curr}${total}\n\n` +
           `Proszę o informację dotyczącą dostawy do hotelu.`;
   } else {
-    msg = `Hello! I would like to order from Egyptian Bazar:\n` +
+    msg = `Hello! I would like to order from the Online Shop:\n` +
           `🛍️ Product: *${prodName}*\n` +
           `📦 Quantity: ${bazarOrderQty}\n` +
           `🏨 Hotel: ${hotel}\n` +

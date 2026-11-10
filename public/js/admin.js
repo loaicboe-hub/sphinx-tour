@@ -887,7 +887,7 @@ function renderProductsTable() {
   tbody.innerHTML = '';
 
   if (products.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px;">No Bazar products yet. Click "+ Add New Product" to create one!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px;">No Online Shop products yet. Click "+ Add New Product" to create one!</td></tr>`;
     return;
   }
 
@@ -1042,7 +1042,7 @@ async function toggleProductFeatured(productId, currentFeatured) {
 }
 
 async function deleteProduct(productId) {
-  if (!confirm('Are you sure you want to delete this Bazar product?')) return;
+  if (!confirm('Are you sure you want to delete this Online Shop product?')) return;
   try {
     const res = await fetch(`/api/products/${productId}`, {
       method: 'DELETE',
@@ -1080,7 +1080,7 @@ function switchProductModalLang(lang, btn) {
 }
 
 function openAddProductModal() {
-  document.getElementById('productFormModalTitle').textContent = 'Add New Bazar Product';
+  document.getElementById('productFormModalTitle').textContent = 'Add New Online Shop Product';
   document.getElementById('productEditForm').reset();
   document.getElementById('productEditId').value = '';
   document.getElementById('productImagePreview').style.display = 'none';
