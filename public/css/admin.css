@@ -798,6 +798,119 @@ body {
   margin-bottom: 8px;
 }
 
+/* Tour Multi-Image Gallery Grid in Admin */
+.tour-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.tour-gallery-item {
+  position: relative;
+  background: rgba(6, 14, 26, 0.6);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.tour-gallery-item.is-cover {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 12px rgba(0, 210, 180, 0.2);
+}
+
+.tour-gallery-thumb-wrap {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000000;
+}
+
+.tour-gallery-thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tour-gallery-badge-cover {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: var(--admin-accent);
+  color: #060E1A;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+.tour-gallery-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-gallery-action {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--admin-border);
+  color: var(--text-main);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-gallery-action:hover:not(:disabled) {
+  background: var(--admin-accent);
+  color: #060E1A;
+  border-color: var(--admin-accent);
+}
+
+.btn-gallery-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-gallery-action.btn-del:hover {
+  background: var(--admin-danger);
+  color: #FFFFFF;
+  border-color: var(--admin-danger);
+}
+
+.btn-gallery-cover {
+  width: 100%;
+  font-size: 0.72rem;
+  padding: 4px 6px;
+  background: rgba(0, 210, 180, 0.12);
+  color: var(--admin-accent);
+  border: 1px solid rgba(0, 210, 180, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  text-align: center;
+}
+
+.btn-gallery-cover:hover {
+  background: var(--admin-accent);
+  color: #060E1A;
+}
+
 /* Reviews Filter Tabs & Moderation Actions */
 .btn-review-tab {
   padding: 8px 16px;

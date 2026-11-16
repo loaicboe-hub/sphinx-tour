@@ -860,10 +860,47 @@ function openDetailsModal(tourId) {
   const includedList = (tour.included?.[currentLang] || tour.included?.en || [])
     .map(item => `<li class="included-item">${escapeHtml(item)}</li>`).join('');
 
-  const safeImg = escapeHtml(safeUrlClient(tour.image, '/uploads/banner_1.jpg'));
+  // Collect all distinct images for this tour: cover image first, followed by gallery images
+  const rawImages = [];
+  if (tour.image && typeof tour.image === 'string' && tour.image.trim()) {
+    rawImages.push(tour.image.trim());
+  }
+  if (Array.isArray(tour.gallery)) {
+    tour.gallery.forEach(img => {
+      if (img && typeof img === 'string' && img.trim() && !rawImages.includes(img.trim())) {
+        rawImages.push(img.trim());
+      }
+    });
+  }
+  if (rawImages.length === 0) rawImages.push('/uploads/banner_1.jpg');
+
+  const allImages = rawImages.map(img => safeUrlClient(img, '/uploads/banner_1.jpg'));
+  let currentGalleryIdx = 0;
+
   body.innerHTML = `
-    <div class="modal-gallery">
-      <img src="${safeImg}" alt="${escapeHtml(tourName)}" />
+    <div class="modal-gallery" id="tourModalGallery">
+      <div class="gallery-viewport" id="galleryViewport" title="Click to view full screen">
+        <img class="gallery-main-img" id="galleryMainImg" src="${escapeHtml(allImages[0])}" alt="${escapeHtml(tourName)}" />
+        ${allImages.length > 1 ? `
+          <button type="button" class="gallery-nav-btn gallery-prev-btn" id="galleryPrevBtn" aria-label="Previous image">‹</button>
+          <button type="button" class="gallery-nav-btn gallery-next-btn" id="galleryNextBtn" aria-label="Next image">›</button>
+          <div class="gallery-counter" id="galleryCounter">
+            <span id="galleryCurrentNum">1</span> / ${allImages.length}
+          </div>
+        ` : ''}
+        <button type="button" class="gallery-fullscreen-btn" id="galleryFullscreenBtn" title="Full Screen" aria-label="Open Fullscreen">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </button>
+      </div>
+      ${allImages.length > 1 ? `
+        <div class="gallery-thumbs-row" id="galleryThumbsRow">
+          ${allImages.map((img, i) => `
+            <button type="button" class="gallery-thumb-btn ${i === 0 ? 'active' : ''}" data-idx="${i}" aria-label="View photo ${i + 1}">
+              <img src="${escapeHtml(img)}" alt="Photo ${i + 1}" loading="lazy" />
+            </button>
+          `).join('')}
+        </div>
+      ` : ''}
     </div>
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
       <div>
@@ -896,6 +933,192 @@ function openDetailsModal(tourId) {
     </div>
   `;
 
+  // Gallery interactive functions
+  function setGalleryIndex(idx) {
+    if (idx < 0) idx = allImages.length - 1;
+    if (idx >= allImages.length) idx = 0;
+    currentGalleryIdx = idx;
+
+    const mainImg = document.getElementById('galleryMainImg');
+    if (mainImg) mainImg.src = allImages[currentGalleryIdx];
+
+    const currentNum = document.getElementById('galleryCurrentNum');
+    if (currentNum) currentNum.textContent = currentGalleryIdx + 1;
+
+    const thumbBtns = document.querySelectorAll('#galleryThumbsRow .gallery-thumb-btn');
+    thumbBtns.forEach((btn, i) => {
+      if (i === currentGalleryIdx) {
+        btn.classList.add('active');
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // If lightbox is currently open, keep it in sync
+    const lbImg = document.getElementById('lightboxImg');
+    if (lbImg) lbImg.src = allImages[currentGalleryIdx];
+    const lbCounter = document.getElementById('lightboxCounter');
+    if (lbCounter) lbCounter.textContent = `${currentGalleryIdx + 1} / ${allImages.length}`;
+  }
+
+  // Previous / Next button listeners
+  const prevBtn = document.getElementById('galleryPrevBtn');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setGalleryIndex(currentGalleryIdx - 1);
+    });
+  }
+  const nextBtn = document.getElementById('galleryNextBtn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setGalleryIndex(currentGalleryIdx + 1);
+    });
+  }
+
+  // Thumbnail buttons listeners
+  document.querySelectorAll('#galleryThumbsRow .gallery-thumb-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = Number(btn.getAttribute('data-idx'));
+      if (!isNaN(idx)) setGalleryIndex(idx);
+    });
+  });
+
+  // Mobile Touch Swipe on Gallery Viewport
+  const viewport = document.getElementById('galleryViewport');
+  if (viewport) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    viewport.addEventListener('touchstart', (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', (e) => {
+      if (!e.changedTouches || !e.changedTouches[0]) return;
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      const deltaY = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX < 0) {
+          setGalleryIndex(currentGalleryIdx + 1); // Swiped Left -> Next
+        } else {
+          setGalleryIndex(currentGalleryIdx - 1); // Swiped Right -> Prev
+        }
+      }
+    }, { passive: true });
+  }
+
+  // Fullscreen Lightbox Mode
+  function openFullscreenLightbox() {
+    const existingLb = document.getElementById('galleryLightbox');
+    if (existingLb) existingLb.remove();
+
+    const lb = document.createElement('div');
+    lb.className = 'gallery-lightbox';
+    lb.id = 'galleryLightbox';
+    lb.innerHTML = `
+      <button type="button" class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close fullscreen">✕</button>
+      <div class="lightbox-stage" id="lightboxStage">
+        <img class="lightbox-img" id="lightboxImg" src="${escapeHtml(allImages[currentGalleryIdx])}" alt="${escapeHtml(tourName)}" />
+        ${allImages.length > 1 ? `
+          <button type="button" class="lightbox-nav-btn lightbox-prev-btn" id="lightboxPrevBtn" aria-label="Previous">‹</button>
+          <button type="button" class="lightbox-nav-btn lightbox-next-btn" id="lightboxNextBtn" aria-label="Next">›</button>
+          <div class="lightbox-counter" id="lightboxCounter">${currentGalleryIdx + 1} / ${allImages.length}</div>
+        ` : ''}
+      </div>
+    `;
+
+    document.body.appendChild(lb);
+
+    const closeBtn = lb.querySelector('#lightboxCloseBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeFullscreenLightbox);
+
+    lb.addEventListener('click', (e) => {
+      if (e.target === lb || e.target.id === 'lightboxStage') {
+        closeFullscreenLightbox();
+      }
+    });
+
+    const lbPrev = lb.querySelector('#lightboxPrevBtn');
+    if (lbPrev) {
+      lbPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setGalleryIndex(currentGalleryIdx - 1);
+      });
+    }
+
+    const lbNext = lb.querySelector('#lightboxNextBtn');
+    if (lbNext) {
+      lbNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setGalleryIndex(currentGalleryIdx + 1);
+      });
+    }
+
+    // Touch Swipe inside Lightbox
+    const stage = lb.querySelector('#lightboxStage');
+    if (stage) {
+      let lbTouchStartX = 0;
+      let lbTouchStartY = 0;
+      stage.addEventListener('touchstart', (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        lbTouchStartX = e.touches[0].clientX;
+        lbTouchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      stage.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+        const deltaX = e.changedTouches[0].clientX - lbTouchStartX;
+        const deltaY = e.changedTouches[0].clientY - lbTouchStartY;
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+          if (deltaX < 0) setGalleryIndex(currentGalleryIdx + 1);
+          else setGalleryIndex(currentGalleryIdx - 1);
+        }
+      }, { passive: true });
+    }
+  }
+
+  function closeFullscreenLightbox() {
+    const lb = document.getElementById('galleryLightbox');
+    if (lb) lb.remove();
+  }
+
+  const fsBtn = document.getElementById('galleryFullscreenBtn');
+  if (fsBtn) {
+    fsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openFullscreenLightbox();
+    });
+  }
+
+  const mainImgEl = document.getElementById('galleryMainImg');
+  if (mainImgEl) {
+    mainImgEl.addEventListener('click', openFullscreenLightbox);
+  }
+
+  // Keyboard navigation when modal is open
+  const handleKeydown = (e) => {
+    if (!document.getElementById('detailsModal')?.classList.contains('active')) {
+      window.removeEventListener('keydown', handleKeydown);
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (document.getElementById('galleryLightbox')) {
+        closeFullscreenLightbox();
+      } else {
+        closeDetailsModal();
+      }
+    } else if (e.key === 'ArrowLeft') {
+      setGalleryIndex(currentGalleryIdx - 1);
+    } else if (e.key === 'ArrowRight') {
+      setGalleryIndex(currentGalleryIdx + 1);
+    }
+  };
+  window.addEventListener('keydown', handleKeydown);
+
   const bookBtn = body.querySelector('.btn-whatsapp-large');
   if (bookBtn) {
     bookBtn.addEventListener('click', () => {
@@ -909,6 +1132,8 @@ function openDetailsModal(tourId) {
 
 function closeDetailsModal() {
   document.getElementById('detailsModal').classList.remove('active');
+  const lb = document.getElementById('galleryLightbox');
+  if (lb) lb.remove();
 }
 
 // Open Quick WhatsApp Booking Modal

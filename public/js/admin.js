@@ -11,6 +11,7 @@ let adminData = {
 };
 
 let quickUploadProductId = null;
+let currentTourImages = [];
 
 let currentAdminPin = localStorage.getItem('egypt_voyage_admin_pin') || '';
 
@@ -99,6 +100,16 @@ function setupAdminListeners() {
   const imageFileInput = document.getElementById('tourImageFile');
   if (imageFileInput) {
     imageFileInput.addEventListener('change', uploadTourImage);
+  }
+
+  const tourUrlInput = document.getElementById('tourImageUrlInput');
+  if (tourUrlInput) {
+    tourUrlInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addTourImageUrlFromInput();
+      }
+    });
   }
 
   // Settings Form Submit
@@ -407,8 +418,11 @@ function openAddTourModal() {
   document.getElementById('tourEditId').value = '';
   document.getElementById('tourImagePreview').style.display = 'none';
   const statusText = document.getElementById('uploadStatusText');
-  if (statusText) statusText.textContent = 'JPG, PNG, WebP, GIF up to 5MB';
+  if (statusText) statusText.textContent = 'Select one or multiple images (JPG, PNG, WebP, GIF up to 5MB each)';
   
+  currentTourImages = [];
+  renderTourGalleryGrid();
+
   switchTourModalLang('en');
   document.getElementById('tourModalOverlay').classList.add('active');
   const modalBody = document.querySelector('#tourModalOverlay .modal-body');
@@ -426,16 +440,24 @@ function openEditTourModal(tourId) {
   document.getElementById('tourDurationInput').value = tour.duration || '';
   document.getElementById('tourPriceInput').value = tour.price || 0;
   document.getElementById('tourChildPriceInput').value = tour.price_child || '';
-  document.getElementById('tourImageUrlInput').value = tour.image || '';
+  document.getElementById('tourImageUrlInput').value = '';
 
-  // Show preview
-  const prev = document.getElementById('tourImagePreview');
-  if (tour.image) {
-    prev.src = tour.image;
-    prev.style.display = 'block';
-  } else {
-    prev.style.display = 'none';
+  const statusText = document.getElementById('uploadStatusText');
+  if (statusText) statusText.textContent = 'Select one or multiple images (JPG, PNG, WebP, GIF up to 5MB each)';
+
+  // Populate currentTourImages with main image and gallery images, preserving order
+  currentTourImages = [];
+  if (tour.image && typeof tour.image === 'string' && tour.image.trim()) {
+    currentTourImages.push(tour.image.trim());
   }
+  if (Array.isArray(tour.gallery)) {
+    tour.gallery.forEach(img => {
+      if (img && typeof img === 'string' && img.trim() && !currentTourImages.includes(img.trim())) {
+        currentTourImages.push(img.trim());
+      }
+    });
+  }
+  renderTourGalleryGrid();
 
   // Multilingual Names
   document.getElementById('tourNameEn').value = tour.names?.en || '';
@@ -463,36 +485,145 @@ function closeTourModal() {
   document.getElementById('tourModalOverlay').classList.remove('active');
 }
 
-// Upload Tour Image
+// Upload Tour Images (supports multiple files)
 async function uploadTourImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append('image', file);
+  const files = Array.from(e.target.files || []);
+  if (files.length === 0) return;
 
   const statusText = document.getElementById('uploadStatusText');
-  statusText.textContent = 'Uploading...';
+  let successCount = 0;
 
-  try {
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'x-admin-pin': currentAdminPin },
-      body: formData
-    });
-    const data = await res.json();
-    if (res.ok && data.success) {
-      document.getElementById('tourImageUrlInput').value = data.url;
-      const prev = document.getElementById('tourImagePreview');
-      prev.src = data.url;
-      prev.style.display = 'block';
-      statusText.textContent = '✓ Uploaded successfully!';
-    } else {
-      statusText.textContent = '❌ ' + (data.error || 'Upload failed');
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (statusText) {
+      statusText.textContent = `Uploading ${i + 1} of ${files.length}...`;
     }
-  } catch (err) {
-    statusText.textContent = '❌ Network error';
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'x-admin-pin': currentAdminPin },
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.url) {
+        if (!currentTourImages.includes(data.url)) {
+          currentTourImages.push(data.url);
+        }
+        successCount++;
+        renderTourGalleryGrid();
+      } else {
+        console.error('File upload failed:', data.error);
+        if (statusText) statusText.textContent = '❌ ' + (data.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.error('Network error during upload:', err);
+      if (statusText) statusText.textContent = '❌ Network error';
+    }
   }
+
+  if (statusText && successCount > 0) {
+    statusText.textContent = `✓ ${successCount} photo(s) uploaded successfully!`;
+  }
+  e.target.value = '';
+}
+
+// Add Tour Image from URL Input
+function addTourImageUrlFromInput() {
+  const input = document.getElementById('tourImageUrlInput');
+  if (!input) return;
+  const url = input.value.trim();
+  if (!url) return;
+  if (!currentTourImages.includes(url)) {
+    currentTourImages.push(url);
+    renderTourGalleryGrid();
+  }
+  input.value = '';
+}
+
+// Set Cover Image (moves to index 0)
+function setTourCoverImage(index) {
+  if (index < 0 || index >= currentTourImages.length) return;
+  const [selected] = currentTourImages.splice(index, 1);
+  currentTourImages.unshift(selected);
+  renderTourGalleryGrid();
+}
+
+// Reorder Tour Image (move earlier or later)
+function moveTourImage(fromIndex, toIndex) {
+  if (fromIndex < 0 || fromIndex >= currentTourImages.length) return;
+  if (toIndex < 0 || toIndex >= currentTourImages.length) return;
+  const [item] = currentTourImages.splice(fromIndex, 1);
+  currentTourImages.splice(toIndex, 0, item);
+  renderTourGalleryGrid();
+}
+
+// Delete Tour Image
+function deleteTourImage(index) {
+  if (index < 0 || index >= currentTourImages.length) return;
+  currentTourImages.splice(index, 1);
+  renderTourGalleryGrid();
+}
+
+// Render dynamic gallery thumbnail cards in admin tour form
+function renderTourGalleryGrid() {
+  const container = document.getElementById('tourGalleryContainer');
+  const grid = document.getElementById('tourGalleryGrid');
+  const countBadge = document.getElementById('tourGalleryCount');
+  const prev = document.getElementById('tourImagePreview');
+
+  if (!grid) return;
+
+  if (countBadge) countBadge.textContent = currentTourImages.length;
+
+  if (currentTourImages.length === 0) {
+    if (container) container.style.display = 'none';
+    grid.innerHTML = '';
+    if (prev) prev.style.display = 'none';
+    return;
+  }
+
+  if (container) container.style.display = 'block';
+
+  // Preview element sync
+  if (prev) {
+    prev.src = currentTourImages[0];
+    prev.style.display = 'none';
+  }
+
+  grid.innerHTML = currentTourImages.map((img, i) => {
+    const isCover = (i === 0);
+    return `
+      <div class="tour-gallery-item ${isCover ? 'is-cover' : ''}" data-idx="${i}">
+        <div class="tour-gallery-thumb-wrap">
+          <img src="${escapeHtmlAdmin(img)}" alt="Tour photo ${i + 1}" />
+          ${isCover ? '<span class="tour-gallery-badge-cover">★ COVER</span>' : ''}
+        </div>
+        ${!isCover ? `
+          <button type="button" class="btn-gallery-cover" onclick="setTourCoverImage(${i})">
+            ★ Set Cover
+          </button>
+        ` : `
+          <div style="text-align: center; font-size: 0.72rem; color: var(--admin-accent); font-weight: 700; padding: 4px 0;">
+            ✓ Main Cover
+          </div>
+        `}
+        <div class="tour-gallery-actions">
+          <button type="button" class="btn-gallery-action" onclick="moveTourImage(${i}, ${i - 1})" ${i === 0 ? 'disabled' : ''} title="Move Earlier">
+            ◀
+          </button>
+          <button type="button" class="btn-gallery-action" onclick="moveTourImage(${i}, ${i + 1})" ${i === currentTourImages.length - 1 ? 'disabled' : ''} title="Move Later">
+            ▶
+          </button>
+          <button type="button" class="btn-gallery-action btn-del" onclick="deleteTourImage(${i})" title="Delete photo">
+            🗑️
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 // Save Tour (Create or Update)
@@ -505,7 +636,10 @@ async function handleSaveTour(e) {
   const duration = document.getElementById('tourDurationInput').value.trim();
   const price = Number(document.getElementById('tourPriceInput').value);
   const price_child = Number(document.getElementById('tourChildPriceInput').value) || Math.round(price * 0.6);
-  const image = document.getElementById('tourImageUrlInput').value.trim();
+
+  // Cover image and gallery
+  const primaryImage = currentTourImages[0] || document.getElementById('tourImageUrlInput').value.trim() || '/uploads/banner_1.jpg';
+  const gallery = currentTourImages.length > 0 ? [...currentTourImages] : [primaryImage];
 
   // Names (fallback to EN if others are empty)
   const nameEn = document.getElementById('tourNameEn').value.trim();
@@ -549,7 +683,8 @@ async function handleSaveTour(e) {
     duration,
     price,
     price_child,
-    image: image || '/uploads/banner_1.jpg',
+    image: primaryImage,
+    gallery,
     names,
     descriptions,
     short_descriptions,

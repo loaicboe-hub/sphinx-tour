@@ -121,7 +121,7 @@ const adminLoginLimiter = rateLimit({
 
 const uploadLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 25,
+  limit: 150,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   validate: rateLimitValidate,
@@ -1247,11 +1247,13 @@ app.patch('/api/tours/:id', verifyAdmin, async (req, res) => {
   const idx = db.tours.findIndex(t => String(t.id) === String(id));
   if (idx === -1) return res.status(404).json({ error: 'Tour not found' });
 
-  const { active, featured, price, price_child } = req.body;
+  const { active, featured, price, price_child, image, gallery } = req.body;
   if (active !== undefined) db.tours[idx].active = Boolean(active);
   if (featured !== undefined) db.tours[idx].featured = Boolean(featured);
   if (price !== undefined) db.tours[idx].price = Math.max(0, Number(price) || 0);
   if (price_child !== undefined) db.tours[idx].price_child = Math.max(0, Number(price_child) || 0);
+  if (image !== undefined) db.tours[idx].image = sanitizeImageUrl(image, db.tours[idx].image);
+  if (Array.isArray(gallery)) db.tours[idx].gallery = gallery.map(u => sanitizeImageUrl(u)).filter(Boolean);
 
   await saveDb(db, ['tours']);
   res.json({ success: true, tour: db.tours[idx] });
