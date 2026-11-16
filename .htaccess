@@ -32,6 +32,13 @@ RewriteRule ^uploads/.*\.(php|phtml|php[0-9]|cgi|pl|py|sh|exe|bat|cmd|js|svg|htm
     Require all denied
 </FilesMatch>
 
+# Never cache HTML files to ensure instant updates on deployment
+<FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
 # Route requests to public/ if file doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -102,6 +102,32 @@ function setupAdminListeners() {
     imageFileInput.addEventListener('change', uploadTourImage);
   }
 
+  const tourDropzone = document.getElementById('tourUploadDropzone');
+  if (tourDropzone) {
+    ['dragenter', 'dragover'].forEach(name => {
+      tourDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        tourDropzone.style.borderColor = 'var(--admin-accent)';
+        tourDropzone.style.background = 'rgba(217, 119, 6, 0.08)';
+      });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      tourDropzone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        tourDropzone.style.borderColor = '';
+        tourDropzone.style.background = '';
+      });
+    });
+    tourDropzone.addEventListener('drop', (e) => {
+      const files = Array.from(e.dataTransfer?.files || []);
+      if (files.length > 0) {
+        uploadTourImage({ target: { files, value: '' } });
+      }
+    });
+  }
+
   const tourUrlInput = document.getElementById('tourImageUrlInput');
   if (tourUrlInput) {
     tourUrlInput.addEventListener('keydown', (e) => {

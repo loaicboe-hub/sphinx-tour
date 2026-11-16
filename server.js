@@ -313,9 +313,13 @@ app.use('/uploads', (req, res, next) => {
 // Serve static frontend files with safe headers
 app.use(express.static(path.join(__dirname, 'public'), {
   dotfiles: 'deny',
-  maxAge: '1h',
-  setHeaders: (res) => {
+  setHeaders: (res, filePath) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
+    if (filePath && (filePath.endsWith('.html') || filePath.endsWith('.htm'))) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
   }
 }));
 app.use('/uploads', express.static(UPLOADS_DIR, {
@@ -1499,6 +1503,9 @@ app.use('/api', (req, res) => {
 
 // SPA / direct route fallback (Express 5 compatible)
 app.use((req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   if (req.path.startsWith('/admin')) {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
   } else if (req.path === '/bazar' || req.path.startsWith('/bazar/')) {
