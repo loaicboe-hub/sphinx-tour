@@ -511,6 +511,60 @@ function closeTourModal() {
   document.getElementById('tourModalOverlay').classList.remove('active');
 }
 
+// Normalize / optimize any image (iPhone HEIC, Android, 4K camera, JFIF) into high-quality JPEG before upload
+async function processImageForUpload(file) {
+  if (!file) return file;
+  if (file.type === 'image/gif' || (file.name && file.name.toLowerCase().endsWith('.gif'))) {
+    return file;
+  }
+  return new Promise((resolve) => {
+    try {
+      const reader = new FileReader();
+      reader.onerror = () => resolve(file);
+      reader.onload = (re) => {
+        const img = new Image();
+        img.onerror = () => resolve(file);
+        img.onload = () => {
+          try {
+            const MAX_DIM = 2048;
+            let w = img.width;
+            let h = img.height;
+            if (w > MAX_DIM || h > MAX_DIM) {
+              if (w > h) {
+                h = Math.round((h * MAX_DIM) / w);
+                w = MAX_DIM;
+              } else {
+                w = Math.round((w * MAX_DIM) / h);
+                h = MAX_DIM;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+
+            canvas.toBlob((blob) => {
+              if (!blob) return resolve(file);
+              const baseName = (file.name || 'photo').replace(/\.[^/.]+$/, '');
+              const safeFile = new File([blob], `${baseName}.jpg`, { type: 'image/jpeg' });
+              resolve(safeFile);
+            }, 'image/jpeg', 0.88);
+          } catch (e) {
+            resolve(file);
+          }
+        };
+        img.src = re.target.result;
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      resolve(file);
+    }
+  });
+}
+
 // Upload Tour Images (supports multiple files)
 async function uploadTourImage(e) {
   const files = Array.from(e.target.files || []);
@@ -524,8 +578,9 @@ async function uploadTourImage(e) {
     if (statusText) {
       statusText.textContent = `Uploading ${i + 1} of ${files.length}...`;
     }
+    const processedFile = await processImageForUpload(file);
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', processedFile);
 
     try {
       const res = await fetch('/api/upload', {
@@ -1117,8 +1172,9 @@ async function handleQuickProductImageUpload(e) {
   const targetId = quickUploadProductId;
   quickUploadProductId = null;
 
+  const processedFile = await processImageForUpload(file);
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append('image', processedFile);
 
   try {
     const upRes = await fetch('/api/upload', {
@@ -1306,11 +1362,12 @@ async function uploadProductImage(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  const formData = new FormData();
-  formData.append('image', file);
-
   const statusText = document.getElementById('productUploadStatusText');
   statusText.textContent = 'Uploading...';
+
+  const processedFile = await processImageForUpload(file);
+  const formData = new FormData();
+  formData.append('image', processedFile);
 
   try {
     const res = await fetch('/api/upload', {

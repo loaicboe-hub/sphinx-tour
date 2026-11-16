@@ -136,14 +136,30 @@ app.use(express.json({ limit: '100kb', strict: true }));
 app.use(express.urlencoded({ extended: false, limit: '100kb', parameterLimit: 50 }));
 
 // ==================== INPUT & FILE MALWARE SANITIZATION ====================
-const SAFE_IMAGE_MIME = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']);
-const SAFE_IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif']);
+const SAFE_IMAGE_MIME = new Set([
+  'image/jpeg',
+  'image/jpg',
+  'image/pjpeg',
+  'image/jfif',
+  'image/png',
+  'image/x-png',
+  'image/webp',
+  'image/gif',
+  'image/bmp',
+  'image/x-ms-bmp',
+  'image/avif',
+  'image/heic',
+  'image/heif',
+  'image/heic-sequence',
+  'application/octet-stream'
+]);
+const SAFE_IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.jfif', '.pjpeg', '.pjp', '.bmp', '.avif', '.heic', '.heif']);
 
 // Memory storage prevents untrusted/infected files from touching disk before magic-byte & malware scan
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB max
+    fileSize: 15 * 1024 * 1024, // 15MB max (accommodates high-res mobile & laptop camera photos)
     files: 1,
     fields: 5,
     headerPairs: 50
@@ -151,9 +167,22 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname || '').toLowerCase();
     const mime = String(file.mimetype || '').toLowerCase();
-    // Explicitly disallow SVG & active content even if image/*
-    if (!SAFE_IMAGE_EXT.has(ext) || !SAFE_IMAGE_MIME.has(mime)) {
-      return cb(new Error('Only safe raster images (JPG, PNG, WEBP, GIF) are allowed.'));
+
+    // Explicitly disallow SVG & active executable content even if image/*
+    const BLOCKED_EXT = new Set(['.svg', '.svgz', '.html', '.htm', '.php', '.phtml', '.exe', '.sh', '.bat', '.cmd', '.js', '.vbs']);
+    if (BLOCKED_EXT.has(ext) || mime === 'image/svg+xml') {
+      const err = new Error('Only safe raster images (JPG, PNG, WEBP, GIF) are allowed.');
+      err.status = 400;
+      return cb(err);
+    }
+
+    // Must be an image MIME or standard safe image extension
+    const isImageMime = mime.startsWith('image/') || mime === 'application/octet-stream';
+    const isImageExt = SAFE_IMAGE_EXT.has(ext) || ext === '';
+    if (!isImageMime && !isImageExt) {
+      const err = new Error('Only safe raster images (JPG, PNG, WEBP, GIF) are allowed.');
+      err.status = 400;
+      return cb(err);
     }
     return cb(null, true);
   }
@@ -177,15 +206,24 @@ function detectAndScanImageBuffer(buf, originalExt) {
     detectedExt = '.gif';
   } else if (buf.subarray(0, 4).toString('ascii') === 'RIFF' && buf.subarray(8, 12).toString('ascii') === 'WEBP') {
     detectedExt = '.webp';
+  } else if (buf[0] === 0x42 && buf[1] === 0x4d) {
+    detectedExt = '.bmp';
   }
 
   if (!detectedExt) {
     return { valid: false, reason: 'File binary signature does not match a valid image.' };
   }
 
-  // Reject masked extension spoofing (e.g., PNG renamed to .gif? minor; block non-image header masquerading)
-  const normOrig = originalExt === '.jpeg' ? '.jpg' : originalExt;
-  if (normOrig !== detectedExt && !(normOrig === '.jpg' && detectedExt === '.jpg')) {
+  // Normalize common extension aliases
+  const normalizeExt = (e) => {
+    if (e === '.jpeg' || e === '.jfif' || e === '.pjpeg' || e === '.pjp') return '.jpg';
+    if (e === '.x-png') return '.png';
+    return e;
+  };
+  const normOrig = normalizeExt(originalExt);
+
+  // Reject masked extension spoofing (e.g. non-image masquerading or PNG renamed as fake.gif)
+  if (normOrig && normOrig !== detectedExt && !(['.jpg', '.jfif'].includes(normOrig) && detectedExt === '.jpg')) {
     return { valid: false, reason: 'File extension does not match actual image contents.' };
   }
 
@@ -1531,7 +1569,7 @@ app.use((err, req, res, next) => {
   }
   if (err && err.name === 'MulterError') {
     const msg = err.code === 'LIMIT_FILE_SIZE'
-      ? 'Image exceeds 5MB maximum limit.'
+      ? 'Image exceeds maximum limit.'
       : 'Invalid file upload request.';
     return res.status(400).json({ success: false, error: msg });
   }
@@ -1540,7 +1578,8 @@ app.use((err, req, res, next) => {
     return res.status(503).json({ success: false, error: 'Database service unavailable.' });
   }
   if (err) {
-    const status = err.status || err.statusCode || (err.message && err.message.startsWith('Only safe raster images') ? 400 : 500);
+    const isUploadErr = err.message && (err.message.includes('safe raster images') || err.message.includes('SVG') || err.message.includes('allowed'));
+    const status = err.status || err.statusCode || (isUploadErr ? 400 : 500);
     if (status >= 500) {
       console.error('Server request error:', err.message);
       return res.status(500).json({ success: false, error: 'Internal server error.' });
